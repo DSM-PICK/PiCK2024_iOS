@@ -1,3 +1,3 @@
 generate:
-        tuist fetch
-        tuist generate
+	tuist fetch
+	tuist generate
