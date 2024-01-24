@@ -5,30 +5,33 @@ import Presentation
 
 public class AuthFlow: Flow {
     
+    public init() {}
+    
     public var root: Presentable {
-        return self.rootViewController
+        return rootPresentable
     }
-    
-    private lazy var rootViewController: UINavigationController = {
-        let viewController = UINavigationController()
-        return viewController
-    }()
-    
+
+    private lazy var rootPresentable = BaseNavigationController()
+
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PickStep else { return .none }
         
         switch step {
             case .loginRequired:
                 return navigateToLogin()
-            default:
-                return .none
+            case .onBoardingRequired:
+                return navigateToOnboarding()
         }
     }
-    
+
     private func navigateToLogin() -> FlowContributors {
         let loginViewController = LoginViewController()
-        self.rootViewController.pushViewController(loginViewController, animated: true)
-        return .none
+        self.rootPresentable.pushViewController(loginViewController, animated: false)
+        return .one(flowContributor: .contribute(withNext: loginViewController))
     }
-    
+
+    private func navigateToOnboarding() -> FlowContributors {
+        return .end(forwardToParentFlowWithStep: PickStep.onBoardingRequired)
+    }
+
 }

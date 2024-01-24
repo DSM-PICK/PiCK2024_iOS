@@ -22,6 +22,8 @@ public class AppFlow: Flow {
                 return navigateToOnboarding()
             case .loginRequired:
                 return navigateToLogin()
+            default:
+                return .none
         }
     }
     

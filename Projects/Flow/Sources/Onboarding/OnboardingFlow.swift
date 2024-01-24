@@ -8,13 +8,10 @@ public class OnboardingFlow: Flow {
     public init() {}
     
     public var root: Presentable {
-        return self.rootViewController
+        return rootPresentable
     }
-    
-    private lazy var rootViewController: UINavigationController = {
-        let viewController = UINavigationController()
-        return viewController
-    }()
+
+    private lazy var rootPresentable = BaseNavigationController()
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PickStep else { return .none }
@@ -22,15 +19,19 @@ public class OnboardingFlow: Flow {
         switch step {
             case .onBoardingRequired:
                 return navigateToOnboarding()
-            default:
-                return .none
+            case .loginRequired:
+                return navigateToLogin()
         }
     }
     
     private func navigateToOnboarding() -> FlowContributors {
         let onboardingViewController = OnboardingViewController()
-        rootViewController.pushViewController(onboardingViewController, animated: true)
-        return .none
+        self.rootPresentable.pushViewController(onboardingViewController, animated: false)
+        return .one(flowContributor: .contribute(withNext: onboardingViewController))
     }
-    
+
+    private func navigateToLogin() -> FlowContributors {
+        return .end(forwardToParentFlowWithStep: PickStep.loginRequired)
+    }
+
 }
