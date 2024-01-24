@@ -1,7 +1,7 @@
 import ProjectDescription
 
 let workspace = Workspace(
-    name: "PICK2024-iOS",
+    name: "PICK-iOS",
     projects: [
         "Projects/**",
         "Modules/**"

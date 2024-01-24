@@ -3,14 +3,14 @@ import ProjectDescriptionHelpers
 import DependencyHelper
 
 let project = Project(
-    name: "PICK2024-iOS",
-    organizationName: "com.choyj",
+    name: "PICK-iOS",
+    organizationName: "com.pick",
     targets: [
         Target(
-            name: "PICK2024-iOS",
+            name: "PICK-iOS",
             platform: .iOS,
             product: .app,
-            bundleId: "com.choyj.iOS.app",
+            bundleId: "com.pick.app",
             deploymentTarget: .iOS(
                 targetVersion: "15.0",
                 devices: [.iphone, .ipad]

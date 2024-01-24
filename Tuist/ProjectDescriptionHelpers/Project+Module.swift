@@ -3,7 +3,7 @@ import ProjectDescription
 extension Project {
     public static func makeModule(
         name: String,
-        organizationName: String = "com.",
+        organizationName: String = "com.pick",
         infoPlist: InfoPlist = .default,
         sources: SourceFilesList = ["Sources/**"],
         resources: ResourceFileElements? = nil,
