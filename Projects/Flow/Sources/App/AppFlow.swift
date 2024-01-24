@@ -40,12 +40,12 @@ public class AppFlow: Flow {
     }
     
     private func navigateToLogin() -> FlowContributors {
-        let authFlow = AuthFlow()
-        Flows.use(authFlow, when: .created) { [weak self] root in
+        let loginFlow = LoginFlow()
+        Flows.use(loginFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
         return .one(flowContributor: .contribute(
-            withNextPresentable: authFlow,
+            withNextPresentable: loginFlow,
             withNextStepper: OneStepper(withSingleStep: PickStep.loginRequired)
         ))
     }

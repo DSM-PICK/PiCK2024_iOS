@@ -3,7 +3,7 @@ import RxFlow
 import Core
 import Presentation
 
-public class AuthFlow: Flow {
+public class LoginFlow: Flow {
     
     public init() {}
     
