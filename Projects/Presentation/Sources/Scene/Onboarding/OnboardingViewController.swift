@@ -1,10 +1,11 @@
 import UIKit
+import SnapKit
+import Then
+import RxFlow
+import RxSwift
+import RxCocoa
+import Core
 
-public class OnboardingViewController: UIViewController {
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .red
-    }
-
+public class OnboardingViewController: UIViewController, Stepper {
+    
 }
