@@ -1,6 +1,6 @@
 import UIKit
 
-public class PiCKButton: UIButton {
+public class PiCKLoginButton: UIButton {
     
     public override var isEnabled: Bool {
         didSet {
