@@ -1,10 +1,6 @@
 import UIKit
 
 public extension UIColor {
-    struct Error {}
-}
-
-public extension UIColor.Error {
     //MARK: Error
     static let error50: UIColor = DesignSystemAsset.Color.error50.color
     static let error100: UIColor = DesignSystemAsset.Color.error100.color

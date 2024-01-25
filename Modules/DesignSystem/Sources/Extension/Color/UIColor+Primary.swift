@@ -1,10 +1,6 @@
 import UIKit
 
 public extension UIColor {
-    struct Primary {}
-}
-
-public extension UIColor.Primary {
     //MARK: Primary
     static let primary50: UIColor = DesignSystemAsset.Color.primary50.color
     static let primary100: UIColor = DesignSystemAsset.Color.primary100.color
