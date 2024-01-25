@@ -15,7 +15,7 @@ public class AppFlow: Flow {
     }
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
-        guard let step = step as? PickStep else { return .none }
+        guard let step = step as? PiCKStep else { return .none }
         
         switch step {
             case .onBoardingRequired:
@@ -35,7 +35,7 @@ public class AppFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: onboardingFlow,
-            withNextStepper: OneStepper(withSingleStep: PickStep.onBoardingRequired)
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.onBoardingRequired)
         ))
     }
     
@@ -46,7 +46,7 @@ public class AppFlow: Flow {
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: loginFlow,
-            withNextStepper: OneStepper(withSingleStep: PickStep.loginRequired)
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.loginRequired)
         ))
     }
     

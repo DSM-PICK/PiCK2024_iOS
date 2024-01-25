@@ -1,5 +1,7 @@
 import UIKit
+
 import RxFlow
+
 import Core
 import Presentation
 
@@ -14,7 +16,7 @@ public class LoginFlow: Flow {
     private lazy var rootPresentable = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
-        guard let step = step as? PickStep else { return .none }
+        guard let step = step as? PiCKStep else { return .none }
         
         switch step {
             case .loginRequired:
@@ -31,7 +33,7 @@ public class LoginFlow: Flow {
     }
 
     private func navigateToOnboarding() -> FlowContributors {
-        return .end(forwardToParentFlowWithStep: PickStep.onBoardingRequired)
+        return .end(forwardToParentFlowWithStep: PiCKStep.onBoardingRequired)
     }
 
 }
