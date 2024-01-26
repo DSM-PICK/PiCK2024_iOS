@@ -22,6 +22,8 @@ public class AppFlow: Flow {
                 return presentOnboardingView()
             case .loginRequired:
                 return presentLoginView()
+            case .testRequired:
+                return presentTestView()
             default:
                 return .none
         }
@@ -48,6 +50,17 @@ public class AppFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: loginFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.loginRequired)
+        ))
+    }
+    
+    private func presentTestView() -> FlowContributors {
+        let testFlow = TestFlow()
+        Flows.use(testFlow, when: .created) { [weak self] root in
+            self?.window.rootViewController = root
+        }
+        return .one(flowContributor: .contribute(
+            withNextPresentable: testFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.testRequired)
         ))
     }
     
