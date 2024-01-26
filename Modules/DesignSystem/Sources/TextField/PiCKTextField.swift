@@ -21,7 +21,7 @@ public class PiCKTextField: UITextField {
         $0.setImage(.eyeOff, for: .normal)
         $0.tintColor = .neutral50
         $0.contentMode = .scaleAspectFit
-        $0.isHidden = true  
+        $0.isHidden = true
     }
     
     public init() {
@@ -32,12 +32,12 @@ public class PiCKTextField: UITextField {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         self.addSubview(textHideButton)
-    
+        
         textHideButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.right.equalToSuperview().inset(16)
@@ -58,7 +58,7 @@ public class PiCKTextField: UITextField {
         self.autocorrectionType = .no
         self.keyboardType = .alphabet
     }
-
+    
     private func bind() {
         self.rx.text.orEmpty
             .map { $0.isEmpty ? UIColor.clear.cgColor : UIColor.secondary500.cgColor }
@@ -72,14 +72,21 @@ public class PiCKTextField: UITextField {
                 self?.backgroundColor = backgroundColor
             }).disposed(by: disposeBag)
         
-        self.textHideButton.rx.tap.subscribe(onNext:{ [weak self] in
-            self?.isSecureTextEntry.toggle()
-            let imageName: UIImage = (self?.isSecureTextEntry ?? false) ? .eyeOff: .eyeOn
-            self?.textHideButton.setImage(imageName, for:.normal)
-        }).disposed(by: disposeBag)
+        self.textHideButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.isSecureTextEntry.toggle()
+                let imageName: UIImage = (self?.isSecureTextEntry ?? false) ? .eyeOff: .eyeOn
+                self?.textHideButton.setImage(imageName, for:.normal)
+            }).disposed(by: disposeBag)
+        
+        self.rx.controlEvent(.editingDidEnd)
+            .subscribe(onNext: { [weak self] in
+                self?.layer.borderColor = UIColor.clear.cgColor
+                self?.backgroundColor = .neutral900
+            }).disposed(by: disposeBag)
 
     }
-
+    
     private func setPlaceholder() {
         guard let string = self.placeholder else {
             return
