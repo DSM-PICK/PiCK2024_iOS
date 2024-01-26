@@ -23,17 +23,24 @@ public class OnboardingFlow: Flow {
                 return navigateToOnboarding()
             case .loginRequired:
                 return navigateToLogin()
+            default:
+                return .none
         }
     }
     
     private func navigateToOnboarding() -> FlowContributors {
         let onboardingViewController = OnboardingViewController()
-        self.rootPresentable.pushViewController(onboardingViewController, animated: false)
+        self.rootPresentable.pushViewController(onboardingViewController, animated: true)
         return .one(flowContributor: .contribute(withNext: onboardingViewController))
     }
 
     private func navigateToLogin() -> FlowContributors {
-        return .end(forwardToParentFlowWithStep: PiCKStep.loginRequired)
+        let loginViewController = LoginViewController(viewModel: LoginViewModel())
+        self.rootPresentable.pushViewController(loginViewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: loginViewController,
+            withNextStepper: LoginViewModel()
+        ))
     }
 
 }

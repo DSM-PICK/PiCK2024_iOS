@@ -19,27 +19,28 @@ public class AppFlow: Flow {
         
         switch step {
             case .onBoardingRequired:
-                return navigateToOnboarding()
+                return presentOnboardingView()
             case .loginRequired:
-                return navigateToLogin()
+                return presentLoginView()
             default:
                 return .none
         }
     }
     
-    private func navigateToOnboarding() -> FlowContributors {
+    private func presentOnboardingView() -> FlowContributors {
         let onboardingFlow = OnboardingFlow()
         
         Flows.use(onboardingFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
+        
         return .one(flowContributor: .contribute(
             withNextPresentable: onboardingFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.onBoardingRequired)
         ))
     }
     
-    private func navigateToLogin() -> FlowContributors {
+    private func presentLoginView() -> FlowContributors {
         let loginFlow = LoginFlow()
         Flows.use(loginFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root

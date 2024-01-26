@@ -21,8 +21,8 @@ public class LoginFlow: Flow {
         switch step {
             case .loginRequired:
                 return navigateToLogin()
-            case .onBoardingRequired:
-                return navigateToOnboarding()
+            default:
+                return .none
         }
     }
 
@@ -34,10 +34,6 @@ public class LoginFlow: Flow {
             withNextPresentable: loginViewController,
             withNextStepper: viewModel
         ))
-    }
-
-    private func navigateToOnboarding() -> FlowContributors {
-        return .end(forwardToParentFlowWithStep: PiCKStep.onBoardingRequired)
     }
 
 }
