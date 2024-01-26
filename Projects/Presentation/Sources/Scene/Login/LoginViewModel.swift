@@ -11,6 +11,10 @@ public class LoginViewModel: ViewModelType, Stepper {
 
     public var steps = PublishRelay<Step>()
     
+    public init(steps: PublishRelay<Step> = PublishRelay<Step>()) {
+        self.steps = steps
+    }
+    
     public struct Input {
         
     }
@@ -19,7 +23,7 @@ public class LoginViewModel: ViewModelType, Stepper {
         
     }
     public func transform(input: Input) -> Output {
-        
+        return Output()
     }
     
 

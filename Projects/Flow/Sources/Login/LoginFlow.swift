@@ -27,9 +27,13 @@ public class LoginFlow: Flow {
     }
 
     private func navigateToLogin() -> FlowContributors {
-        let loginViewController = LoginViewController()
+        let viewModel = LoginViewModel()
+        let loginViewController = LoginViewController(viewModel: viewModel)
         self.rootPresentable.pushViewController(loginViewController, animated: false)
-        return .one(flowContributor: .contribute(withNext: loginViewController))
+        return .one(flowContributor: .contribute(
+            withNextPresentable: loginViewController,
+            withNextStepper: viewModel
+        ))
     }
 
     private func navigateToOnboarding() -> FlowContributors {
