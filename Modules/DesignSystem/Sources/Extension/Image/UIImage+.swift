@@ -8,5 +8,9 @@ public extension UIImage {
     
     //MARK: rectangle
     static let pageControlRectangle = DesignSystemAsset.Image.pageControlRectangle.image
+    
+    //MARK: eye
+    static let eyeOn = DesignSystemAsset.Image.eyeOn.image
+    static let eyeOff = DesignSystemAsset.Image.eyeOff.image
 
 }
