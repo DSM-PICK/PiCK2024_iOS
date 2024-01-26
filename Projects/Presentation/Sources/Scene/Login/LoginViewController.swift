@@ -4,13 +4,15 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class LoginViewController: BaseVC<LoginViewModel> {
+public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
     
     private let disposeBag = DisposeBag()
+    public let steps = PublishRelay<Step>()
     
     private let pickLabel = UILabel().then {
         $0.text = "PiCK"
@@ -30,11 +32,16 @@ public class LoginViewController: BaseVC<LoginViewModel> {
         $0.isSecurity = true
     }
     private let loginButton = PiCKLoginButton(type: .system).then {
-        $0.isEnabled = false
+        $0.isEnabled = true//임시
     }
 
     public override func attribute() {
         navigationItem.hidesBackButton = true
+        
+        loginButton.rx.tap
+            .subscribe(onNext: {
+                self.steps.accept(PiCKStep.mainRequired)
+            }).disposed(by: disposeBag)
     }
     public override func addView() {
         [
