@@ -12,7 +12,7 @@ let project = Project(
             product: .app,
             bundleId: "com.pick.app",
             deploymentTarget: .iOS(
-                targetVersion: "15.0",
+                targetVersion: "16.0",
                 devices: [.iphone, .ipad]
             ),
             infoPlist: .file(path: "Support/Info.plist"),

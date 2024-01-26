@@ -15,38 +15,39 @@ public class AppFlow: Flow {
     }
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
-        guard let step = step as? PickStep else { return .none }
+        guard let step = step as? PiCKStep else { return .none }
         
         switch step {
             case .onBoardingRequired:
-                return navigateToOnboarding()
+                return presentOnboardingView()
             case .loginRequired:
-                return navigateToLogin()
+                return presentLoginView()
             default:
                 return .none
         }
     }
     
-    private func navigateToOnboarding() -> FlowContributors {
+    private func presentOnboardingView() -> FlowContributors {
         let onboardingFlow = OnboardingFlow()
         
         Flows.use(onboardingFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
+        
         return .one(flowContributor: .contribute(
             withNextPresentable: onboardingFlow,
-            withNextStepper: OneStepper(withSingleStep: PickStep.onBoardingRequired)
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.onBoardingRequired)
         ))
     }
     
-    private func navigateToLogin() -> FlowContributors {
+    private func presentLoginView() -> FlowContributors {
         let loginFlow = LoginFlow()
         Flows.use(loginFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: loginFlow,
-            withNextStepper: OneStepper(withSingleStep: PickStep.loginRequired)
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.loginRequired)
         ))
     }
     

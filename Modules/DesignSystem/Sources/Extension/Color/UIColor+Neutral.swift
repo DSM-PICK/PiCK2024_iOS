@@ -1,10 +1,6 @@
 import UIKit
 
 public extension UIColor {
-    struct Neutral {}
-}
-
-public extension UIColor.Neutral {
     //MARK: Neutral
     static let neutral50: UIColor = DesignSystemAsset.Color.neutral50.color
     static let neutral100: UIColor = DesignSystemAsset.Color.neutral100.color

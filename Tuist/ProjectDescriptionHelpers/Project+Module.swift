@@ -19,7 +19,7 @@ extension Project {
             product: product,
             bundleId: "\(organizationName).\(name)",
             deploymentTarget: .iOS(
-                targetVersion: "15.0",
+                targetVersion: "16.0",
                 devices: [.iphone, .ipad]
             ),
             infoPlist: infoPlist,

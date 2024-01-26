@@ -1,6 +1,6 @@
 import RxFlow
 
-public enum PickStep: Step {
+public enum PiCKStep: Step {
     case onBoardingRequired
     case loginRequired
 }

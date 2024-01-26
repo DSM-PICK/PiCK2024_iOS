@@ -1,7 +1,9 @@
 import Foundation
+
 import RxCocoa
 import RxFlow
 import RxSwift
+
 import Core
 
 public final class AppStepper: Stepper {
@@ -11,6 +13,6 @@ public final class AppStepper: Stepper {
     public init() {}
     
     public var initialStep: Step {
-        return PickStep.onBoardingRequired
+        return PiCKStep.onBoardingRequired
     }
 }
