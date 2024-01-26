@@ -33,6 +33,9 @@ public class LoginViewController: BaseVC<LoginViewModel> {
         $0.isEnabled = false
     }
 
+    public override func attribute() {
+        navigationItem.hidesBackButton = true
+    }
     public override func addView() {
         [
             pickLabel,
