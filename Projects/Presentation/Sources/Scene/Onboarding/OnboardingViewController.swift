@@ -44,7 +44,6 @@ public class OnboardingViewController: UIViewController, Stepper {
         $0.showsVerticalScrollIndicator = false
         $0.isPagingEnabled = true
         $0.register(OnboardingCell.self, forCellWithReuseIdentifier: OnboardingCell.identifier)
-        $0.alwaysBounceVertical = false
         $0.bounces = false
     }
     private let pageControl = PageControl().then {

@@ -12,7 +12,7 @@ import DesignSystem
 public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
     
     private let disposeBag = DisposeBag()
-    public let steps = PublishRelay<Step>()
+    public var steps = PublishRelay<Step>()
     
     private let pickLabel = UILabel().then {
         $0.text = "PiCK"
@@ -31,7 +31,7 @@ public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
         $0.placeholder = "비밀번호"
         $0.isSecurity = true
     }
-    private let loginButton = PiCKLoginButton(type: .system).then {
+    private let loginButton = PiCKLoginButton().then {
         $0.isEnabled = true//임시
     }
 
@@ -39,7 +39,7 @@ public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
         navigationItem.hidesBackButton = true
         
         loginButton.rx.tap
-            .subscribe(onNext: {
+            .bind(onNext: {
                 self.steps.accept(PiCKStep.mainRequired)
             }).disposed(by: disposeBag)
     }
