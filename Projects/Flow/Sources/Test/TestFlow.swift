@@ -13,7 +13,7 @@ public class TestFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = BaseNavigationController()
+    private let rootPresentable = BaseNavigationController()
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }

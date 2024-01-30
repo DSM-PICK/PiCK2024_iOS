@@ -31,7 +31,6 @@ public class AppFlow: Flow {
     
     private func presentOnboardingView() -> FlowContributors {
         let onboardingFlow = OnboardingFlow()
-        
         Flows.use(onboardingFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
