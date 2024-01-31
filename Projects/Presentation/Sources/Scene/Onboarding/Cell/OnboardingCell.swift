@@ -19,7 +19,6 @@ class OnboardingCell: UICollectionViewCell {
         imageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-
     }
 
 }
