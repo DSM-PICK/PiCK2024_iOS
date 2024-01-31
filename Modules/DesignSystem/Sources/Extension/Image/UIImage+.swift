@@ -19,5 +19,7 @@ public extension UIImage {
     static let schoolMealIcon = DesignSystemAsset.Image.schoolMeal.image
     static let profileIcon = DesignSystemAsset.Image.profile.image
     static let noticeIcon = DesignSystemAsset.Image.notice.image
+    static let chevronLeftIcon = DesignSystemAsset.Image.chevronLeft.image
+    static let chevronRightIcon = DesignSystemAsset.Image.chevronRight.image
 
 }
