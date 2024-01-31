@@ -21,5 +21,6 @@ public extension UIImage {
     static let noticeIcon = DesignSystemAsset.Image.notice.image
     static let chevronLeftIcon = DesignSystemAsset.Image.chevronLeft.image
     static let chevronRightIcon = DesignSystemAsset.Image.chevronRight.image
+    static let newNoticeIcon = DesignSystemAsset.Image.newNotice.image
 
 }
