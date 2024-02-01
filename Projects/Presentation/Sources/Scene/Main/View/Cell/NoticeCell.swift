@@ -57,7 +57,7 @@ public class NoticeCell: UITableViewCell {
     private func setLayout() {
         noticeIconImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalToSuperview().inset(18)
+            $0.left.equalToSuperview().inset(34)
         }
         noticeLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(8)

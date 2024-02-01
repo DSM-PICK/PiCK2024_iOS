@@ -22,7 +22,7 @@ public class SchoolMealView: UIView {
     }
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
-        $0.itemSize = .init(width: 310, height: 225)
+        $0.itemSize = .init(width: self.frame.width - 32, height: 225)
         $0.minimumLineSpacing = 20
     }
     private lazy var collectionView = UICollectionView(

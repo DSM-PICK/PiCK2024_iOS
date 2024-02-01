@@ -22,7 +22,7 @@ public class TimeTableView: UIView {
     }
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
-        $0.itemSize = .init(width: 302, height: 40)
+        $0.itemSize = .init(width: self.frame.width - 40, height: 40)
         $0.minimumLineSpacing = 8
     }
     private lazy var collectionView = UICollectionView(
