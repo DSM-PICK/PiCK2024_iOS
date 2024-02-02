@@ -5,17 +5,20 @@ import Then
 
 public class PiCKMainButton: UIButton {
     
-    public lazy var label = UILabel().then {
+    public func getter(text: String) {
+        label.text = text
+    }
+    
+    private lazy var label = UILabel().then {
         $0.textColor = .primary50
         $0.font = .body3
     }
-
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
         layout()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
