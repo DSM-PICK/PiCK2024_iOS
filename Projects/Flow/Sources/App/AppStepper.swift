@@ -12,7 +12,8 @@ public final class AppStepper: Stepper {
     
     public init() {}
     
+    //TODO: 서버통신 시작하면 분기처리하기
     public var initialStep: Step {
-        return PiCKStep.onBoardingRequired
+        return PiCKStep.testRequired
     }
 }

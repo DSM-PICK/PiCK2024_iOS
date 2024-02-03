@@ -7,7 +7,17 @@ public class PiCKLoginButton: UIButton {
             self.setup()
         }
     }
-    private var fgColor: UIColor {
+    public override var isHighlighted: Bool {
+        didSet {
+            UIView.animate(withDuration: 0.3, animations: {
+                let normalColor = self.bgColor
+                let highlightedColor = UIColor.primary800
+                self.backgroundColor = self.isHighlighted ? highlightedColor : normalColor
+            })
+        }
+    }
+    
+    private var titleColor: UIColor {
         !isEnabled ? .neutral300: .white
     }
     
@@ -20,7 +30,7 @@ public class PiCKLoginButton: UIButton {
         self.setTitle("로그인", for: .normal)
         self.titleLabel?.font = .buttonS
         self.backgroundColor = bgColor
-        self.setTitleColor(fgColor, for: .normal)
+        self.setTitleColor(titleColor, for: .normal)
     }
     
 }

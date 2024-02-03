@@ -1,7 +1,5 @@
 import UIKit
 
-import RxSwift
-
 public class BaseVC<ViewModel: ViewModelType>: UIViewController {
     
     public var viewModel: ViewModel
@@ -18,8 +16,8 @@ public class BaseVC<ViewModel: ViewModelType>: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        bind()
         attribute()
+        bind()
     }
 
     public override func viewDidLayoutSubviews() {

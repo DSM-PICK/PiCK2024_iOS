@@ -13,7 +13,7 @@ public class OnboardingFlow: Flow {
         return rootPresentable
     }
 
-    private lazy var rootPresentable = BaseNavigationController()
+    private let rootPresentable = BaseNavigationController()
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -35,11 +35,12 @@ public class OnboardingFlow: Flow {
     }
 
     private func navigateToLogin() -> FlowContributors {
-        let loginViewController = LoginViewController(viewModel: LoginViewModel())
+        let viewModel = LoginViewModel()
+        let loginViewController = LoginViewController(viewModel: viewModel)
         self.rootPresentable.pushViewController(loginViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: loginViewController,
-            withNextStepper: LoginViewModel()
+            withNextStepper: viewModel
         ))
     }
 

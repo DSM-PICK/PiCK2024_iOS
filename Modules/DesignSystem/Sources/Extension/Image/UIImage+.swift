@@ -9,8 +9,18 @@ public extension UIImage {
     //MARK: rectangle
     static let pageControlRectangle = DesignSystemAsset.Image.pageControlRectangle.image
     
-    //MARK: eye
+    //MARK: icon
     static let eyeOn = DesignSystemAsset.Image.eyeOn.image
     static let eyeOff = DesignSystemAsset.Image.eyeOff.image
+    static let alertIcon = DesignSystemAsset.Image.alert.image
+    static let settingIcon = DesignSystemAsset.Image.setting.image
+    static let scheduleIcon = DesignSystemAsset.Image.schedule.image
+    static let applyIcon = DesignSystemAsset.Image.apply.image
+    static let schoolMealIcon = DesignSystemAsset.Image.schoolMeal.image
+    static let profileIcon = DesignSystemAsset.Image.profile.image
+    static let noticeIcon = DesignSystemAsset.Image.notice.image
+    static let chevronLeftIcon = DesignSystemAsset.Image.chevronLeft.image
+    static let chevronRightIcon = DesignSystemAsset.Image.chevronRight.image
+    static let newNoticeIcon = DesignSystemAsset.Image.newNotice.image
 
 }
