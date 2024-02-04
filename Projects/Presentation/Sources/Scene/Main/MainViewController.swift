@@ -200,13 +200,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         switch indexPath.row {
             case 0:
-                cell.view = TimeTableView(frame: cellViewSize)
+                cell.view = TimeTableCollectionView(frame: cellViewSize)
                 return cell
             case 1:
-                cell.view = SchoolMealView(frame: cellViewSize)
+                cell.view = SchoolMealCollectionView(frame: cellViewSize)
                 return cell
             case 2:
-                cell.view = NoticeView(frame: cellViewSize)
+                cell.view = NoticeCollectionView(frame: cellViewSize)
                 return cell
             default:
                 return cell
