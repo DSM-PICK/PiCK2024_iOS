@@ -23,9 +23,9 @@ public class MainCell: UICollectionViewCell {
         
         contentView.addSubview(view)
         
-//        view.snp.makeConstraints {
-//            $0.edges.equalToSuperview()
-//        }
+        view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     private func setup() {
