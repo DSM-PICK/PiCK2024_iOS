@@ -8,26 +8,19 @@ import DesignSystem
 
 public class TimeTableView: UIView {
     
-    private let date = Date()
-    
-    private let timeTableLabel = UILabel().then {
-        $0.text = "시간표"
+    private let dateLabel = UILabel().then {
+        $0.text = "2월 4일 (일)"
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private lazy var dateLabel = UILabel().then {
-        $0.text = "\(date.toString(DateFormatIndicated.dateAndDays.rawValue))"
-        $0.textColor = .neutral300
-        $0.font = .body3
-    }
-    private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
+    private lazy var collectionviewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
-        $0.itemSize = .init(width: self.frame.width - 40, height: 40)
-        $0.minimumLineSpacing = 8
+        $0.minimumLineSpacing = 12
+        $0.itemSize = .init(width: self.frame.width - 46, height: 52)
     }
     private lazy var collectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: collectionViewLayout
+        collectionViewLayout: collectionviewLayout
     ).then {
         $0.backgroundColor = .white
         $0.register(TimeTableCell.self, forCellWithReuseIdentifier: TimeTableCell.identifier)
@@ -37,6 +30,7 @@ public class TimeTableView: UIView {
         super.init(frame: frame)
         setup()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -52,23 +46,18 @@ public class TimeTableView: UIView {
     }
     private func addView() {
         [
-            timeTableLabel,
             dateLabel,
             collectionView
         ].forEach { self.addSubview($0) }
     }
     private func setLayout() {
-        timeTableLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(14)
-            $0.left.equalToSuperview().inset(16)
-        }
         dateLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16)
-            $0.left.equalTo(timeTableLabel.snp.right).offset(8)
+            $0.top.left.equalToSuperview()
         }
         collectionView.snp.makeConstraints {
-            $0.top.equalTo(dateLabel.snp.bottom).offset(24)
-            $0.left.right.bottom.equalToSuperview()
+            $0.top.equalTo(dateLabel.snp.bottom).offset(7)
+            $0.left.right.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(25)
         }
     }
     
@@ -84,9 +73,8 @@ extension TimeTableView: UICollectionViewDelegate, UICollectionViewDataSource {
         else {
             return UICollectionViewCell()
         }
-        cell.periodLabel.text = "\(indexPath.row)"
+        cell.periodLabel.text = "\(indexPath.row + 1)교시"
         return cell
     }
-    
     
 }
