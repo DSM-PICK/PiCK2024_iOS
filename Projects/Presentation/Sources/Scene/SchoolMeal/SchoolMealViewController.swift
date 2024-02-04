@@ -1,14 +1,15 @@
-//
-//  SchoolMealViewController.swift
-//  Presentation
-//
-//  Created by 조영준 on 2/4/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import UIKit
 
-class SchoolMealViewController: UIViewController {
+import SnapKit
+import Then
+import RxSwift
+import RxCocoa
+import RxFlow
+
+import Core
+import DesignSystem
+
+class SchoolMealViewController: BaseVC<SchoolMealViewModel> {
 
     override func viewDidLoad() {
         super.viewDidLoad()

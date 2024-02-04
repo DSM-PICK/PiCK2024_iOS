@@ -43,8 +43,8 @@ public class OnboardingViewController: UIViewController, Stepper {
         $0.showsHorizontalScrollIndicator = false
         $0.showsVerticalScrollIndicator = false
         $0.isPagingEnabled = true
-        $0.register(OnboardingCell.self, forCellWithReuseIdentifier: OnboardingCell.identifier)
         $0.bounces = false
+        $0.register(OnboardingCell.self, forCellWithReuseIdentifier: OnboardingCell.identifier)
     }
     private let pageControl = PageControl().then {
         $0.numberOfPages = 3

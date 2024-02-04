@@ -1,30 +1,80 @@
-//
-//  ScheduleViewController.swift
-//  Presentation
-//
-//  Created by 조영준 on 2/4/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import UIKit
 
-class ScheduleViewController: UIViewController {
+import SnapKit
+import Then
+import RxSwift
+import RxCocoa
+import RxFlow
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+import Core
+import DesignSystem
 
-        // Do any additional setup after loading the view.
+public class ScheduleViewController: BaseVC<ScheduleViewModel> {
+    
+    private lazy var viewSize = CGRect(
+        x: 0,
+        y: 0,
+        width: self.view.frame.width - 46,
+        height: self.view.frame.height - 184)
+    
+    private lazy var segementedTimetableView = ScrollTimeTableView(frame: viewSize)
+    private let segementedCalendarView = AcademicCalendarView()
+    
+    private let navigationTitleLabel = UILabel().then {
+        $0.text = "일정"
+        $0.textColor = .neutral50
+        $0.font = .subTitle3M
+    }
+    private lazy var segementedControl = UISegmentedControl(items: [
+        "시간표",
+        "학사일정"
+    ]).then {
+        $0.selectedSegmentIndex = 0
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    public override func attribute() {
+        navigationItem.titleView = navigationTitleLabel
+        navigationItem.hidesBackButton = false
     }
-    */
+    public override func addView() {
+        [
+            segementedControl,
+            segementedTimetableView,
+            segementedCalendarView
+        ].forEach { view.addSubview($0) }
+    }
+    public override func setLayout() {
+        segementedControl.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(90)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(36)
+        }
+        segementedTimetableView.snp.makeConstraints {
+            $0.top.equalTo(segementedControl.snp.bottom).offset(28)
+            $0.left.right.equalToSuperview().inset(23)
+            $0.bottom.equalToSuperview().inset(74)
+        }
+        segementedCalendarView.snp.makeConstraints {
+            $0.top.equalTo(segementedControl.snp.bottom).offset(28)
+            $0.left.right.equalToSuperview().inset(23)
+            $0.bottom.equalToSuperview().inset(74)
+        }
+        
+        self.segementedControl.addTarget(self, action: #selector(didChangeValue(segment:)), for: .valueChanged)
+        self.didChangeValue(segment: self.segementedControl)
+    }
+       
 
+     
+     @objc private func didChangeValue(segment: UISegmentedControl) {
+       self.shouldHideFirstView = segment.selectedSegmentIndex != 0
+     }
+    
+    var shouldHideFirstView: Bool? {
+      didSet {
+        guard let shouldHideFirstView = self.shouldHideFirstView else { return }
+        self.segementedTimetableView.isHidden = shouldHideFirstView
+        self.segementedCalendarView.isHidden = !self.segementedTimetableView.isHidden
+      }
+    }
 }

@@ -1,15 +1,14 @@
+//
+//  NoticeViewController.swift
+//  Presentation
+//
+//  Created by 조영준 on 2/4/24.
+//  Copyright © 2024 com.pick. All rights reserved.
+//
+
 import UIKit
 
-import SnapKit
-import Then
-import RxSwift
-import RxCocoa
-import RxFlow
-
-import Core
-import DesignSystem
-
-class ProfileViewController: BaseVC<ProfileViewModel> {
+class NoticeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
