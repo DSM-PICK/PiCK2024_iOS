@@ -5,9 +5,9 @@ import Then
 
 import DesignSystem
 
-public class TimeTableCell: UICollectionViewCell {
+public class TimeTableCollectionCell: UICollectionViewCell {
     
-    static let identifier = "timeTableCellID"
+    static let identifier = "timeTableCollectionCellID"
     
     public var periodLabel = UILabel().then {
         $0.textColor = .primary50
