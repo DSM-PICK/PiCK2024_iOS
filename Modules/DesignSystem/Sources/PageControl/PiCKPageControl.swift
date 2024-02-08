@@ -1,6 +1,6 @@
 import UIKit
 
-public class PageControl: UIPageControl {
+public class PiCKPageControl: UIPageControl {
 
     private var selectedIndex: Int = 0
     private var remainingDecimal: CGFloat = 0
