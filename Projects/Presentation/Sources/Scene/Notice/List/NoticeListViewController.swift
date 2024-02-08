@@ -6,7 +6,7 @@ import Then
 import Core
 import DesignSystem
 
-public class NoticeViewController: BaseVC<NoticeViewModel> {
+public class NoticeListViewController: BaseVC<NoticeListViewModel> {
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "공지사항"
@@ -38,7 +38,7 @@ public class NoticeViewController: BaseVC<NoticeViewModel> {
 
 }
 
-extension NoticeViewController: UITableViewDelegate, UITableViewDataSource {
+extension NoticeListViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 30
     }
