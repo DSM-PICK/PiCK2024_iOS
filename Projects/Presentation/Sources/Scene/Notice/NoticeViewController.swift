@@ -1,30 +1,54 @@
-//
-//  NoticeViewController.swift
-//  Presentation
-//
-//  Created by 조영준 on 2/4/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import UIKit
 
-class NoticeViewController: UIViewController {
+import SnapKit
+import Then
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+import Core
+import DesignSystem
 
-        // Do any additional setup after loading the view.
+public class NoticeViewController: BaseVC<NoticeViewModel> {
+    
+    private let navigationTitleLabel = UILabel().then {
+        $0.text = "공지사항"
+        $0.textColor = .neutral50
+        $0.font = .subTitle3M
+    }
+    private lazy var noticeTableView = UITableView().then {
+        $0.backgroundColor = .white
+        $0.separatorColor = .primary900
+        $0.rowHeight = 80
+        $0.register(NoticeCell.self, forCellReuseIdentifier: NoticeCell.identifier)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    public override func attribute() {
+        navigationItem.titleView = navigationTitleLabel
+        
+        noticeTableView.delegate = self
+        noticeTableView.dataSource = self
     }
-    */
+    public override func addView() {
+        view.addSubview(noticeTableView)
+    }
+    public override func setLayout() {
+        noticeTableView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(106)
+            $0.left.right.bottom.equalToSuperview()
+        }
+    }
 
+}
+
+extension NoticeViewController: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 30
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeCell.identifier, for: indexPath) as? NoticeCell
+        else {
+            return UITableViewCell()
+        }
+        return cell
+    }
+    
 }
