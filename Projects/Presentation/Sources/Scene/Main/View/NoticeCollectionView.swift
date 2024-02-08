@@ -28,9 +28,10 @@ public class NoticeCollectionView: UIView {
         $0.tintColor = .neutral200
         $0.semanticContentAttribute = .forceRightToLeft
     }
-    private lazy var tableView = UITableView().then {
+    private lazy var noticeTableView = UITableView().then {
         $0.backgroundColor = .white
         $0.separatorColor = .primary900
+        $0.rowHeight = 80
         $0.register(NoticeCell.self, forCellReuseIdentifier: NoticeCell.identifier)
     }
     
@@ -49,15 +50,15 @@ public class NoticeCollectionView: UIView {
     }
     
     private func setup() {
-        tableView.delegate = self
-        tableView.dataSource = self
+        noticeTableView.delegate = self
+        noticeTableView.dataSource = self
     }
     private func addView() {
         [
             noticeLabel,
             dateLabel,
             moreButton,
-            tableView
+            noticeTableView
         ].forEach { self.addSubview($0) }
     }
     private func setLayout() {
@@ -72,7 +73,7 @@ public class NoticeCollectionView: UIView {
         moreButton.snp.makeConstraints {
             $0.top.right.equalToSuperview().inset(12)
         }
-        tableView.snp.makeConstraints {
+        noticeTableView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(24)
             $0.left.right.bottom.equalToSuperview()
         }
@@ -89,16 +90,7 @@ extension NoticeCollectionView: UITableViewDelegate, UITableViewDataSource {
         else {
             return UITableViewCell()
         }
-        switch indexPath.row {
-            case 0:
-                cell.newNoticeIconImageView.isHidden = false
-                return cell
-            default:
-                return cell
-        }
-    }
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return cell
     }
     
 }

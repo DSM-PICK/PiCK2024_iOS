@@ -20,7 +20,7 @@ public class NoticeCell: UITableViewCell {
         $0.textColor = .black
         $0.font = .body3
     }
-    private let dateLabel = UILabel().then {
+    private lazy var dateLabel = UILabel().then {
         $0.text = "1일전"
         $0.textColor = .neutral200
         $0.font = .caption3

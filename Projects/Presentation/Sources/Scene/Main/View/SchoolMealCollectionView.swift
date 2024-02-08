@@ -25,7 +25,7 @@ public class SchoolMealCollectionView: UIView {
         $0.itemSize = .init(width: self.frame.width - 32, height: 225)
         $0.minimumLineSpacing = 20
     }
-    private lazy var collectionView = UICollectionView(
+    private lazy var schoolMealCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout
     ).then {
@@ -48,14 +48,14 @@ public class SchoolMealCollectionView: UIView {
     }
     
     private func setup() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        schoolMealCollectionView.delegate = self
+        schoolMealCollectionView.dataSource = self
     }
     private func addView() {
         [
             schoolMealLabel,
             dateLabel,
-            collectionView
+            schoolMealCollectionView
         ].forEach { self.addSubview($0) }
     }
     private func setLayout() {
@@ -67,7 +67,7 @@ public class SchoolMealCollectionView: UIView {
             $0.top.equalToSuperview().inset(16)
             $0.left.equalTo(schoolMealLabel.snp.right).offset(8)
         }
-        collectionView.snp.makeConstraints {
+        schoolMealCollectionView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(24)
             $0.left.right.bottom.equalToSuperview()
         }

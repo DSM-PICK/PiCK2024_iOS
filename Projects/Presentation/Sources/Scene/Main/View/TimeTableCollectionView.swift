@@ -25,7 +25,7 @@ public class TimeTableCollectionView: UIView {
         $0.itemSize = .init(width: self.frame.width - 40, height: 40)
         $0.minimumLineSpacing = 8
     }
-    private lazy var collectionView = UICollectionView(
+    private lazy var timetableCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout
     ).then {
@@ -47,14 +47,14 @@ public class TimeTableCollectionView: UIView {
     }
     
     private func setup() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        timetableCollectionView.delegate = self
+        timetableCollectionView.dataSource = self
     }
     private func addView() {
         [
             timeTableLabel,
             dateLabel,
-            collectionView
+            timetableCollectionView
         ].forEach { self.addSubview($0) }
     }
     private func setLayout() {
@@ -66,7 +66,7 @@ public class TimeTableCollectionView: UIView {
             $0.top.equalToSuperview().inset(16)
             $0.left.equalTo(timeTableLabel.snp.right).offset(8)
         }
-        collectionView.snp.makeConstraints {
+        timetableCollectionView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(24)
             $0.left.right.bottom.equalToSuperview()
         }

@@ -24,7 +24,7 @@ public class ScrollTimeTableView: UIView {
         $0.bounces = false
         $0.register(ScrollTimeTableViewCell.self, forCellWithReuseIdentifier: ScrollTimeTableViewCell.identifier)
     }
-    private let pageControl = PageControl().then {
+    private let pageControl = PiCKPageControl().then {
         $0.numberOfPages = 5
         $0.currentPage = 0
         $0.backgroundColor = .white
@@ -60,11 +60,13 @@ public class ScrollTimeTableView: UIView {
         ].forEach { self.addSubview($0) }
         
         colletionView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.left.right.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(30)
+//            $0.edges.equalToSuperview()
         }
         pageControl.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(colletionView.snp.bottom).offset(40)
+            $0.top.equalTo(colletionView.snp.bottom).offset(17)
         }
     }
     
