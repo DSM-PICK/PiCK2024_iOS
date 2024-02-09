@@ -1,11 +1,6 @@
 import UIKit
 
-import RxSwift
-import RxCocoa
-
-public class PiCKApplicationButton: UIButton {
-    
-    private let disposeBag = DisposeBag()
+public class PiCKApplyButton: UIButton {
 
     public override var isSelected: Bool {
         didSet {
@@ -23,7 +18,6 @@ public class PiCKApplicationButton: UIButton {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        bind()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -40,12 +34,6 @@ public class PiCKApplicationButton: UIButton {
         self.titleLabel?.font = .buttonES
         self.backgroundColor = bgColor
         self.tintColor = .clear
-    }
-    private func bind() {
-        self.rx.tap
-            .bind {
-                self.isSelected.toggle()
-            }.disposed(by: disposeBag)
     }
     
 }
