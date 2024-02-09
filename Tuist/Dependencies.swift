@@ -33,7 +33,13 @@ let dependencies = Dependencies.init(
         // Kingfisher
         .remote(
             url: "https://github.com/onevcat/Kingfisher.git",
-            requirement: .upToNextMajor(from: "7.4.1"))
+            requirement: .upToNextMajor(from: "7.4.1")
+        ),
+        //RxGesture
+        .remote(
+            url: "https://github.com/RxSwiftCommunity/RxGesture",
+            requirement: .upToNextMajor(from: "4.0.0")
+        )
     ]),
     platforms: [.iOS]
 )

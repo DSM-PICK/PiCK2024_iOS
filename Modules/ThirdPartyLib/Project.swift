@@ -14,6 +14,7 @@ let project = Project.makeModule(
         .SPM.RxCocoa,
         .SPM.KeychainSwift,
         .SPM.Kingfisher,
-        .SPM.Moya
+        .SPM.Moya,
+        .SPM.RxGesture
     ]
 )
