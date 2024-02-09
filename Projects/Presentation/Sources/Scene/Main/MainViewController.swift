@@ -59,7 +59,7 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         $0.getter(text: "일정")
         $0.setImage(.scheduleIcon, for: .normal)
     }
-    private let applyButton =  PiCKMainButton(type: .system).then {
+    private let applicationButton =  PiCKMainButton(type: .system).then {
         $0.getter(text: "신청")
         $0.setImage(.applyIcon, for: .normal)
     }
@@ -144,7 +144,7 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         
         [
             scheduleButton,
-            applyButton,
+            applicationButton,
             schoolMealButton,
             profileButton
         ].forEach { buttonStackView.addArrangedSubview($0) }

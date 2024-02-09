@@ -5,10 +5,6 @@ import Then
 
 public class PiCKMainButton: UIButton {
     
-    public func getter(text: String) {
-        label.text = text
-    }
-    
     private lazy var label = UILabel().then {
         $0.textColor = .primary50
         $0.font = .body3
@@ -23,6 +19,9 @@ public class PiCKMainButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func getter(text: String) {
+        label.text = text
+    }
     private func setup() {
         self.backgroundColor = .white
         self.tintColor = .secondary500
