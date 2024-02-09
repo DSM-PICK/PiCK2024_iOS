@@ -22,5 +22,7 @@ public extension UIImage {
     static let chevronLeftIcon = DesignSystemAsset.Image.chevronLeft.image
     static let chevronRightIcon = DesignSystemAsset.Image.chevronRight.image
     static let newNoticeIcon = DesignSystemAsset.Image.newNotice.image
+    static let pencilIcon = DesignSystemAsset.Image.pencil.image
+    static let bikeIcon = DesignSystemAsset.Image.bike.image
 
 }
