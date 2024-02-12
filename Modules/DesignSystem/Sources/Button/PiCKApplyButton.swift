@@ -2,20 +2,15 @@ import UIKit
 
 public class PiCKApplyButton: UIButton {
 
-    public override var isSelected: Bool {
+    public override var isEnabled: Bool {
         didSet {
             self.setup()
         }
     }
     
     private var titleColor: UIColor {
-        !isSelected ? .neutral50: .white
+        !isEnabled ? .neutral500: .neutral50
     }
-    
-    private var bgColor: UIColor {
-        !isSelected ? .white: .primary500
-    }
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -28,12 +23,9 @@ public class PiCKApplyButton: UIButton {
     }
     
     private func setup() {
-        self.backgroundColor = .white
-        self.layer.cornerRadius = 4
+        self.setTitle("확인", for: .normal)
         self.setTitleColor(titleColor, for: .normal)
-        self.titleLabel?.font = .buttonES
-        self.backgroundColor = bgColor
-        self.tintColor = .clear
+        self.titleLabel?.font = .subTitle3M
     }
     
 }
