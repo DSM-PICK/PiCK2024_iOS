@@ -36,7 +36,8 @@ public class OutingApplyViewController: BaseVC<OutingApplyViewModel> {
         $0.titleLabel?.font = .caption2
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .neutral900
-        $0.titleEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 86)
+        $0.contentHorizontalAlignment = .left
+        $0.contentEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
     }
     private let slashLabel = UILabel().then {
         $0.text = "~"
@@ -50,7 +51,8 @@ public class OutingApplyViewController: BaseVC<OutingApplyViewModel> {
         $0.titleLabel?.font = .caption2
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .neutral900
-        $0.titleEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: 86)
+        $0.contentHorizontalAlignment = .left
+        $0.titleEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
     }
     private let outingReasonLabel = UILabel().then {
         $0.text = "외출 사유를 적어주세요"
@@ -110,12 +112,6 @@ public class OutingApplyViewController: BaseVC<OutingApplyViewModel> {
             $0.top.equalTo(outingTimeSelectLabel.snp.bottom).offset(12)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(44)
-        }
-        departureTimeButton.snp.makeConstraints {
-            $0.width.equalTo(150)
-        }
-        arrivalTimeButton.snp.makeConstraints {
-            $0.width.equalTo(150)
         }
         outingReasonLabel.snp.makeConstraints {
             $0.top.equalTo(departureTimeButton.snp.bottom).offset(40)
