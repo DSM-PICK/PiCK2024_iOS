@@ -23,6 +23,7 @@ public class PiCKAlert: UIViewController {
         $0.axis = .horizontal
         $0.spacing = 10
         $0.backgroundColor = .clear
+        $0.alignment = .fill
         $0.distribution = .fillEqually
     }
     private let checkButton = UIButton(type: .system).then {
@@ -105,11 +106,6 @@ public class PiCKAlert: UIViewController {
         buttonStackView.snp.makeConstraints {
             $0.top.equalTo(questionLabel.snp.bottom).offset(24)
             $0.left.right.equalToSuperview().inset(20)
-        }
-        cancelButton.snp.makeConstraints {
-            $0.height.equalTo(44)
-        }
-        checkButton.snp.makeConstraints {
             $0.height.equalTo(44)
         }
     }

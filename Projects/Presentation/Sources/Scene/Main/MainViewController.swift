@@ -45,9 +45,10 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         $0.font = .subTitle2B
     }
     private lazy var buttonStackView = UIStackView().then {
-        $0.backgroundColor = .primary1000
         $0.axis = .horizontal
         $0.spacing = 34
+        $0.backgroundColor = .primary1000
+        $0.alignment = .fill
         $0.distribution = .fillEqually
     }
     private let labelStackView = UIStackView().then {
