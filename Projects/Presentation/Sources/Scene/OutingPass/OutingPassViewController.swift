@@ -36,7 +36,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
         $0.textColor = .neutral50
         $0.font = .label1
     }
-    private let dd = PiCKPaddingLabel().then {
+    private let outingTimeRangeLabel = PiCKPaddingLabel().then {
         $0.text = "16:30 ~ 20:30"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
@@ -49,7 +49,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
         $0.textColor = .neutral50
         $0.font = .label1
     }
-    private let ddd = PiCKPaddingLabel().then {
+    private let outingReasonDescriptionLabel = PiCKPaddingLabel().then {
         $0.text = "집 가고싶다"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
@@ -62,7 +62,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
         $0.textColor = .neutral50
         $0.font = .label1
     }
-    private let dddd = PiCKPaddingLabel().then {
+    private let approvedTeacherNameLabel = PiCKPaddingLabel().then {
         $0.text = "아 몰라"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
@@ -83,11 +83,11 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
             outingTypeLabel,
             qrCodeImageView,
             outingTimeLabel,
-            dd,
+            outingTimeRangeLabel,
             outingReasonLabel,
-            ddd,
+            outingReasonDescriptionLabel,
             approvedTeacherLabel,
-            dddd
+            approvedTeacherNameLabel
         ].forEach { mainView.addSubview($0) }
     }
     public override func setLayout() {
@@ -103,42 +103,41 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
             $0.height.equalTo(view.frame.height)
         }
         userInfoLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(30)
+            $0.top.equalToSuperview().inset(25)
             $0.left.equalToSuperview().inset(24)
         }
         outingTypeLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(30)
+            $0.top.equalToSuperview().inset(25)
             $0.right.equalToSuperview().inset(24)
         }
         qrCodeImageView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(userInfoLabel.snp.bottom).offset(32)
-            //            $0.left.right.equalToSuperview().inset(24)
             $0.width.height.equalTo(342)
         }
         outingTimeLabel.snp.makeConstraints {
             $0.top.equalTo(qrCodeImageView.snp.bottom).offset(32)
             $0.left.equalToSuperview().inset(24)
         }
-        dd.snp.makeConstraints {
+        outingTimeRangeLabel.snp.makeConstraints {
             $0.top.equalTo(outingTimeLabel.snp.bottom).offset(6)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(40)
         }
         outingReasonLabel.snp.makeConstraints {
-            $0.top.equalTo(dd.snp.bottom).offset(32)
+            $0.top.equalTo(outingTimeRangeLabel.snp.bottom).offset(32)
             $0.left.equalToSuperview().inset(24)
         }
-        ddd.snp.makeConstraints {
+        outingReasonDescriptionLabel.snp.makeConstraints {
             $0.top.equalTo(outingReasonLabel.snp.bottom).offset(6)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(40)
         }
         approvedTeacherLabel.snp.makeConstraints {
-            $0.top.equalTo(ddd.snp.bottom).offset(32)
+            $0.top.equalTo(outingReasonDescriptionLabel.snp.bottom).offset(32)
             $0.left.equalToSuperview().inset(24)
         }
-        dddd.snp.makeConstraints {
+        approvedTeacherNameLabel.snp.makeConstraints {
             $0.top.equalTo(approvedTeacherLabel.snp.bottom).offset(6)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(40)
