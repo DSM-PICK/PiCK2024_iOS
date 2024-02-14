@@ -1,30 +1,148 @@
-//
-//  OutingPassViewController.swift
-//  Presentation
-//
-//  Created by 조영준 on 2/14/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import UIKit
 
-class OutingPassViewController: UIViewController {
+import SnapKit
+import Then
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+import Core
+import DesignSystem
 
-        // Do any additional setup after loading the view.
+public class OutingPassViewController: BaseVC<OutingPassViewModel> {
+    
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    private let mainView = UIView()
+    
+    private let navigationTitleLabel = UILabel().then {
+        $0.text = "외출증"
+        $0.textColor = .neutral50
+        $0.font = .subTitle3M
+    }
+    private let userInfoLabel = UILabel().then {
+        $0.text = "조영준"
+        $0.textColor = .neutral100
+        $0.font = .subTitle1M
+    }
+    private let outingTypeLabel = UILabel().then {
+        $0.text = "외출"
+        $0.textColor = .primary500
+        $0.font = .subTitle1M
+    }
+    private let qrCodeImageView = UIImageView().then {
+        $0.backgroundColor = .primary1200
+        $0.layer.cornerRadius = 4
+    }
+    private let outingTimeLabel = UILabel().then {
+        $0.text = "외출 시간"
+        $0.textColor = .neutral50
+        $0.font = .label1
+    }
+    private let dd = PiCKPaddingLabel().then {
+        $0.text = "16:30 ~ 20:30"
+        $0.textColor = .neutral100
+        $0.font = .subTitle3M
+        $0.backgroundColor = .primary1200
+        $0.layer.cornerRadius = 4
+        $0.clipsToBounds = true
+    }
+    private let outingReasonLabel = UILabel().then {
+        $0.text = "사유"
+        $0.textColor = .neutral50
+        $0.font = .label1
+    }
+    private let ddd = PiCKPaddingLabel().then {
+        $0.text = "집 가고싶다"
+        $0.textColor = .neutral100
+        $0.font = .subTitle3M
+        $0.backgroundColor = .primary1200
+        $0.layer.cornerRadius = 4
+        $0.clipsToBounds = true
+    }
+    private let approvedTeacherLabel = UILabel().then {
+        $0.text = "확인 교사"
+        $0.textColor = .neutral50
+        $0.font = .label1
+    }
+    private let dddd = PiCKPaddingLabel().then {
+        $0.text = "아 몰라"
+        $0.textColor = .neutral100
+        $0.font = .subTitle3M
+        $0.backgroundColor = .primary1200
+        $0.layer.cornerRadius = 4
+        $0.clipsToBounds = true
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    public override func attribute() {
+        navigationItem.titleView = navigationTitleLabel
     }
-    */
-
+    public override func addView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(mainView)
+        [
+            userInfoLabel,
+            outingTypeLabel,
+            qrCodeImageView,
+            outingTimeLabel,
+            dd,
+            outingReasonLabel,
+            ddd,
+            approvedTeacherLabel,
+            dddd
+        ].forEach { mainView.addSubview($0) }
+    }
+    public override func setLayout() {
+        scrollView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        contentView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.leading.trailing.equalTo(self.view)
+        }
+        mainView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalTo(view.frame.height)
+        }
+        userInfoLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(30)
+            $0.left.equalToSuperview().inset(24)
+        }
+        outingTypeLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(30)
+            $0.right.equalToSuperview().inset(24)
+        }
+        qrCodeImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(userInfoLabel.snp.bottom).offset(32)
+            //            $0.left.right.equalToSuperview().inset(24)
+            $0.width.height.equalTo(342)
+        }
+        outingTimeLabel.snp.makeConstraints {
+            $0.top.equalTo(qrCodeImageView.snp.bottom).offset(32)
+            $0.left.equalToSuperview().inset(24)
+        }
+        dd.snp.makeConstraints {
+            $0.top.equalTo(outingTimeLabel.snp.bottom).offset(6)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(40)
+        }
+        outingReasonLabel.snp.makeConstraints {
+            $0.top.equalTo(dd.snp.bottom).offset(32)
+            $0.left.equalToSuperview().inset(24)
+        }
+        ddd.snp.makeConstraints {
+            $0.top.equalTo(outingReasonLabel.snp.bottom).offset(6)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(40)
+        }
+        approvedTeacherLabel.snp.makeConstraints {
+            $0.top.equalTo(ddd.snp.bottom).offset(32)
+            $0.left.equalToSuperview().inset(24)
+        }
+        dddd.snp.makeConstraints {
+            $0.top.equalTo(approvedTeacherLabel.snp.bottom).offset(6)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(40)
+        }
+    }
+    
 }
