@@ -40,10 +40,10 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
         $0.textColor = .black
         $0.font = .body3
     }
-    private let applyButton = PiCKApplyButton(type: .system).then {
+    private let applyButton = PiCKWeekendMealApplyButton(type: .system).then {
         $0.setTitle("신청", for: .normal)
     }
-    private let noApplyButton = PiCKApplyButton(type: .system).then {
+    private let noApplyButton = PiCKWeekendMealApplyButton(type: .system).then {
         $0.setTitle("미신청", for: .normal)
     }
     private let additionApplyLabel = UILabel().then {
@@ -58,18 +58,19 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
         $0.distribution = .fillEqually
     }
     private let classroomChangeApplyView = PiCKApplyView().then {
-        $0.getter(text: "교실 이동")
+        $0.getter(text: "교실 이동", image: .pencilIcon)
     }
     private let outingApplyView = PiCKApplyView().then {
-        $0.getter(text: "외출 신청")
+        $0.getter(text: "외출 신청", image: .bikeIcon)
     }
     private let earlyLeaveApplyView = PiCKApplyView().then {
-        $0.getter(text: "조기 귀가 신청")
+        $0.getter(text: "조기 귀가 신청", image: .bikeIcon)
     }
     
     public override func attribute() {
         navigationItem.titleView = navigationTitleLabel
         
+        //나중에 bind로 옮기고 버튼을 radio로 할지 고민해보기
         applyButton.rx.tap
             .bind { [weak self] in
                 let modal = PiCKAlert(
@@ -77,7 +78,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
                     cancelButtonTitle: "취소",
                     checkButtonTitle: "확인",
                     clickToAction: {
-                        //신청 버튼 컬러 변경
+                        self?.applyButton.isSelected = true
                     })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -91,7 +92,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
                     cancelButtonTitle: "취소",
                     checkButtonTitle: "확인",
                     clickToAction: {
-                        //미신청 버튼 컬러 변경
+                        self?.noApplyButton.isSelected = true
                     })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -123,7 +124,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
     }
     public override func setLayout() {
         weekendMealApplyLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(126)
+            $0.top.equalToSuperview().inset(100)
             $0.left.equalToSuperview().inset(24)
         }
         explanationLabel.snp.makeConstraints {
@@ -158,7 +159,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
         applyStackView.snp.makeConstraints {
             $0.top.equalTo(additionApplyLabel.snp.bottom).offset(16)
             $0.left.right.equalToSuperview().inset(24)
-            $0.bottom.equalToSuperview().inset(140)
+            $0.bottom.equalToSuperview().inset(120)
         }
     }
     
