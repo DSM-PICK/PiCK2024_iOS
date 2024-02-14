@@ -1,21 +1,22 @@
-//
-//  PiCKPaddingLabel.swift
-//  DesignSystem
-//
-//  Created by 조영준 on 2/14/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import UIKit
 
-class PiCKPaddingLabel: UILabel {
+public class PiCKPaddingLabel: UILabel {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    @IBInspectable var topInset: CGFloat = 10.0
+    @IBInspectable var bottomInset: CGFloat = 10.0
+    @IBInspectable var leftInset: CGFloat = 12.0
+    @IBInspectable var rightInset: CGFloat = 12.0
+ 
+    public override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: topInset, left: leftInset, bottom: bottomInset, right: rightInset)
+        super.drawText(in: rect.inset(by: insets))
     }
-    */
+    public override var intrinsicContentSize: CGSize {
+        let size = super.intrinsicContentSize
+        return CGSize(width: size.width + leftInset + rightInset, height: size.height + topInset + bottomInset)
+    }
+    public override var bounds: CGRect {
+        didSet { preferredMaxLayoutWidth = bounds.width - (leftInset + rightInset) }
+    }
 
 }
