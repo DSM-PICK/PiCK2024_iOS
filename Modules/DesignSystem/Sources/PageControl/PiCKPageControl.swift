@@ -99,6 +99,10 @@ public class PiCKPageControl: UIPageControl {
         self.setOffset(scrollView.contentOffset.x, width: scrollView.bounds.width)
     }
     
+    public func scrollViewDidScrollAtMain(_ scrollView: UIScrollView) {
+        self.setOffset(scrollView.contentOffset.x, width: scrollView.bounds.width - 48)
+    }
+    
     private func reset() {
         self.invalidateIntrinsicContentSize()
         self.setNeedsDisplay()
