@@ -2,8 +2,7 @@ import UIKit
 
 public class BaseNavigationController: UINavigationController {
     private var backButtonImage: UIImage? {
-        return UIImage(systemName: "chevron.left")!
-            .withAlignmentRectInsets(UIEdgeInsets(top: 0.0, left: -24.0, bottom: 0.0, right: 0.0))
+        return .chevronLeftIcon
     }
 
     private var backButtonAppearance: UIBarButtonItemAppearance {
