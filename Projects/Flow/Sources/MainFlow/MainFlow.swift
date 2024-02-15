@@ -7,13 +7,15 @@ import Presentation
 
 public class MainFlow: Flow {
     
-    public init() {}
-    
     public var root: Presentable {
-        return rootPresentable
+        return rootViewController
     }
 
-    private let rootPresentable = BaseNavigationController()
+    private let rootViewController: MainViewController
+    
+    public init() {
+        self.rootViewController = MainViewController(viewModel: MainViewModel())
+    }
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -21,19 +23,73 @@ public class MainFlow: Flow {
         switch step {
             case .mainRequired:
                 return navigateToMain()
+            case .scheduleRequired:
+                return navigateToSchedule()
+            case .applyRequired:
+                return navigateToApply()
+            case .schoolMealRequired:
+                return navigateToSchoolMeal()
+            case .profileRequired:
+                return navigateToProfile()
             default:
                 return .none
         }
     }
     
     private func navigateToMain() -> FlowContributors {
-        let viewModel = MainViewModel()
-        let mainViewController = MainViewController(viewModel: viewModel)
-        self.rootPresentable.navigationController?.pushViewController(mainViewController, animated: true)
         return .one(flowContributor: .contribute(
-            withNextPresentable: mainViewController,
-            withNextStepper: viewModel
+            withNextPresentable: rootViewController,
+            withNextStepper: rootViewController//MARK: 향후에 ViewModel로 변경
         ))
     }
-
+    
+    private func navigateToSchedule() -> FlowContributors {
+        let scheduleFlow = ScheduleFlow()
+        Flows.use(scheduleFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: scheduleFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.scheduleRequired)
+        ))
+    }
+    
+    private func navigateToApply() -> FlowContributors {
+        let applyFlow = ApplyFlow()
+        Flows.use(applyFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: applyFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.applyRequired)
+        ))
+    }
+    
+    private func navigateToSchoolMeal() -> FlowContributors {
+        let schoolMealFlow = SchoolMealFlow()
+        Flows.use(schoolMealFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: schoolMealFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.schoolMealRequired)
+        ))
+    }
+    
+    private func navigateToProfile() -> FlowContributors {
+        let profileFlow = ProfileFlow()
+        Flows.use(profileFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: profileFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.profileRequired)
+        ))
+    }
+    
+    
 }

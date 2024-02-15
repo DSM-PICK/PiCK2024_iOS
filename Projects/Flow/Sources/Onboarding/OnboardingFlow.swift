@@ -10,10 +10,10 @@ public class OnboardingFlow: Flow {
     public init() {}
     
     public var root: Presentable {
-        return rootPresentable
+        return rootViewController
     }
 
-    private let rootPresentable = BaseNavigationController()
+    private var rootViewController = BaseNavigationController()
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -30,17 +30,18 @@ public class OnboardingFlow: Flow {
     
     private func navigateToOnboarding() -> FlowContributors {
         let onboardingViewController = OnboardingViewController()
-        self.rootPresentable.pushViewController(onboardingViewController, animated: true)
+        self.rootViewController.pushViewController(onboardingViewController, animated: true)
         return .one(flowContributor: .contribute(withNext: onboardingViewController))
     }
 
     private func navigateToLogin() -> FlowContributors {
-        let viewModel = LoginViewModel()
-        let loginViewController = LoginViewController(viewModel: viewModel)
-        self.rootPresentable.pushViewController(loginViewController, animated: true)
+        let loginFlow = LoginFlow()
+        Flows.use(loginFlow, when: .created) { [weak self] root in
+            self?.rootViewController.pushViewController(root, animated: true)
+        }
         return .one(flowContributor: .contribute(
-            withNextPresentable: loginViewController,
-            withNextStepper: viewModel
+            withNextPresentable: loginFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.loginRequired)
         ))
     }
 
