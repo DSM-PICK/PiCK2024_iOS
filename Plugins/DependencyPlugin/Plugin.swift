@@ -1,3 +1,3 @@
 import ProjectDescription
 
-let plugin = Plugin(name: "DependencyHelper")
+let plugin = Plugin(name: "DependencyPlugin")
