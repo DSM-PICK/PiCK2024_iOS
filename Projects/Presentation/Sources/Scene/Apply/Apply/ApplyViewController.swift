@@ -10,9 +10,10 @@ import RxGesture
 import Core
 import DesignSystem
 
-public class ApplyViewController: BaseVC<ApplyViewModel> {
+public class ApplyViewController: BaseVC<ApplyViewModel>, Stepper {
     
     private let disposeBag = DisposeBag()
+    public let steps = PublishRelay<Step>()
     
     private let applyDate = Date()
     
@@ -57,7 +58,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
         $0.backgroundColor = .clear
         $0.distribution = .fillEqually
     }
-    private let classroomChangeApplyView = PiCKApplyView().then {
+    private let classroomMoveApplyView = PiCKApplyView().then {
         $0.getter(text: "교실 이동", image: .pencilIcon)
     }
     private let outingApplyView = PiCKApplyView().then {
@@ -99,6 +100,23 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
                 self?.present(modal, animated: true)
             }.disposed(by: disposeBag)
         
+        classroomMoveApplyView.rx.tapGesture()
+            .when(.recognized)
+            .bind {_ in
+                self.steps.accept(PiCKStep.classroomMoveApplyRequired)
+            }.disposed(by: disposeBag)
+        
+        outingApplyView.rx.tapGesture()
+            .when(.recognized)
+            .bind {_ in
+                self.steps.accept(PiCKStep.outingApplyRequired)
+            }.disposed(by: disposeBag)
+        
+        earlyLeaveApplyView.rx.tapGesture()
+            .when(.recognized)
+            .bind {_ in
+                self.steps.accept(PiCKStep.earlyLeaveApplyRequired)
+            }.disposed(by: disposeBag)
         
     }
     public override func addView() {
@@ -117,7 +135,7 @@ public class ApplyViewController: BaseVC<ApplyViewModel> {
         ].forEach { weekendMealApplyView.addSubview($0) }
         
         [
-            classroomChangeApplyView,
+            classroomMoveApplyView,
             outingApplyView,
             earlyLeaveApplyView
         ].forEach { applyStackView.addArrangedSubview($0) }
