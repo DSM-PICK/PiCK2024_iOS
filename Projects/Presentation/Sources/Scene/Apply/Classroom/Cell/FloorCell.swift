@@ -8,10 +8,22 @@ import DesignSystem
 
 class FloorCell: UICollectionViewCell {
     
+    override var isSelected: Bool {
+        didSet {
+            self.setup()
+        }
+    }
+    
+    private var titleColor: UIColor {
+        !isSelected ? .neutral50 : .white
+    }
+    private var bgColor: UIColor {
+        !isSelected ? .primary1200 : .primary500
+    }
+    
     static let identifier = "floorCellID"
     
-    public let classroomLabel = UILabel().then {
-        $0.textColor = .neutral50
+    public lazy var classroomLabel = UILabel().then {
         $0.font = .body2
     }
     
@@ -28,8 +40,10 @@ class FloorCell: UICollectionViewCell {
     }
     
     private func setup() {
-        contentView.backgroundColor = .primary1200
+        contentView.backgroundColor = bgColor
         contentView.layer.cornerRadius = 8
+        
+        classroomLabel.textColor = titleColor
     }
     private func layout() {
         contentView.addSubview(classroomLabel)

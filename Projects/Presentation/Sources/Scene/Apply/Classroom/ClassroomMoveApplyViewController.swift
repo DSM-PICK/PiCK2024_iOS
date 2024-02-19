@@ -174,4 +174,10 @@ extension ClassroomMoveApplyViewController: UICollectionViewDelegate, UICollecti
         return cell
     }
     
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? FloorCell {
+            print(cell.classroomLabel.text ?? "")
+        }
+    }
+    
 }

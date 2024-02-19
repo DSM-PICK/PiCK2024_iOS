@@ -1,9 +1,29 @@
-//
-//  ClassroomMoveApplyViewModel.swift
-//  Presentation
-//
-//  Created by 조영준 on 2/10/24.
-//  Copyright © 2024 com.pick. All rights reserved.
-//
-
 import Foundation
+
+import RxSwift
+import RxCocoa
+import RxFlow
+
+import Core
+import Domain
+
+public class ClassroomMoveApplyViewModel: ViewModelType, Stepper {
+    
+    public var steps = PublishRelay<Step>()
+    
+    public init(steps: PublishRelay<Step> = PublishRelay<Step>()) {
+        self.steps = steps
+    }
+    
+    public struct Input {
+        
+    }
+    public struct Output {
+        
+    }
+    
+    public func transform(input: Input) -> Output {
+        return Output()
+    }
+    
+}
