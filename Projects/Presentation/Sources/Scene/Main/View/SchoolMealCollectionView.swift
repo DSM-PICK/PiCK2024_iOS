@@ -9,6 +9,7 @@ import DesignSystem
 public class SchoolMealCollectionView: UIView {
     
     private let date = Date()
+    private lazy var todayDate = date.toString(DateFormatIndicated.dateAndDays.rawValue)
     
     private let schoolMealLabel = UILabel().then {
         $0.text = "급식"
@@ -16,7 +17,7 @@ public class SchoolMealCollectionView: UIView {
         $0.font = .subTitle3M
     }
     private lazy var dateLabel = UILabel().then {
-        $0.text = "\(date.toString(DateFormatIndicated.dateAndDays.rawValue))"
+        $0.text = "\(todayDate)"
         $0.textColor = .neutral300
         $0.font = .body3
     }
@@ -30,6 +31,7 @@ public class SchoolMealCollectionView: UIView {
         collectionViewLayout: collectionViewLayout
     ).then {
         $0.backgroundColor = .white
+        $0.layer.cornerRadius = 8
         $0.register(SchoolMealCell.self, forCellWithReuseIdentifier: SchoolMealCell.identifier)
     }
     
@@ -74,6 +76,7 @@ public class SchoolMealCollectionView: UIView {
     }
     
 }
+
 extension SchoolMealCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3

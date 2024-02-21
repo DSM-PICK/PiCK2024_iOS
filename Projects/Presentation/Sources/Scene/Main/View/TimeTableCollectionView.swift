@@ -9,6 +9,7 @@ import DesignSystem
 public class TimeTableCollectionView: UIView {
     
     private let date = Date()
+    private lazy var todayDate = date.toString(DateFormatIndicated.dateAndDays.rawValue)
     
     private let timeTableLabel = UILabel().then {
         $0.text = "시간표"
@@ -16,7 +17,7 @@ public class TimeTableCollectionView: UIView {
         $0.font = .subTitle3M
     }
     private lazy var dateLabel = UILabel().then {
-        $0.text = "\(date.toString(DateFormatIndicated.dateAndDays.rawValue))"
+        $0.text = "\(todayDate)"
         $0.textColor = .neutral300
         $0.font = .body3
     }
@@ -30,6 +31,7 @@ public class TimeTableCollectionView: UIView {
         collectionViewLayout: collectionViewLayout
     ).then {
         $0.backgroundColor = .white
+        $0.layer.cornerRadius = 8
         $0.register(TimeTableCollectionCell.self, forCellWithReuseIdentifier: TimeTableCollectionCell.identifier)
     }
     
@@ -84,7 +86,7 @@ extension TimeTableCollectionView: UICollectionViewDelegate, UICollectionViewDat
         else {
             return UICollectionViewCell()
         }
-        cell.periodLabel.text = "\(indexPath.row)"
+        cell.periodLabel.text = "\(indexPath.row + 1)"
         return cell
     }
     
