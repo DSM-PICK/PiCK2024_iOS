@@ -41,6 +41,7 @@ public class TimeTableView: UIView {
     }
     
     private func setup() {
+        self.backgroundColor = .white
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -52,12 +53,13 @@ public class TimeTableView: UIView {
     }
     private func setLayout() {
         dateLabel.snp.makeConstraints {
-            $0.top.left.equalToSuperview()
+            $0.top.equalToSuperview().inset(28)
+            $0.left.equalToSuperview()
         }
         collectionView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(7)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(25)
+            $0.bottom.equalToSuperview().inset(40)
         }
     }
     

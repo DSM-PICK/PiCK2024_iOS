@@ -60,9 +60,9 @@ public class ScrollTimeTableView: UIView {
         ].forEach { self.addSubview($0) }
         
         colletionView.snp.makeConstraints {
-            $0.top.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(30)
-//            $0.edges.equalToSuperview()
+//            $0.top.left.right.equalToSuperview()
+//            $0.bottom.equalToSuperview().inset(30)
+            $0.edges.equalToSuperview()
         }
         pageControl.snp.makeConstraints {
             $0.centerX.equalToSuperview()

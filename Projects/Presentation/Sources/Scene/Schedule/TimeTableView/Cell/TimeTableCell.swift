@@ -50,11 +50,11 @@ public class TimeTableCell: UICollectionViewCell {
     private func setLayout() {
         periodLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalToSuperview().inset(10)
+            $0.left.equalToSuperview()//.inset(10)
         }
         periodImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalToSuperview().inset(74)
+            $0.left.equalToSuperview().inset(64)
             $0.width.height.equalTo(32)
         }
         subjectLabel.snp.makeConstraints {
