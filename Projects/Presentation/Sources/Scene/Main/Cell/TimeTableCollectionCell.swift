@@ -60,7 +60,8 @@ public class TimeTableCollectionCell: UICollectionViewCell {
         }
         periodImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalTo(periodLabel.snp.right).offset(24)
+//            $0.left.equalTo(periodLabel.snp.right).offset(24)
+            $0.left.equalToSuperview().inset(54)
         }
         subjectLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
