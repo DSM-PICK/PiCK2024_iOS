@@ -75,8 +75,10 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         $0.getter(text: "my")
         $0.setImage(.profileIcon, for: .normal)
     }
-    private lazy var outingPassView = AnyView().then {
-        $0.isHidden = true
+    private lazy var outingPassView = OutingPassView(clickToAction: {
+        self.steps.accept(PiCKStep.outingPassRequired)
+    }).then {
+        $0.isHidden = false
     }
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
@@ -155,7 +157,7 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
             schoolMealButton,
             profileButton
         ].forEach { buttonStackView.addArrangedSubview($0) }
-    
+        
     }
     public override func setLayout() {
         pickLabel.snp.makeConstraints {
@@ -205,7 +207,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 cell.view = SchoolMealCollectionView(frame: cellViewSize)
                 return cell
             case 2:
-                cell.view = NoticeCollectionView(frame: cellViewSize)
+                cell.view = NoticeCollectionView(clickToAction: {
+                    self.steps.accept(PiCKStep.noticeRequired)
+                })
                 return cell
             default:
                 return cell
@@ -228,4 +232,5 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         let index = round(scrolledOffsetX / cellWidth)
         targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
     }
+    
 }
