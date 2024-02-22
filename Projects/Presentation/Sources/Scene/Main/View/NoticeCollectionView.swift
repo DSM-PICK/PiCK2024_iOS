@@ -2,11 +2,19 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class NoticeCollectionView: UIView {
+public class NoticeCollectionView: UIView, Stepper {
+    
+    private let disposeBag = DisposeBag()
+    public var steps = PublishRelay<Step>()
+    
+    public var clickToAction: () -> Void
     
     private let date = Date()
     
@@ -15,34 +23,39 @@ public class NoticeCollectionView: UIView {
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private lazy var dateLabel = UILabel().then {
-        $0.text = "\(date.toString(DateFormatIndicated.dateAndDays.rawValue))"
-        $0.textColor = .neutral300
-        $0.font = .body3
-    }
-    private let moreButton = UIButton(type: .system).then {
+    public let moreButton = UIButton(type: .system).then {
         $0.setTitle("더보기", for: .normal)
         $0.setTitleColor(.neutral200, for: .normal)
         $0.titleLabel?.font = .body3
-        $0.setImage(.chevronRightIcon, for: .normal)
-        $0.tintColor = .neutral200
+//        $0.setImage(.chevronRightIcon, for: .normal)
+//        $0.imageEdgeInsets = .init(
+//            top: 5,
+//            left: 12,
+//            bottom: 5,
+//            right: 8)
+//        $0.tintColor = .neutral200
         $0.semanticContentAttribute = .forceRightToLeft
     }
     private lazy var noticeTableView = UITableView().then {
         $0.backgroundColor = .white
         $0.separatorColor = .primary900
         $0.rowHeight = 80
+        $0.layer.cornerRadius = 8
+        $0.showsVerticalScrollIndicator = false
         $0.register(NoticeCell.self, forCellReuseIdentifier: NoticeCell.identifier)
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(
+        clickToAction: @escaping () -> Void
+    ) {
+        self.clickToAction = clickToAction
+        super.init(frame: .zero)
         setup()
+        bind()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         addView()
@@ -53,10 +66,15 @@ public class NoticeCollectionView: UIView {
         noticeTableView.delegate = self
         noticeTableView.dataSource = self
     }
+    private func bind() {
+        moreButton.rx.tap
+            .bind { [weak self] in
+                self?.clickToAction()
+            }.disposed(by: disposeBag)
+    }
     private func addView() {
         [
             noticeLabel,
-            dateLabel,
             moreButton,
             noticeTableView
         ].forEach { self.addSubview($0) }
@@ -66,20 +84,17 @@ public class NoticeCollectionView: UIView {
             $0.top.equalToSuperview().inset(14)
             $0.left.equalToSuperview().inset(16)
         }
-        dateLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16)
-            $0.left.equalTo(noticeLabel.snp.right).offset(8)
-        }
         moreButton.snp.makeConstraints {
             $0.top.right.equalToSuperview().inset(12)
         }
         noticeTableView.snp.makeConstraints {
-            $0.top.equalTo(dateLabel.snp.bottom).offset(24)
+            $0.top.equalTo(noticeLabel.snp.bottom).offset(8)
             $0.left.right.bottom.equalToSuperview()
         }
     }
     
 }
+
 extension NoticeCollectionView: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
