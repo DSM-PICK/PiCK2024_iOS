@@ -9,7 +9,10 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class ProfileViewController: BaseVC<ProfileViewModel> {
+public class ProfileViewController: BaseVC<ProfileViewModel>, Stepper {
+    
+    private let disposeBag = DisposeBag()
+    public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "my"
@@ -104,6 +107,12 @@ public class ProfileViewController: BaseVC<ProfileViewModel> {
     
     public override func attribute() {
         navigationItem.titleView = navigationTitleLabel
+    }
+    public override func bind() {
+        logOutButton.rx.tap
+            .bind { [weak self] in
+                self?.steps.accept(PiCKStep.logoutAlertRequired)
+            }.disposed(by: disposeBag)
     }
     public override func addView() {
         [

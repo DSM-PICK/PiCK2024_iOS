@@ -2,11 +2,17 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class OutingPassViewController: BaseVC<OutingPassViewModel> {
+public class OutingPassViewController: BaseVC<OutingPassViewModel>, Stepper {
+    
+    private let disposeBag = DisposeBag()
+    public var steps = PublishRelay<Step>()
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -100,7 +106,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel> {
         }
         mainView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.height.equalTo(view.frame.height)
+            $0.height.equalTo(self.view.frame.height * 1.2)
         }
         userInfoLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(25)
