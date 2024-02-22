@@ -31,6 +31,10 @@ public class MainFlow: Flow {
                 return navigateToSchoolMeal()
             case .profileRequired:
                 return navigateToProfile()
+            case .outingPassRequired:
+                return presentOutingPass()
+            case .noticeRequired:
+                return navigateToNotice()
             default:
                 return .none
         }
@@ -88,6 +92,28 @@ public class MainFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: profileFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.profileRequired)
+        ))
+    }
+    
+    private func presentOutingPass() -> FlowContributors {
+        let viewModel = OutingPassViewModel()
+        let viewController = OutingPassViewController(viewModel: viewModel)
+        self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: viewController,
+            withNextStepper: viewController
+        ))
+    }
+    
+    private func navigateToNotice() -> FlowContributors {
+        let noticeFlow = NoticeFlow()
+        Flows.use(noticeFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: noticeFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.noticeRequired)
         ))
     }
     
