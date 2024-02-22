@@ -2,11 +2,16 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class NoticeListViewController: BaseVC<NoticeListViewModel> {
+public class NoticeListViewController: BaseVC<NoticeListViewModel>, Stepper {
+    
+    public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "공지사항"
@@ -49,6 +54,11 @@ extension NoticeListViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as? NoticeCell
+        self.steps.accept(PiCKStep.detailNoticeRequired)
     }
     
 }
