@@ -4,6 +4,7 @@ import RxFlow
 import Flow
 
 import Core
+import DesignSystem
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

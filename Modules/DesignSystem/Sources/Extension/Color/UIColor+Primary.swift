@@ -13,5 +13,6 @@ public extension UIColor {
     static let primary800: UIColor = DesignSystemAsset.Color.primary800.color
     static let primary900: UIColor = DesignSystemAsset.Color.primary900.color
     static let primary1000: UIColor = DesignSystemAsset.Color.primary1000.color
+    static let primary1200: UIColor = DesignSystemAsset.Color.primary1200.color
 
 }

@@ -10,10 +10,10 @@ public class LoginFlow: Flow {
     public init() {}
     
     public var root: Presentable {
-        return rootPresentable
+        return rootViewController
     }
 
-    private let rootPresentable = BaseNavigationController()
+    private let rootViewController = BaseNavigationController()
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -31,30 +31,23 @@ public class LoginFlow: Flow {
     private func navigateToLogin() -> FlowContributors {
         let viewModel = LoginViewModel()
         let loginViewController = LoginViewController(viewModel: viewModel)
-        self.rootPresentable.pushViewController(loginViewController, animated: true)
+        self.rootViewController.pushViewController(loginViewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: loginViewController,
-            withNextStepper: viewModel
+            withNextStepper: loginViewController
         ))
     }
     
     private func navigateToMain() -> FlowContributors {
         let mainFlow = MainFlow()
         Flows.use(mainFlow, when: .created) { [weak self] root in
-            self?.rootPresentable.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
             withNextPresentable: mainFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.mainRequired)
         ))
-//        let viewModel = MainViewModel()
-//        let mainViewController = MainViewController(viewModel: viewModel)
-//        self.rootPresentable.pushViewController(mainViewController, animated: true)
-//        return .one(flowContributor: .contribute(
-//            withNextPresentable: mainViewController,
-//            withNextStepper: viewModel
-//        ))
     }
 
 }

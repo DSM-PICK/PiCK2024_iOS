@@ -1,6 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
-import DependencyHelper
+import DependencyPlugin
 
 let project = Project.makeModule(
     name: "ThirdPartyLib",
@@ -14,6 +14,7 @@ let project = Project.makeModule(
         .SPM.RxCocoa,
         .SPM.KeychainSwift,
         .SPM.Kingfisher,
-        .SPM.Moya
+        .SPM.Moya,
+        .SPM.RxGesture
     ]
 )

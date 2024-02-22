@@ -1,0 +1,88 @@
+import UIKit
+
+import RxFlow
+
+import Core
+import DesignSystem
+import Presentation
+
+public class ApplyFlow: Flow {
+    
+    public var root: Presentable {
+        return rootViewController
+    }
+
+    private let rootViewController: ApplyViewController
+    
+    public init() {
+        self.rootViewController = ApplyViewController(viewModel: ApplyViewModel())
+    }
+
+    public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
+        guard let step = step as? PiCKStep else { return .none }
+        
+        switch step {
+            case .applyRequired:
+                return navigateToApply()
+            case .classroomMoveApplyRequired:
+                return navigateToClassroomMoveApply()
+            case .outingApplyRequired:
+                return navigateToOutingApply()
+            case .earlyLeaveApplyRequired:
+                return navigateToEarlyLeaveApply()
+            case .timePickerAlertRequired(let button):
+                return presentTimePickerAlert(button)
+            default:
+                return .none
+        }
+    }
+
+    private func navigateToApply() -> FlowContributors {
+        return .one(flowContributor: .contribute(
+            withNextPresentable: rootViewController,
+            withNextStepper: rootViewController
+        ))
+    }
+    
+    private func navigateToClassroomMoveApply() -> FlowContributors {
+        let viewModel = ClassroomMoveApplyViewModel()
+        let viewController = ClassroomMoveApplyViewController(viewModel: viewModel)
+        self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: viewController,
+            withNextStepper: viewModel
+        ))
+    }
+    
+    private func navigateToOutingApply() -> FlowContributors {
+        let viewModel = OutingApplyViewModel()
+        let viewController = OutingApplyViewController(viewModel: viewModel)
+        self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: viewController,
+            withNextStepper: viewModel
+        ))
+    }
+    
+    private func navigateToEarlyLeaveApply() -> FlowContributors {
+        let viewModel = EarlyLeaveApplyViewModel()
+        let viewController = EarlyLeaveApplyViewController(viewModel: viewModel)
+        self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        return .one(flowContributor: .contribute(
+            withNextPresentable: viewController,
+            withNextStepper: viewModel
+        ))
+    }
+    
+    private func presentTimePickerAlert(_ button: [String]) -> FlowContributors {
+        let timePickerAlert = PiCKTimePickerAlert(clickToAction: { depatureTime in
+//            button.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
+//            button.setTitleColor(.neutral50, for: .normal)
+        })
+        timePickerAlert.modalPresentationStyle = .overFullScreen
+        timePickerAlert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(timePickerAlert, animated: true)
+        return .none
+    }
+
+}
