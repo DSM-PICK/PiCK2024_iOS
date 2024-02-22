@@ -41,10 +41,12 @@ public class DetailNoticeCell: UITableViewCell {
     
     private func setup() {
         contentView.addSubview(contentLabel)
+        self.isUserInteractionEnabled = false
         
         contentLabel.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
+            $0.top.equalToSuperview().inset(16)
             $0.left.right.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview()
         }
     }
     
