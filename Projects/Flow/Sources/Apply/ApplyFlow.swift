@@ -3,6 +3,7 @@ import UIKit
 import RxFlow
 
 import Core
+import DesignSystem
 import Presentation
 
 public class ApplyFlow: Flow {
@@ -29,6 +30,8 @@ public class ApplyFlow: Flow {
                 return navigateToOutingApply()
             case .earlyLeaveApplyRequired:
                 return navigateToEarlyLeaveApply()
+            case .timePickerAlertRequired(let button):
+                return presentTimePickerAlert(button)
             default:
                 return .none
         }
@@ -50,6 +53,7 @@ public class ApplyFlow: Flow {
             withNextStepper: viewModel
         ))
     }
+    
     private func navigateToOutingApply() -> FlowContributors {
         let viewModel = OutingApplyViewModel()
         let viewController = OutingApplyViewController(viewModel: viewModel)
@@ -59,6 +63,7 @@ public class ApplyFlow: Flow {
             withNextStepper: viewModel
         ))
     }
+    
     private func navigateToEarlyLeaveApply() -> FlowContributors {
         let viewModel = EarlyLeaveApplyViewModel()
         let viewController = EarlyLeaveApplyViewController(viewModel: viewModel)
@@ -67,6 +72,17 @@ public class ApplyFlow: Flow {
             withNextPresentable: viewController,
             withNextStepper: viewModel
         ))
+    }
+    
+    private func presentTimePickerAlert(_ button: [String]) -> FlowContributors {
+        let timePickerAlert = PiCKTimePickerAlert(clickToAction: { depatureTime in
+//            button.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
+//            button.setTitleColor(.neutral50, for: .normal)
+        })
+        timePickerAlert.modalPresentationStyle = .overFullScreen
+        timePickerAlert.modalTransitionStyle = .crossDissolve
+        rootViewController.present(timePickerAlert, animated: true)
+        return .none
     }
 
 }

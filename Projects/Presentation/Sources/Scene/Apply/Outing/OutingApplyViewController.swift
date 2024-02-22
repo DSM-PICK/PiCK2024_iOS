@@ -4,13 +4,15 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class OutingApplyViewController: BaseVC<OutingApplyViewModel> {
+public class OutingApplyViewController: BaseVC<OutingApplyViewModel>, Stepper {
     
     private let disposeBag = DisposeBag()
+    public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "외출 신청"
@@ -69,6 +71,7 @@ public class OutingApplyViewController: BaseVC<OutingApplyViewModel> {
     public override func bind() {
         departureTimeButton.rx.tap
             .bind { [weak self] in
+//                self?.steps.accept(PiCKStep.timePickerAlertRequired)
                 let modal = PiCKTimePickerAlert(clickToAction: { depatureTime in
                     self?.departureTimeButton.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
                     self?.departureTimeButton.setTitleColor(.neutral50, for: .normal)

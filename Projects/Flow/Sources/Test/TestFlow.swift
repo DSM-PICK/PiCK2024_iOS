@@ -20,18 +20,18 @@ public class TestFlow: Flow {
         
         switch step {
             case .testRequired:
-                return navigateToMain()
+                return navigateToTest()
             default:
                 return .none
         }
     }
     
-    private func navigateToMain() -> FlowContributors {
-        let viewModel = MainViewModel()
-        let mainViewController = MainViewController(viewModel: viewModel)
-        self.rootPresentable.pushViewController(mainViewController, animated: false)
+    private func navigateToTest() -> FlowContributors {
+        let viewModel = ScheduleViewModel()
+        let viewController = ScheduleViewController(viewModel: viewModel)
+        self.rootPresentable.pushViewController(viewController, animated: false)
         return .one(flowContributor: .contribute(
-            withNextPresentable: mainViewController,
+            withNextPresentable: viewController,
             withNextStepper: viewModel
         ))
     }
