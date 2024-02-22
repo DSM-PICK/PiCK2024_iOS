@@ -4,13 +4,16 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
 import Core
 import DesignSystem
 
-public class EarlyLeaveApplyViewController: BaseVC<EarlyLeaveApplyViewModel> {
+public class EarlyLeaveApplyViewController: BaseVC<EarlyLeaveApplyViewModel>, Stepper {
     
     private let disposeBag = DisposeBag()
+    
+    public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "조기 귀가 신청"
