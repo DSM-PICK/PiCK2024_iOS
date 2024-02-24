@@ -9,9 +9,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class OutingApplyViewController: BaseVC<OutingApplyViewModel>, Stepper {
+public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
@@ -63,7 +62,7 @@ public class OutingApplyViewController: BaseVC<OutingApplyViewModel>, Stepper {
     }
     private let outingReasonTextView = PiCKApplyTextView()
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: outingApplyButton)
         navigationItem.rightBarButtonItem?.isEnabled = false

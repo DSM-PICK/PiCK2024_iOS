@@ -6,7 +6,7 @@ import Then
 import Core
 import DesignSystem
 
-public class ScrollTimeTableView: UIView {
+public class ScrollTimeTableView: BaseView {
     
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
@@ -36,29 +36,17 @@ public class ScrollTimeTableView: UIView {
         $0.dotSpacings = 4
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
-    
-    private func setup() {
+    public override func attribute() {
         colletionView.delegate = self
         colletionView.dataSource = self
     }
-    private func layout() {
+    public override func addView() {
         [
             colletionView,
             pageControl
         ].forEach { self.addSubview($0) }
-        
+    }
+    public override func setLayout() {
         colletionView.snp.makeConstraints {
 //            $0.top.left.right.equalToSuperview()
 //            $0.bottom.equalToSuperview().inset(30)
@@ -82,12 +70,6 @@ extension ScrollTimeTableView: UICollectionViewDelegate, UICollectionViewDataSou
         else {
             return UICollectionViewCell()
         }
-        cell.view = TimeTableView(frame: CGRect(
-            x: 0,
-            y: 0,
-            width: self.frame.width,
-            height: self.frame.height
-        ))
         return cell
     }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {

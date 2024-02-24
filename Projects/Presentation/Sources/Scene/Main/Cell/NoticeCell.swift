@@ -3,9 +3,10 @@ import UIKit
 import SnapKit
 import Then
 
+import Core
 import DesignSystem
 
-public class NoticeCell: UITableViewCell {
+public class NoticeCell: BaseCollectionViewCell {
     
     static let identifier = "noticeCellID"
     
@@ -29,23 +30,10 @@ public class NoticeCell: UITableViewCell {
         $0.isHidden = true
     }
     
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        addView()
-        setLayout()
-    }
-    
-    private func setup() {
+    public override func attribute() {
         contentView.backgroundColor = .white
     }
-    private func addView() {
+    public override func layout() {
         [
             noticeIconImageView,
             noticeLabel,
@@ -53,8 +41,7 @@ public class NoticeCell: UITableViewCell {
             dateLabel,
             newNoticeIconImageView
         ].forEach { contentView.addSubview($0) }
-    }
-    private func setLayout() {
+        
         noticeIconImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalToSuperview().inset(34)

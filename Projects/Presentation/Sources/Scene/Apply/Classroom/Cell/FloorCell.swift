@@ -6,11 +6,11 @@ import Then
 import Core
 import DesignSystem
 
-class FloorCell: UICollectionViewCell {
+class FloorCell: BaseCollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            self.setup()
+            self.attribute()
         }
     }
     
@@ -27,25 +27,13 @@ class FloorCell: UICollectionViewCell {
         $0.font = .body2
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
-    
-    private func setup() {
+    override func attribute() {
         contentView.backgroundColor = bgColor
         contentView.layer.cornerRadius = 8
         
         classroomLabel.textColor = titleColor
     }
-    private func layout() {
+    override func layout() {
         contentView.addSubview(classroomLabel)
         
         classroomLabel.snp.makeConstraints {

@@ -9,9 +9,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
+public class LoginViewController: BaseViewController<LoginViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
     private let pickLabel = UILabel().then {
@@ -35,9 +34,10 @@ public class LoginViewController: BaseVC<LoginViewModel>, Stepper {
         $0.isEnabled = true//임시
     }
 
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.hidesBackButton = true
-        
+    }
+    public override func bind() {
         loginButton.rx.tap
             .bind(onNext: {
                 self.steps.accept(PiCKStep.mainRequired)

@@ -6,7 +6,7 @@ import Then
 import Core
 import DesignSystem
 
-public class DetailNoticeViewController: BaseVC<DetailNoticeViewModel> {
+public class DetailNoticeViewController: BaseViewController<DetailNoticeViewModel> {
     
     private lazy var navigationTitleLabel = UILabel().then {
         $0.text = "[중요] 오리엔테이션날 일정 안내"

@@ -1,10 +1,12 @@
 import UIKit
 
-public class PiCKWeekendMealApplyButton: UIButton {
+import Core
+
+public class PiCKWeekendMealApplyButton: BaseButton {
 
     public override var isSelected: Bool {
         didSet {
-            self.setup()
+            self.attribute()
         }
     }
     
@@ -16,18 +18,7 @@ public class PiCKWeekendMealApplyButton: UIButton {
         !isSelected ? .white: .primary500
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        setup()
-    }
-    
-    private func setup() {
+    public override func attribute() {
         self.backgroundColor = .white
         self.layer.cornerRadius = 4
         self.setTitleColor(titleColor, for: .normal)

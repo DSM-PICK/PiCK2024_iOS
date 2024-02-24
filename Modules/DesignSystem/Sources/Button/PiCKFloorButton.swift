@@ -3,11 +3,13 @@ import UIKit
 import SnapKit
 import Then
 
-public class PiCKFloorButton: UIButton {
+import Core
+
+public class PiCKFloorButton: BaseButton {
     
     public override var isSelected: Bool {
         didSet {
-            self.setup()
+            self.attribute()
         }
     }
     
@@ -19,14 +21,7 @@ public class PiCKFloorButton: UIButton {
         !isSelected ? .primary1200: .primary500
     }
     
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        setup()
-        layout()
-    }
-    
-    private func setup() {
-//        self.backgroundColor = .white
+    public override func attribute() {
         self.layer.cornerRadius = 17
         self.setTitleColor(titleColor, for: .normal)
         self.titleLabel?.font = .body2
@@ -35,9 +30,10 @@ public class PiCKFloorButton: UIButton {
         self.tintColor = .clear
     }
     
-    private func layout() {
+    public override func layout() {
         self.snp.makeConstraints {
             $0.height.equalTo(34)
         }
     }
+    
 }

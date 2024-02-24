@@ -9,9 +9,7 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class ScheduleViewController: BaseVC<ScheduleViewModel>, Stepper {
-    
-    private let disposeBag = DisposeBag()
+public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
     
@@ -34,7 +32,7 @@ public class ScheduleViewController: BaseVC<ScheduleViewModel>, Stepper {
         "학사일정"
     ])
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
     public override func bind() {

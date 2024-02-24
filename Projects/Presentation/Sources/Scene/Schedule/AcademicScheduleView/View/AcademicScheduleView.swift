@@ -6,7 +6,7 @@ import Then
 import Core
 import DesignSystem
 
-public class AcademicScheduleView: UIView {
+public class AcademicScheduleView: BaseView {
     
     private let calendarView = PiCKAcademicScheduleCalendarView()
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
@@ -24,31 +24,20 @@ public class AcademicScheduleView: UIView {
         $0.showsVerticalScrollIndicator = false
         $0.register(AcademicScheduleCell.self, forCellWithReuseIdentifier: AcademicScheduleCell.identifier)
     }
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
     
-    private func setup() {
+    public override func attribute() {
         self.backgroundColor = .white
         scheduleCollectionView.delegate = self
         scheduleCollectionView.dataSource = self
     }
     
-    private func layout() {
+    public override func addView() {
         [
             calendarView,
             scheduleCollectionView
         ].forEach { self.addSubview($0) }
-        
+    }
+    public override func setLayout() {
         calendarView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.left.right.equalToSuperview()

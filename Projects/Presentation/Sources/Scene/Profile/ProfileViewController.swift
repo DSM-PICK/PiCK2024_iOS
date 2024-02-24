@@ -1,4 +1,5 @@
 import UIKit
+import PhotosUI
 
 import SnapKit
 import Then
@@ -9,9 +10,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class ProfileViewController: BaseVC<ProfileViewModel>, Stepper {
+public class ProfileViewController: BaseViewController<ProfileViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
@@ -105,10 +105,16 @@ public class ProfileViewController: BaseVC<ProfileViewModel>, Stepper {
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
     }
     
-    public override func attribute() {
+
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
     public override func bind() {
+        profileImageChangeButton.rx.tap
+            .bind { [weak self] in
+                self?.presentPicker()
+            }.disposed(by: disposeBag)
+        
         logOutButton.rx.tap
             .bind { [weak self] in
                 self?.steps.accept(PiCKStep.logoutAlertRequired)
@@ -180,6 +186,56 @@ public class ProfileViewController: BaseVC<ProfileViewModel>, Stepper {
             $0.top.equalTo(accountManagementExplainLabel.snp.bottom).offset(8)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(56)
+        }
+    }
+    private var itemProviders: [NSItemProvider] = []
+    
+    private func presentPicker() {
+        // PHPickerConfiguration 생성 및 정의
+        var config = PHPickerConfiguration()
+        // 라이브러리에서 보여줄 Assets을 필터를 한다. (기본값: 이미지, 비디오, 라이브포토)
+        config.filter = .images
+        // 다중 선택 갯수 설정 (0 = 무제한)
+        config.selectionLimit = 1
+        
+        let imagePicker = PHPickerViewController(configuration: config)
+        imagePicker.delegate = self
+        imagePicker.isEditing = true
+        
+        self.present(imagePicker, animated: true)
+    }
+    private func displayImage() {
+        // 사진이 한 개이므로 first로 접근하여 itemProvider를 생성
+        guard let itemProvider = itemProviders.first else { return }
+        
+        // 만약 itemProvider에서 UIImage로 로드가 가능하다면?
+        if itemProvider.canLoadObject(ofClass: UIImage.self) {
+            // 로드 핸들러를 통해 UIImage를 처리해 줍시다.
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                
+                guard let self = self,
+                      let image = image as? UIImage else { return }
+                
+                // loadObject가 비동기적으로 처리되기 때문에 UI 업데이트를 위해 메인쓰레드로 변경
+                DispatchQueue.main.async {
+                    self.profileImageView.image = image
+                }
+            }
+        }
+    }
+}
+
+extension ProfileViewController: PHPickerViewControllerDelegate {
+    public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        // picker가 선택이 완료되면 화면 내리기
+        picker.dismiss(animated: true)
+        
+        // 만들어준 itemProviders에 Picker로 선택한 이미지정보를 전달
+        itemProviders = results.map(\.itemProvider)
+        
+        if !itemProviders.isEmpty {
+            displayImage()
         }
     }
     

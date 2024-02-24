@@ -10,9 +10,8 @@ import RxGesture
 import Core
 import DesignSystem
 
-public class ApplyViewController: BaseVC<ApplyViewModel>, Stepper {
+public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public let steps = PublishRelay<Step>()
     
     private let applyDate = Date()
@@ -68,10 +67,12 @@ public class ApplyViewController: BaseVC<ApplyViewModel>, Stepper {
         $0.getter(text: "조기 귀가 신청", image: .bikeIcon)
     }
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
+    }
+    public override func bind() {
         
-        //나중에 bind로 옮기고 버튼을 radio로 할지 고민해보기
+        //버튼을 radio로 할지 고민해보기
         applyButton.rx.tap
             .bind { [weak self] in
                 let modal = PiCKAlert(

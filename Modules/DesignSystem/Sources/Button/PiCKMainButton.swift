@@ -3,32 +3,26 @@ import UIKit
 import SnapKit
 import Then
 
-public class PiCKMainButton: UIButton {
+import Core
+
+public class PiCKMainButton: BaseButton {
+    
+    public func getter(text: String) {
+        label.text = text
+    }
     
     private lazy var label = UILabel().then {
         $0.textColor = .primary50
         $0.font = .body3
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-        layout()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public func getter(text: String) {
-        label.text = text
-    }
-    private func setup() {
+    public override func attribute() {
         self.backgroundColor = .white
         self.tintColor = .secondary500
         self.layer.cornerRadius = 20
     }
     
-    private func layout() {
+    public override func layout() {
         self.addSubview(label)
         
         self.snp.makeConstraints {

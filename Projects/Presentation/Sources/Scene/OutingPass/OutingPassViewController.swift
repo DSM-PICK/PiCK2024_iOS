@@ -9,9 +9,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class OutingPassViewController: BaseVC<OutingPassViewModel>, Stepper {
+public class OutingPassViewController: BaseViewController<OutingPassViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
     private let scrollView = UIScrollView()
@@ -24,7 +23,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel>, Stepper {
         $0.font = .subTitle3M
     }
     private let userInfoLabel = UILabel().then {
-        $0.text = "조영준"
+        $0.text = "1115 조영준"
         $0.textColor = .neutral100
         $0.font = .subTitle1M
     }
@@ -77,7 +76,7 @@ public class OutingPassViewController: BaseVC<OutingPassViewModel>, Stepper {
         $0.clipsToBounds = true
     }
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
     public override func addView() {

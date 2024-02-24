@@ -3,9 +3,10 @@ import UIKit
 import SnapKit
 import Then
 
+import Core
 import DesignSystem
 
-public class SchoolMealCell: UICollectionViewCell {
+public class SchoolMealCell: BaseCollectionViewCell {
     
     static let identifier = "schoolMealCellID"
     
@@ -19,32 +20,18 @@ public class SchoolMealCell: UICollectionViewCell {
         $0.font = .body1
         $0.numberOfLines = 0
     }
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        addView()
-        setLayout()
-    }
     
-    private func setup() {
+    public override func attribute() {
         contentView.backgroundColor = .primary1000
         contentView.layer.cornerRadius = 4
         
     }
-    private func addView() {
+    public override func layout() {
         [
             schoolMealTimeLabel,
             menuLabel
         ].forEach { contentView.addSubview($0) }
-    }
-    private func setLayout() {
+        
         schoolMealTimeLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalToSuperview().inset(28)

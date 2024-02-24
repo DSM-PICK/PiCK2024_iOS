@@ -9,9 +9,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class SchoolMealViewController: BaseVC<SchoolMealViewModel>, Stepper {
+public class SchoolMealViewController: BaseViewController<SchoolMealViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public let steps = PublishRelay<Step>()
     
     private let date = Date()
@@ -48,9 +47,10 @@ public class SchoolMealViewController: BaseVC<SchoolMealViewModel>, Stepper {
         $0.register(SchoolMealCell.self, forCellWithReuseIdentifier: SchoolMealCell.identifier)
     }
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
-        
+    }
+    public override func attribute() {
         schoolMealCollectionView.delegate = self
         schoolMealCollectionView.dataSource = self
     }

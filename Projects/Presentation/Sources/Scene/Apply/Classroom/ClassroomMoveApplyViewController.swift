@@ -9,9 +9,8 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class ClassroomMoveApplyViewController: BaseVC<ClassroomMoveApplyViewModel>, Stepper {
+public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveApplyViewModel>, Stepper {
     
-    private let disposeBag = DisposeBag()
     public let steps = PublishRelay<Step>()
     private lazy var currentFloorClassroomArray: [String] = firstFloorClassroomArray
     private lazy var firstFloorClassroomArray = [
@@ -31,6 +30,13 @@ public class ClassroomMoveApplyViewController: BaseVC<ClassroomMoveApplyViewMode
     ]
     private lazy var fifthFloorClassroomArray = [
         "음악실", "상담실", "수학실", "과학실", "음악 준비실"
+    ]
+    private lazy var floorButtonArray = [
+        firstFloorButton,
+        secondFloorButton,
+        thirdFloorButton,
+        fourthFloorButton,
+        fifthFloorButton
     ]
     
     private let navigationTitleLabel = UILabel().then {
@@ -80,18 +86,12 @@ public class ClassroomMoveApplyViewController: BaseVC<ClassroomMoveApplyViewMode
         $0.register(FloorCell.self, forCellWithReuseIdentifier: FloorCell.identifier)
     }
     
-    private lazy var floorButtonArray = [
-        firstFloorButton,
-        secondFloorButton,
-        thirdFloorButton,
-        fourthFloorButton,
-        fifthFloorButton
-    ]
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: classroomMoveApplyButton)
         navigationItem.rightBarButtonItem?.isEnabled = false
-        
+    }
+    public override func attribute() {
         floorCollectionView.delegate = self
         floorCollectionView.dataSource = self
     }

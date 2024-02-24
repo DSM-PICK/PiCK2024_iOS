@@ -9,9 +9,7 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class EarlyLeaveApplyViewController: BaseVC<EarlyLeaveApplyViewModel>, Stepper {
-    
-    private let disposeBag = DisposeBag()
+public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
     
@@ -42,7 +40,7 @@ public class EarlyLeaveApplyViewController: BaseVC<EarlyLeaveApplyViewModel>, St
     }
     private let earlyLeaveReasonTextView = PiCKApplyTextView()
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: earlyLeaveApplyButton)
         navigationItem.rightBarButtonItem?.isEnabled = false

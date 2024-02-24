@@ -9,7 +9,7 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class NoticeListViewController: BaseVC<NoticeListViewModel>, Stepper {
+public class NoticeListViewController: BaseViewController<NoticeListViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
     
@@ -18,24 +18,30 @@ public class NoticeListViewController: BaseVC<NoticeListViewModel>, Stepper {
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private lazy var noticeTableView = UITableView().then {
+    private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .vertical
+        $0.itemSize = .init(width: self.view.frame.width, height: 80)
+    }
+    private lazy var noticeCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: collectionViewFlowLayout
+    ).then {
         $0.backgroundColor = .white
-        $0.separatorColor = .primary900
-        $0.rowHeight = 80
-        $0.register(NoticeCell.self, forCellReuseIdentifier: NoticeCell.identifier)
+        $0.register(NoticeCell.self, forCellWithReuseIdentifier: NoticeCell.identifier)
     }
     
-    public override func attribute() {
+    public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
-        
-        noticeTableView.delegate = self
-        noticeTableView.dataSource = self
+    }
+    public override func attribute() {
+        noticeCollectionView.delegate = self
+        noticeCollectionView.dataSource = self
     }
     public override func addView() {
-        view.addSubview(noticeTableView)
+        view.addSubview(noticeCollectionView)
     }
     public override func setLayout() {
-        noticeTableView.snp.makeConstraints {
+        noticeCollectionView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(106)
             $0.left.right.bottom.equalToSuperview()
         }
@@ -43,21 +49,21 @@ public class NoticeListViewController: BaseVC<NoticeListViewModel>, Stepper {
 
 }
 
-extension NoticeListViewController: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 30
+extension NoticeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeCell.identifier, for: indexPath) as? NoticeCell
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoticeCell.identifier, for: indexPath) as? NoticeCell
         else {
-            return UITableViewCell()
+            return UICollectionViewCell()
         }
         return cell
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as? NoticeCell
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as? NoticeCell
         self.steps.accept(PiCKStep.detailNoticeRequired)
     }
     

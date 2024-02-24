@@ -1,12 +1,15 @@
 import UIKit
 
-public class PiCKLoginButton: UIButton {
+import Core
+
+public class PiCKLoginButton: BaseButton {
     
     public override var isEnabled: Bool {
         didSet {
-            self.setup()
+            self.layout()
         }
     }
+    
     public override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.3, animations: {
@@ -25,7 +28,7 @@ public class PiCKLoginButton: UIButton {
         !isEnabled ? .primary1000: .primary400
     }
     
-    private func setup() {
+    public override func layout() {
         self.layer.cornerRadius = 4
         self.setTitle("로그인", for: .normal)
         self.titleLabel?.font = .buttonS

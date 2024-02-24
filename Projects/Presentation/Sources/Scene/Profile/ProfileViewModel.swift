@@ -7,7 +7,7 @@ import RxFlow
 import Core
 import Domain
 
-public class ProfileViewModel: ViewModelType, Stepper {
+public class ProfileViewModel: BaseViewModel, Stepper {
     
     public var steps = PublishRelay<Step>()
     

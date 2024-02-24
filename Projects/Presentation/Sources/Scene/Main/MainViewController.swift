@@ -9,9 +9,7 @@ import RxFlow
 import Core
 import DesignSystem
 
-public class MainViewController: BaseVC<MainViewModel>, Stepper {
-    
-    private let disposeBag = DisposeBag()
+public class MainViewController: BaseViewController<MainViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
     
@@ -75,7 +73,7 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         $0.getter(text: "my")
         $0.setImage(.profileIcon, for: .normal)
     }
-    private lazy var outingPassView = OutingPassView(clickToAction: {
+    private lazy var outingPassView = PassView(clickToAction: {
         self.steps.accept(PiCKStep.outingPassRequired)
     }).then {
         $0.isHidden = false
@@ -111,12 +109,13 @@ public class MainViewController: BaseVC<MainViewModel>, Stepper {
         $0.dotRadius = 4
         $0.dotSpacings = 4
     }
-    public override func attribute() {
-        view.backgroundColor = .primary1000
-        
+    
+    public override func configureNavigationBar() {
         navigationItem.hidesBackButton = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: alertButton)
-        
+    }
+    public override func attribute() {
+        view.backgroundColor = .primary1000
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -194,31 +193,19 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
+    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCell.identifier, for: indexPath) as? MainCell
         else {
             return UICollectionViewCell()
         }
-        switch indexPath.row {
-            case 0:
-                cell.view = TimeTableCollectionView(frame: cellViewSize)
-                return cell
-            case 1:
-                cell.view = SchoolMealCollectionView(frame: cellViewSize)
-                return cell
-            case 2:
-                cell.view = NoticeCollectionView(clickToAction: {
-                    self.steps.accept(PiCKStep.noticeRequired)
-                })
-                return cell
-            default:
-                return cell
-        }
+        cell.registerCellIndex(index: indexPath.row)
+        cell.moreButton.rx.tap
+            .bind { [weak self] in
+                self?.steps.accept(PiCKStep.noticeRequired)
+            }.disposed(by: disposeBag)
+        return cell
     }
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pageControl.scrollViewDidScrollAtMain(scrollView)
-    }
-    
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
@@ -231,6 +218,10 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         let cellWidth = itemSize.width + itemSpacing
         let index = round(scrolledOffsetX / cellWidth)
         targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        pageControl.scrollViewDidScrollAtMain(scrollView)
     }
     
 }

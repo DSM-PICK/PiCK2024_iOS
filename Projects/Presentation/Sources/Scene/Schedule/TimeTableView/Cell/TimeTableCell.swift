@@ -3,9 +3,10 @@ import UIKit
 import SnapKit
 import Then
 
+import Core
 import DesignSystem
 
-public class TimeTableCell: UICollectionViewCell {
+public class TimeTableCell: BaseCollectionViewCell {
     
     static let identifier = "timeTableCellID"
     
@@ -27,27 +28,14 @@ public class TimeTableCell: UICollectionViewCell {
         $0.font = .caption3
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        addView()
-        setLayout()
-    }
-    
-    private func addView() {
+    public override func layout() {
         [
             periodLabel,
             periodImageView,
             subjectLabel,
             timeLabel
         ].forEach { contentView.addSubview($0) }
-    }
-    private func setLayout() {
+        
         periodLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalToSuperview()//.inset(10)

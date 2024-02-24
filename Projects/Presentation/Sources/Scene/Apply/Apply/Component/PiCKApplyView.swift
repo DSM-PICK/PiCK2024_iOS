@@ -6,7 +6,15 @@ import Then
 import Core
 import DesignSystem
 
-public class PiCKApplyView: UIView {
+public class PiCKApplyView: BaseView {
+    
+    public func getter(
+        text: String,
+        image: UIImage
+    ) {
+        applyLabel.text = text
+        applyImageView.image = image
+    }
     
     private let todayLabel = UILabel().then {
         $0.text = "오늘"
@@ -19,36 +27,18 @@ public class PiCKApplyView: UIView {
     }
     private let applyImageView = UIImageView()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
-    
-    public func getter(
-        text: String,
-        image: UIImage
-    ) {
-        applyLabel.text = text
-        applyImageView.image = image
-    }
-    private func setup() {
+    public override func attribute() {
         self.backgroundColor = .primary1200
         self.layer.cornerRadius = 8
     }
-    private func layout() {
+    public override func addView() {
         [
             todayLabel,
             applyLabel,
             applyImageView
         ].forEach { self.addSubview($0) }
-        
+    }
+    public override func setLayout() {
         todayLabel.snp.makeConstraints {
             $0.top.left.equalToSuperview().inset(16)
         }

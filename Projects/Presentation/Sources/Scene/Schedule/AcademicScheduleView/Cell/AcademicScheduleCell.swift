@@ -6,7 +6,7 @@ import Then
 import Core
 import DesignSystem
 
-public class AcademicScheduleCell: UICollectionViewCell {
+public class AcademicScheduleCell: BaseCollectionViewCell {
     
     static let identifier = "academicScheduleCellID"
     
@@ -30,23 +30,11 @@ public class AcademicScheduleCell: UICollectionViewCell {
         $0.font = .subTitle2M
     }
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
-    
-    private func setup() {
+    public override func attribute() {
         contentView.backgroundColor = .primary1200
         contentView.layer.cornerRadius = 4
     }
-    private func layout() {
+    public override func layout() {
         [
             lineView,
             dateLabel,
