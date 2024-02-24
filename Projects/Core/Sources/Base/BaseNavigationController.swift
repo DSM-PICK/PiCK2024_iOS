@@ -1,8 +1,8 @@
 import UIKit
 
-public class BaseNavigationController: UINavigationController {
+open class BaseNavigationController: UINavigationController {
     private var backButtonImage: UIImage? {
-        return .chevronLeftIcon
+        return UIImage(named: "chevronLeftIcon")
     }
 
     private var backButtonAppearance: UIBarButtonItemAppearance {
