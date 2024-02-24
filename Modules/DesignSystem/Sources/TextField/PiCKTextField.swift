@@ -84,7 +84,6 @@ public class PiCKTextField: UITextField {
                 self?.layer.borderColor = UIColor.clear.cgColor
                 self?.backgroundColor = .neutral900
             }).disposed(by: disposeBag)
-
     }
     
     private func setPlaceholder() {

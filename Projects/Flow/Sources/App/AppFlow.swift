@@ -34,7 +34,6 @@ public class AppFlow: Flow {
         Flows.use(onboardingFlow, when: .created) { [weak self] root in
             self?.window.rootViewController = root
         }
-        
         return .one(flowContributor: .contribute(
             withNextPresentable: onboardingFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.onBoardingRequired)

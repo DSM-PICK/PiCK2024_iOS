@@ -30,7 +30,7 @@ public class ProfileFlow: Flow {
                 return .none
         }
     }
-
+    
     private func navigateToProfile() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
