@@ -12,7 +12,6 @@ open class BaseButton: UIButton {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        attribute()
         buttonAction()
     }
     required public init?(coder: NSCoder) {
@@ -20,6 +19,7 @@ open class BaseButton: UIButton {
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
+        attribute()
         layout()
     }
     
