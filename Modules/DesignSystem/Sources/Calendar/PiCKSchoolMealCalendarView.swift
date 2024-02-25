@@ -7,11 +7,9 @@ import RxCocoa
 
 import Core
 
-public class PiCKSchoolMealCalendarView: UIView {
+public class PiCKSchoolMealCalendarView: BaseView {
     
-    private let disposeBag = DisposeBag()
-    
-    var clickCell: (String) -> Void?
+    var clickCell: (String) -> Void
     
     private var calendar = Calendar.current
     private var dateFormatter = DateFormatter()
@@ -49,27 +47,22 @@ public class PiCKSchoolMealCalendarView: UIView {
         $0.register(SchoolMealCalendarCell.self, forCellWithReuseIdentifier: SchoolMealCalendarCell.identifier)
     }
     
-    public init(clickCell: @escaping (String) -> Void?) {
+    public init(
+        clickCell: @escaping (String) -> Void
+    ) {
         self.clickCell = clickCell
         super.init(frame: .zero)
-        attribute()
-        bind()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        addView()
-        setLayout()
-    }
     
-    private func attribute() {
+    public override func attribute() {
         calendarCollectionView.delegate = self
         calendarCollectionView.dataSource = self
         self.configureCalendar()
     }
-    public func bind() {
+    public override func bind() {
         
         previousButton.rx.tap
             .bind { [weak self] in
@@ -81,7 +74,7 @@ public class PiCKSchoolMealCalendarView: UIView {
                 self?.plusMonth()
             }.disposed(by: disposeBag)
     }
-    public func addView() {
+    public override func addView() {
         [
             calendarStackView,
             calendarCollectionView
@@ -93,7 +86,7 @@ public class PiCKSchoolMealCalendarView: UIView {
             nextButton
         ].forEach { calendarStackView.addArrangedSubview($0) }
     }
-    public func setLayout() {
+    public override func setLayout() {
         calendarStackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview()

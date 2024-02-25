@@ -3,11 +3,13 @@ import UIKit
 import SnapKit
 import Then
 
-class SchoolMealCalendarCell: UICollectionViewCell {
+import Core
+
+public class SchoolMealCalendarCell: BaseCollectionViewCell {
     
-    override var isSelected: Bool {
+    public override var isSelected: Bool {
         didSet {
-            self.setup()
+            self.attribute()
         }
     }
     
@@ -25,25 +27,13 @@ class SchoolMealCalendarCell: UICollectionViewCell {
         $0.font = .buttonES
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        layout()
-    }
-    
-    private func setup() {
+    public override func attribute() {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 16
         contentView.layer.borderWidth = 3
         contentView.layer.borderColor = borderColor.cgColor
     }
-    private func layout() {
+    public override func layout() {
         contentView.addSubview(daysLabel)
         
         daysLabel.snp.makeConstraints {
