@@ -33,6 +33,7 @@ public class DetailNoticeViewController: BaseViewController<DetailNoticeViewMode
     }
     
     public override func attribute() {
+        super.attribute()
         tableView.delegate = self
         tableView.dataSource = self
     }

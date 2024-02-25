@@ -92,6 +92,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     public override func attribute() {
+        super.attribute()
         floorCollectionView.delegate = self
         floorCollectionView.dataSource = self
     }

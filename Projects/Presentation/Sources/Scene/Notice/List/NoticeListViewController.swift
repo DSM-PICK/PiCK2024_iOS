@@ -34,6 +34,7 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel>, 
         navigationItem.titleView = navigationTitleLabel
     }
     public override func attribute() {
+        super.attribute()
         noticeCollectionView.delegate = self
         noticeCollectionView.dataSource = self
     }

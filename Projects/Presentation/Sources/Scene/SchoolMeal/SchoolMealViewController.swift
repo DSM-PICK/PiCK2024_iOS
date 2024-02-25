@@ -51,6 +51,7 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel>, 
         navigationItem.titleView = navigationTitleLabel
     }
     public override func attribute() {
+        super.attribute()
         schoolMealCollectionView.delegate = self
         schoolMealCollectionView.dataSource = self
     }
