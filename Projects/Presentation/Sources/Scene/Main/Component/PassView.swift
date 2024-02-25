@@ -11,10 +11,9 @@ import DesignSystem
 
 public class PassView: BaseView, Stepper {
     
-    public var clickToAction: () -> Void
-    
-    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
+    
+    public var clickToAction: () -> Void
     
     private let labelStackView = UIStackView().then {
         $0.axis = .vertical

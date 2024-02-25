@@ -1,6 +1,5 @@
 import UIKit
 
-import SnapKit
 import RxSwift
 import RxCocoa
 
@@ -23,7 +22,6 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
         attribute()
         bind()
     }
-
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addView()

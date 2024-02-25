@@ -1,27 +1,28 @@
 import UIKit
 
-import Then
-import SnapKit
 import RxSwift
 import RxCocoa
 
-
 open class BaseView: UIView {
+    
+    public let disposeBag = DisposeBag()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         attribute()
+        bind()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         addView()
         setLayout()
     }
     
     open func attribute() {
+        self.backgroundColor = .white
         //UIView에 관련된 설정을 하는 함수
     }
     open func bind() {
