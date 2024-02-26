@@ -29,7 +29,7 @@ public extension TargetDependency.Module {
     static func module(name: String) -> TargetDependency {
         return .project(
             target: name,
-            path: .relativeToRoot("Modules/\(name)")
+            path: .relativeToRoot("Projects/Modules/\(name)")
         )
     }
 }
