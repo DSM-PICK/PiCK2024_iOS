@@ -22,7 +22,6 @@ public extension TargetDependency.Projects {
 
 public extension TargetDependency.Module {
     static let appNetwork = module(name: "AppNetwork")
-    static let appLogger = module(name: "AppLogger")
     static let designSystem = module(name: "DesignSystem")
     static let thirdPartyLib = module(name: "ThirdPartyLib")
 
