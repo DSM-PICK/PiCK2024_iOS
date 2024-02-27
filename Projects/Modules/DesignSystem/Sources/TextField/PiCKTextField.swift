@@ -9,6 +9,8 @@ public class PiCKTextField: UITextField {
     
     private let disposeBag = DisposeBag()
     
+    public var errorMessage = PublishRelay<String?>()
+    
     public var isSecurity: Bool = false {
         didSet {
             textHideButton.isHidden = !isSecurity
@@ -23,6 +25,10 @@ public class PiCKTextField: UITextField {
         $0.contentMode = .scaleAspectFit
         $0.isHidden = true
     }
+    private let errorLabel = UILabel().then {
+        $0.textColor = .error400
+        $0.font = .caption2
+    }
     
     public init() {
         super.init(frame: .zero)
@@ -35,13 +41,7 @@ public class PiCKTextField: UITextField {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
-        self.addSubview(textHideButton)
-        
-        textHideButton.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().inset(16)
-        }
+        layout()
         setPlaceholder()
     }
     
@@ -59,31 +59,21 @@ public class PiCKTextField: UITextField {
         self.keyboardType = .alphabet
     }
     
-    private func bind() {
-        self.rx.text.orEmpty
-            .map { $0.isEmpty ? UIColor.clear.cgColor : UIColor.secondary500.cgColor }
-            .subscribe(onNext: { [weak self] borderColor in
-                self?.layer.borderColor = borderColor
-            }).disposed(by: disposeBag)
+    private func layout() {
         
-        self.rx.text.orEmpty
-            .map { $0.isEmpty ? UIColor.neutral900 : UIColor.white }
-            .subscribe(onNext: { [weak self] backgroundColor in
-                self?.backgroundColor = backgroundColor
-            }).disposed(by: disposeBag)
+        [
+            textHideButton,
+            errorLabel
+        ].forEach { self.addSubview($0) }
         
-        self.textHideButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.isSecureTextEntry.toggle()
-                let imageName: UIImage = (self?.isSecureTextEntry ?? false) ? .eyeOff: .eyeOn
-                self?.textHideButton.setImage(imageName, for:.normal)
-            }).disposed(by: disposeBag)
-        
-        self.rx.controlEvent(.editingDidEnd)
-            .subscribe(onNext: { [weak self] in
-                self?.layer.borderColor = UIColor.clear.cgColor
-                self?.backgroundColor = .neutral900
-            }).disposed(by: disposeBag)
+        textHideButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.right.equalToSuperview().inset(16)
+        }
+        errorLabel.snp.makeConstraints {
+            $0.top.equalTo(self.snp.bottom)
+            $0.left.equalToSuperview()
+        }
     }
     
     private func setPlaceholder() {
@@ -98,5 +88,60 @@ public class PiCKTextField: UITextField {
             ]
         )
     }
+    
+}
 
+extension PiCKTextField {
+    
+    private func bind() {
+        self.rx.text.orEmpty
+            .map { $0.isEmpty ? UIColor.clear.cgColor : UIColor.secondary500.cgColor }
+            .subscribe(
+                onNext: { [weak self] borderColor in
+                    self?.layer.borderColor = borderColor
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        self.rx.text.orEmpty
+            .map { $0.isEmpty ? UIColor.neutral900 : UIColor.white }
+            .subscribe(
+                onNext: { [weak self] backgroundColor in
+                    self?.backgroundColor = backgroundColor
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        self.textHideButton.rx.tap
+            .subscribe(
+                onNext: { [weak self] in
+                    self?.isSecureTextEntry.toggle()
+                    let imageName: UIImage = (self?.isSecureTextEntry ?? false) ? .eyeOff: .eyeOn
+                    self?.textHideButton.setImage(imageName, for:.normal)
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        self.rx.controlEvent(.editingDidEnd)
+            .subscribe(
+                onNext: { [weak self] in
+                    self?.layer.borderColor = UIColor.clear.cgColor
+                    self?.backgroundColor = .neutral900
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        errorMessage
+            .subscribe(
+                onNext: { [weak self] content in
+                    self?.errorLabel.isHidden = content == nil
+                    guard let content = content else { return }
+                    self?.layer.borderColor = UIColor.error500.cgColor
+                    self?.backgroundColor = .error900
+                    self?.errorLabel.text = "\(content)"
+                }
+            )
+            .disposed(by: disposeBag)
+    }
+    
 }
