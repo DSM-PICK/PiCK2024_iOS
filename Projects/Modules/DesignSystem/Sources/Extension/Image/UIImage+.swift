@@ -25,5 +25,6 @@ public extension UIImage {
     static let pencilIcon = DesignSystemAsset.Image.pencil.image
     static let bikeIcon = DesignSystemAsset.Image.bike.image
     static let cameraIcon = DesignSystemAsset.Image.camera.image
+    static let selfStudyTeacherIcon = DesignSystemAsset.Image.selfStudyTeacher.image
 
 }

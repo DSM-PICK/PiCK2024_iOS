@@ -37,8 +37,9 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
     private let alertButton = UIButton(type: .system).then {
         $0.setImage(.alertIcon, for: .normal)
     }
-    private let settingButton = UIButton(type: .system).then {
-        $0.setImage(.settingIcon, for: .normal)
+    private let profileButton = UIButton(type: .system).then {
+        $0.setImage(.profileIcon, for: .normal)
+        $0.imageEdgeInsets = .init(top: 5, left: 5, bottom: 5, right: 5)
     }
     private let studentInfoLabel = UILabel().then {
         $0.text = "2학년 4반 13번 조영준"
@@ -69,14 +70,14 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
         $0.getter(text: "급식")
         $0.setImage(.schoolMealIcon, for: .normal)
     }
-    private let profileButton = PiCKMainButton(type: .system).then {
-        $0.getter(text: "my")
-        $0.setImage(.profileIcon, for: .normal)
+    private let teacherInquiryButton = PiCKMainButton(type: .system).then {
+        $0.getter(text: "선생님 조회")
+        $0.setImage(.selfStudyTeacher, for: .normal)
     }
     private lazy var outingPassView = PassView(clickToAction: {
         self.steps.accept(PiCKStep.outingPassRequired)
     }).then {
-        $0.isHidden = false
+        $0.isHidden = true
     }
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
@@ -112,7 +113,10 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
     
     public override func configureNavigationBar() {
         navigationItem.hidesBackButton = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: alertButton)
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(customView: alertButton),
+            UIBarButtonItem(customView: profileButton)
+        ]
     }
     public override func attribute() {
         view.backgroundColor = .primary1000
@@ -120,6 +124,11 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
         collectionView.dataSource = self
     }
     public override func bind() {
+        profileButton.rx.tap
+            .bind { [weak self] in
+                self?.steps.accept(PiCKStep.profileRequired)
+            }.disposed(by: disposeBag)
+        
         scheduleButton.rx.tap
             .bind { [weak self] in
                 self?.steps.accept(PiCKStep.scheduleRequired)
@@ -135,9 +144,9 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
                 self?.steps.accept(PiCKStep.schoolMealRequired)
             }.disposed(by: disposeBag)
         
-        profileButton.rx.tap
+        teacherInquiryButton.rx.tap
             .bind { [weak self] in
-                self?.steps.accept(PiCKStep.profileRequired)
+                self?.steps.accept(PiCKStep.selfStudyTeacherRequired)
             }.disposed(by: disposeBag)
     }
     public override func addView() {
@@ -154,7 +163,7 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
             scheduleButton,
             applyButton,
             schoolMealButton,
-            profileButton
+            teacherInquiryButton
         ].forEach { buttonStackView.addArrangedSubview($0) }
         
     }

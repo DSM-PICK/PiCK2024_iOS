@@ -31,6 +31,9 @@ public enum PiCKStep: Step {
     case noticeRequired
     case detailNoticeRequired
     
+    //teacherInquiry
+    case teacherInquiryRequired
+    
     //test
     case testRequired
 

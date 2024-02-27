@@ -29,10 +29,11 @@ public class SchoolMealFlow: Flow {
     }
 
     private func navigateToSchoolMeal() -> FlowContributors {
-        return .one(flowContributor: .contribute(
-            withNextPresentable: rootViewController,
-            withNextStepper: rootViewController.viewModel
-        ))
+//        return .one(flowContributor: .contribute(
+//            withNextPresentable: rootViewController,
+//            withNextStepper: rootViewController.viewModel
+//        ))
+        return .one(flowContributor: .contribute(withNext: rootViewController))
     }
 
 }

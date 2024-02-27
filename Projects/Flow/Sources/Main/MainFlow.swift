@@ -23,14 +23,16 @@ public class MainFlow: Flow {
         switch step {
             case .mainRequired:
                 return navigateToMain()
+            case .profileRequired:
+                return navigateToProfile()
             case .scheduleRequired:
                 return navigateToSchedule()
             case .applyRequired:
                 return navigateToApply()
             case .schoolMealRequired:
                 return navigateToSchoolMeal()
-            case .profileRequired:
-                return navigateToProfile()
+            case .selfStudyTeacherRequired:
+                return navigateToSelfStudyTeacher()
             case .outingPassRequired:
                 return presentOutingPass()
             case .noticeRequired:
@@ -44,6 +46,18 @@ public class MainFlow: Flow {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
             withNextStepper: rootViewController//MARK: 향후에 ViewModel로 변경
+        ))
+    }
+    
+    private func navigateToProfile() -> FlowContributors {
+        let profileFlow = ProfileFlow()
+        Flows.use(profileFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+        }
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: profileFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.profileRequired)
         ))
     }
     
@@ -83,15 +97,15 @@ public class MainFlow: Flow {
         ))
     }
     
-    private func navigateToProfile() -> FlowContributors {
-        let profileFlow = ProfileFlow()
-        Flows.use(profileFlow, when: .created) { [weak self] root in
+    private func navigateToSelfStudyTeacher() -> FlowContributors {
+        let noticeFlow = SelfStudyTeacherFlow()
+        Flows.use(noticeFlow, when: .created) { [weak self] root in
             self?.rootViewController.navigationController?.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
-            withNextPresentable: profileFlow,
-            withNextStepper: OneStepper(withSingleStep: PiCKStep.profileRequired)
+            withNextPresentable: noticeFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.selfStudyTeacherRequired)
         ))
     }
     
