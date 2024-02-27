@@ -4,14 +4,12 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
+import AppNetwork
 import Core
 import DesignSystem
 
-public class LoginViewController: BaseViewController<LoginViewModel>, Stepper {
-    
-    public var steps = PublishRelay<Step>()
+public class LoginViewController: BaseViewController<LoginViewModel> {
     
     private let pickLabel = UILabel().then {
         $0.text = "PiCK"
@@ -33,15 +31,25 @@ public class LoginViewController: BaseViewController<LoginViewModel>, Stepper {
     private let loginButton = PiCKLoginButton().then {
         $0.isEnabled = true//임시
     }
-
+    
     public override func configureNavigationBar() {
         navigationItem.hidesBackButton = true
     }
     public override func bind() {
-        loginButton.rx.tap
-            .bind(onNext: {
-                self.steps.accept(PiCKStep.mainRequired)
-            }).disposed(by: disposeBag)
+        let input = LoginViewModel.Input(
+            idText: idTextField.rx.text.orEmpty.asObservable(),
+            passwordText: passwordTextField.rx.text.orEmpty.asObservable(),
+            loginButtonSignal: loginButton.rx.tap.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.idErrorDescription.asObservable()
+            .bind(to: self.idTextField.errorMessage)
+            .disposed(by: disposeBag)
+        
+        output.passwordErrorDescription.asObservable()
+            .bind(to: self.passwordTextField.errorMessage)
+            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
@@ -77,5 +85,4 @@ public class LoginViewController: BaseViewController<LoginViewModel>, Stepper {
             $0.height.equalTo(47)
         }
     }
-
 }
