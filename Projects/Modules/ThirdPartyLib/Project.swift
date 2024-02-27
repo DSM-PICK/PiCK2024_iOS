@@ -15,6 +15,7 @@ let project = Project.makeModule(
         .SPM.KeychainSwift,
         .SPM.Kingfisher,
         .SPM.Moya,
+        .SPM.RxMoya,
         .SPM.RxGesture,
         .SPM.Swinject
     ]
