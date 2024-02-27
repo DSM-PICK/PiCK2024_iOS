@@ -72,7 +72,7 @@ public class MainViewController: BaseViewController<MainViewModel>, Stepper {
     }
     private let teacherInquiryButton = PiCKMainButton(type: .system).then {
         $0.getter(text: "선생님 조회")
-        $0.setImage(.selfStudyTeacher, for: .normal)
+        $0.setImage(.selfStudyTeacherIcon, for: .normal)
     }
     private lazy var outingPassView = PassView(clickToAction: {
         self.steps.accept(PiCKStep.outingPassRequired)
