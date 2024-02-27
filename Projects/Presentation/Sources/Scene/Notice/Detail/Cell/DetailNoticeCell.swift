@@ -23,8 +23,7 @@ public class DetailNoticeCell: UITableViewCell {
         ■ 학교 홈페이지 로그인 후 [과제제출 – 신입생 - 각 교과] 게시판
         에 제출
         ■ 과제 중 자기소개 PPT는 첨부한 파일을 참고하되, 자유롭게 만들
-        어도
-        됩니다.
+        어도 됩니다.
         """
         $0.textColor = .neutral50
         $0.font = .caption2
@@ -52,7 +51,6 @@ public class DetailNoticeCell: UITableViewCell {
         contentLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
             $0.left.right.equalToSuperview().inset(24)
-            $0.bottom.equalToSuperview()
         }
     }
     

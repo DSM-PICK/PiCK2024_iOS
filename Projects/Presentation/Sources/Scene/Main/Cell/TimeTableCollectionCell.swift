@@ -22,11 +22,6 @@ public class TimeTableCollectionCell: BaseCollectionViewCell {
         $0.textColor = .black
         $0.font = DesignSystemFontFamily.NotoSansKR.medium.font(size: 14)
     }
-    public var timeLabel = UILabel().then {
-        $0.text = "08:30 ~ 09:20"
-        $0.textColor = .neutral500
-        $0.font = .caption3
-    }
     
     public override func attribute() {
         contentView.backgroundColor = .neutral1000
@@ -37,8 +32,7 @@ public class TimeTableCollectionCell: BaseCollectionViewCell {
         [
             periodLabel,
             periodImageView,
-            subjectLabel,
-            timeLabel
+            subjectLabel
         ].forEach { contentView.addSubview($0) }
         
         periodLabel.snp.makeConstraints {
@@ -52,10 +46,6 @@ public class TimeTableCollectionCell: BaseCollectionViewCell {
         subjectLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(periodImageView.snp.right).offset(24)
-        }
-        timeLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.left.equalTo(subjectLabel.snp.right).offset(4)
         }
     }
     
