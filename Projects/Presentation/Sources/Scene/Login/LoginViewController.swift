@@ -11,11 +11,7 @@ import DesignSystem
 
 public class LoginViewController: BaseViewController<LoginViewModel> {
     
-    private let pickLabel = UILabel().then {
-        $0.text = "PiCK"
-        $0.textColor = .primary300
-        $0.font = .heading3
-    }
+    private let pickLogoImageView = UIImageView(image: .PiCKLogo)
     private let explainLabel = UILabel().then {
         $0.text = "스퀘어 계정으로 로그인 해주세요."
         $0.textColor = .neutral400
@@ -28,8 +24,12 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
         $0.placeholder = "비밀번호"
         $0.isSecurity = true
     }
-    private let loginButton = PiCKLoginButton().then {
-        $0.isEnabled = true//임시
+    private let loginButton = UIButton(type: .system).then {
+        $0.setTitle("로그인", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .buttonS
+        $0.backgroundColor = .primary400
+        $0.layer.cornerRadius = 4
     }
     
     public override func configureNavigationBar() {
@@ -53,7 +53,7 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
     }
     public override func addView() {
         [
-            pickLabel,
+            pickLogoImageView,
             explainLabel,
             idTextField,
             passwordTextField,
@@ -61,12 +61,14 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
         ].forEach { view.addSubview($0) }
     }
     public override func setLayout() {
-        pickLabel.snp.makeConstraints {
+        pickLogoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(184)
             $0.left.equalToSuperview().inset(24)
+            $0.width.equalTo(120)
+            $0.height.equalTo(68)
         }
         explainLabel.snp.makeConstraints {
-            $0.top.equalTo(pickLabel.snp.bottom).offset(3)
+            $0.top.equalTo(pickLogoImageView.snp.bottom).offset(3)
             $0.left.equalToSuperview().inset(24)
         }
         idTextField.snp.makeConstraints {

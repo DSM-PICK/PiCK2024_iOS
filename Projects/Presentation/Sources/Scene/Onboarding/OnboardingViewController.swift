@@ -57,8 +57,12 @@ public class OnboardingViewController: UIViewController, Stepper {
         $0.dotRadius = 4
         $0.dotSpacings = 4
     }
-    private let loginButton = PiCKLoginButton(type: .system).then {
-        $0.isEnabled = true
+    private let loginButton = UIButton(type: .system).then {
+        $0.setTitle("로그인", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .buttonS
+        $0.backgroundColor = .primary400
+        $0.layer.cornerRadius = 4
     }
 
     public override func viewDidLoad() {
