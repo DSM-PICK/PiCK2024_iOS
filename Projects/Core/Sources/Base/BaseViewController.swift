@@ -22,6 +22,10 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
         attribute()
         bind()
     }
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        bindAction()
+    }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addView()
@@ -34,6 +38,9 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
     open func attribute() {
         view.backgroundColor = .white
         //뷰 관련 코드를 설정하는 함수
+    }
+    open func bindAction() {
+        //Rx 액션을 설정하는 함수
     }
     open func bind() {
         //UI 바인딩을 설정하는 함수
