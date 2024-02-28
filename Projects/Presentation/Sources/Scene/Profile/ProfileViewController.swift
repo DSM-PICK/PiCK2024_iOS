@@ -11,6 +11,7 @@ import DesignSystem
 
 public class ProfileViewController: BaseViewController<ProfileViewModel>, Stepper {
     
+    private let viewWillAppearRelay = PublishRelay<Void>()
     public let steps = PublishRelay<Step>()
     
     private let navigationTitleLabel = UILabel().then {
@@ -52,22 +53,18 @@ public class ProfileViewController: BaseViewController<ProfileViewModel>, Steppe
         $0.distribution = .fillEqually
     }
     private let userNameLabel = UILabel().then {
-        $0.text = "조영준"
         $0.textColor = .neutral50
         $0.font = .body2
     }
     private let userBirthDateLabel = UILabel().then {
-        $0.text = "2007년 3월 12일"
         $0.textColor = .neutral50
         $0.font = .body2
     }
     private let userStudentIDLabel = UILabel().then {
-        $0.text = "1학년 1반 15번"
         $0.textColor = .neutral50
         $0.font = .body2
     }
     private let userIDLabel = UILabel().then {
-        $0.text = "cyj513"
         $0.textColor = .neutral50
         $0.font = .body2
     }
@@ -97,7 +94,26 @@ public class ProfileViewController: BaseViewController<ProfileViewModel>, Steppe
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
+    public override func bindAction() {
+        viewWillAppearRelay.accept(())
+    }
     public override func bind() {
+        let input = ProfileViewModel.Input(
+            viewWillAppear: viewWillAppearRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.userProfileData.asObservable()
+            .subscribe(
+                onNext: { [self] data in
+                    userNameLabel.text = data.name
+                    userBirthDateLabel.text = data.birthDay
+                    userStudentIDLabel.text = "\(data.grade)학년 \(data.classNum)반 \(data.num)번"
+                    userIDLabel.text = data.accountID
+                }
+            )
+            .disposed(by: disposeBag)
+        
         logOutButton.rx.tap
             .bind { [weak self] in
                 self?.steps.accept(PiCKStep.logoutAlertRequired)
@@ -155,5 +171,5 @@ public class ProfileViewController: BaseViewController<ProfileViewModel>, Steppe
             $0.height.equalTo(56)
         }
     }
-
+    
 }

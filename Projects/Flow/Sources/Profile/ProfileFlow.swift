@@ -13,9 +13,10 @@ public class ProfileFlow: Flow {
     }
 
     private let rootViewController: ProfileViewController
+    private let container = StepperDI.shared
     
     public init() {
-        self.rootViewController = ProfileViewController(viewModel: ProfileViewModel())
+        self.rootViewController = ProfileViewController(viewModel: container.profileViewModel)
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -34,7 +35,7 @@ public class ProfileFlow: Flow {
     private func navigateToProfile() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController//.viewModel
+            withNextStepper: rootViewController.viewModel
         ))
     }
     
