@@ -18,7 +18,6 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationBar()
         attribute()
         bind()
     }
@@ -30,6 +29,7 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
         super.viewDidLayoutSubviews()
         addView()
         setLayout()
+        configureNavigationBar()
     }
     
     open func configureNavigationBar() {
