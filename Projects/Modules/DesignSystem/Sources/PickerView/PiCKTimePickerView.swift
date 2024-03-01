@@ -31,28 +31,30 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch selectedPickerType {
-        case .hours:
-            return hoursArray.count
-        case .mins:
-            return minsArray.count
+            case .hours:
+                return hoursArray.count
+            case .mins:
+                return minsArray.count
         }
     }
     
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 60))
-
+        
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 60))
         label.textColor = .neutral50
         label.font = .subTitle3M
         label.textAlignment = .center
         
         view.addSubview(label)
-        
+
         switch selectedPickerType {
-        case .hours:
-            label.text = "\(hoursArray[row])"
-        case .mins:
-            label.text = "\(minsArray[row])"
+            case .hours:
+                let hoursFormat = String(format: "%02d", hoursArray[row])
+                label.text = hoursFormat
+            case .mins:
+                let minsFormat = String(format: "%02d", minsArray[row])
+                label.text = minsFormat
         }
         
         return view

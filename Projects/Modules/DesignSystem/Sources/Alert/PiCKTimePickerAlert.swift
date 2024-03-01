@@ -77,7 +77,6 @@ public class PiCKTimePickerAlert: UIViewController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         layout()
-        
         pickerArray.forEach { $0.subviews[1].backgroundColor = .clear }
     }
     private func bind() {
@@ -87,8 +86,10 @@ public class PiCKTimePickerAlert: UIViewController {
             }.disposed(by: disposeBag)
         checkButton.rx.tap
             .bind { [weak self] in
-                self?.hourIndex = "\(self?.hourPicker.selectedRow(inComponent: 0) ?? 0)"
-                self?.minIndex = "\(self?.minPicker.selectedRow(inComponent: 0) ?? 0)"
+                let hourIndex = String(format: "%02d", self?.hourPicker.selectedRow(inComponent: 0) ?? 0)
+                let minIndex = String(format: "%02d", self?.minPicker.selectedRow(inComponent: 0) ?? 0)
+                self?.hourIndex = hourIndex
+                self?.minIndex = minIndex
                 self?.clickToAction([self?.hourIndex, self?.minIndex])
                 self?.dismiss(animated: true)
             }.disposed(by: disposeBag)
