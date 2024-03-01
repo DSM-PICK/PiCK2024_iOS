@@ -2,7 +2,7 @@ import UIKit
 
 import Core
 
-public class PiCKApplyButton: BaseButton {
+public class PiCKNavigationApplyButton: BaseButton {
 
     public override var isEnabled: Bool {
         didSet {
