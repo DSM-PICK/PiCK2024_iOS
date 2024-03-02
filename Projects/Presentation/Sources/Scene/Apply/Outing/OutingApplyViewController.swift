@@ -4,21 +4,22 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
+import RxGesture
 
 import Core
 import DesignSystem
 
-public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>, Stepper {
+public class OutingApplyViewController: BaseViewController<OutingApplyViewModel> {
     
-    public let steps = PublishRelay<Step>()
+    var depatureTimeText = BehaviorRelay<String>(value: "")
+    var arrivalTimeText = BehaviorRelay<String>(value: "")
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "외출 신청"
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private let outingApplyButton = PiCKApplyButton(type: .system)
+    private let outingApplyButton = PiCKNavigationApplyButton(type: .system)
     private let outingTimeSelectLabel = UILabel().then {
         $0.text = "희망 외출 시간을 선택해주세요"
         $0.textColor = .black
@@ -31,14 +32,13 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
         $0.alignment = .fill
         $0.distribution = .fillProportionally
     }
-    private let departureTimeButton = UIButton(type: .system).then {
-        $0.setTitle("출발 시간", for: .normal)
-        $0.setTitleColor(.neutral500, for: .normal)
-        $0.titleLabel?.font = .caption2
+    private let departureTimeLabel = PiCKPaddingLabel().then {
+        $0.text = "출발 시간"
+        $0.textColor = .neutral500
+        $0.font = .caption2
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .neutral900
-        $0.contentHorizontalAlignment = .left
-        $0.contentEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
+        $0.textAlignment = .left
     }
     private let slashLabel = UILabel().then {
         $0.text = "~"
@@ -46,14 +46,13 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
         $0.font = .subTitle1M
         $0.textAlignment = .center
     }
-    private let arrivalTimeButton = UIButton(type: .system).then {
-        $0.setTitle("도착 시간", for: .normal)
-        $0.setTitleColor(.neutral500, for: .normal)
-        $0.titleLabel?.font = .caption2
+    private let arrivalTimeLabel = PiCKPaddingLabel().then {
+        $0.text = "도착 시간"
+        $0.textColor = .neutral500
+        $0.font = .caption2
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .neutral900
-        $0.contentHorizontalAlignment = .left
-        $0.titleEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
+        $0.textAlignment = .left
     }
     private let outingReasonLabel = UILabel().then {
         $0.text = "외출 사유를 적어주세요"
@@ -68,23 +67,48 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     public override func bind() {
-        departureTimeButton.rx.tap
-            .bind { [weak self] in
-//                self?.steps.accept(PiCKStep.timePickerAlertRequired)
+        let input = OutingApplyViewModel.Input(
+            reasonText: outingReasonTextView.rx.text.orEmpty.asObservable(),
+            startTimeText: depatureTimeText.asObservable(),
+            endTimeText: arrivalTimeText.asObservable(),
+            outingApplyButton: outingApplyButton.rx.tap.asObservable()
+        )
+        let output =  viewModel.transform(input: input)
+        
+        output.isApplyButtonEnable.asObservable()
+            .subscribe(
+                onNext: { [self] status in
+                    outingApplyButton.isEnabled = status
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        departureTimeLabel.rx.tapGesture()
+            .when(.recognized)
+            .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { depatureTime in
-                    self?.departureTimeButton.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
-                    self?.departureTimeButton.setTitleColor(.neutral50, for: .normal)
+                    self?.depatureTimeText.accept("\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")")
+                    
+                    self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
+                    self?.departureTimeLabel.textColor = .neutral50
+                    
+                    print(self?.depatureTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
                 self?.present(modal, animated: true)
             }.disposed(by: disposeBag)
         
-        arrivalTimeButton.rx.tap
-            .bind { [weak self] in
+        arrivalTimeLabel.rx.tapGesture()
+            .when(.recognized)
+            .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { arrialTime in
-                    self?.arrivalTimeButton.setTitle("\(arrialTime[0] ?? "") : \(arrialTime[1] ?? "")", for: .normal)
-                    self?.arrivalTimeButton.setTitleColor(.neutral50, for: .normal)
+                    self?.arrivalTimeText.accept("\(arrialTime[0] ?? ""):\(arrialTime[1] ?? "")")
+                    
+                    self?.arrivalTimeLabel.text = "\(arrialTime[0] ?? "") : \(arrialTime[1] ?? "")"
+                    self?.arrivalTimeLabel.textColor = .neutral50
+                    
+                    print(self?.arrivalTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -100,9 +124,9 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
         ].forEach { view.addSubview($0) }
         
         [
-            departureTimeButton,
+            departureTimeLabel,
             slashLabel,
-            arrivalTimeButton
+            arrivalTimeLabel
         ].forEach { outingTimeStackView.addArrangedSubview($0) }
     }
     public override func setLayout() {
@@ -116,7 +140,7 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
             $0.height.equalTo(44)
         }
         outingReasonLabel.snp.makeConstraints {
-            $0.top.equalTo(departureTimeButton.snp.bottom).offset(40)
+            $0.top.equalTo(outingTimeStackView.snp.bottom).offset(40)
             $0.left.equalToSuperview().inset(24)
         }
         outingReasonTextView.snp.makeConstraints {
