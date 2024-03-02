@@ -3,7 +3,6 @@ import Foundation
 import Domain
 
 public struct DetailProfileDTO: Decodable {
-    
     let name: String
     let birthDay: String
     let grade: Int
@@ -17,6 +16,7 @@ public struct DetailProfileDTO: Decodable {
         case birthDay = "birth_day"
         case accountID = "account_id"
     }
+    
 }
 
 extension DetailProfileDTO {
@@ -30,4 +30,5 @@ extension DetailProfileDTO {
             accountID: accountID
         )
     }
+    
 }

@@ -9,7 +9,7 @@ import Domain
 
 class AuthRepositoryImpl: AuthRepository {
 
-    let authDataSource = AuthDataSource.shared
+    let remoteDataSource = AuthDataSource.shared
     private var disposeBag = DisposeBag()
 
     func login(accountID: String, password: String) -> Completable {
@@ -17,7 +17,7 @@ class AuthRepositoryImpl: AuthRepository {
         return Completable.create { [weak self] completable in
             guard let self = self else { return Disposables.create {} }
 
-            self.authDataSource.login(accountID: accountID, password: password)
+            self.remoteDataSource.login(accountID: accountID, password: password)
                 .subscribe(onSuccess: { tokenData in
                     TokenStorage.shared.accessToken = tokenData.accessToken
                     TokenStorage.shared.refreshToken = tokenData.refreshToken
@@ -31,7 +31,7 @@ class AuthRepositoryImpl: AuthRepository {
         }
     }
     
-    func refreshToken() -> Completable {
+    func refreshToken() -> Completable {//수정 필요
         return Completable.empty()
     }
     

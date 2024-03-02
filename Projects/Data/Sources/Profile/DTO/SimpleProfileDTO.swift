@@ -3,7 +3,6 @@ import Foundation
 import Domain
 
 public struct SimpleProfileDTO: Decodable {
-    
     let name: String
     let grade: Int
     let classNum: Int
