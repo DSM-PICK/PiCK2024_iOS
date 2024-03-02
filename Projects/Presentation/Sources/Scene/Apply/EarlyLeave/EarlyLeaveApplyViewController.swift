@@ -4,34 +4,33 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
+import RxGesture
 
 import Core
 import DesignSystem
 
-public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyViewModel>, Stepper {
+public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyViewModel> {
     
-    public let steps = PublishRelay<Step>()
+    var depatureTimeText = BehaviorRelay<String>(value: "")
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "조기 귀가 신청"
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private let earlyLeaveApplyButton = PiCKApplyButton(type: .system)
+    private let earlyLeaveApplyButton = PiCKNavigationApplyButton(type: .system)
     private let earlyLeaveTimeSelectLabel = UILabel().then {
         $0.text = "희망 귀가 시간을 선택해주세요"
         $0.textColor = .black
         $0.font = .body1
     }
-    private let departureTimeButton = UIButton(type: .system).then {
-        $0.setTitle("출발 시간", for: .normal)
-        $0.setTitleColor(.neutral500, for: .normal)
-        $0.titleLabel?.font = .caption2
+    private let departureTimeLabel = PiCKPaddingLabel().then {
+        $0.text = "출발 시간"
+        $0.textColor = .neutral500
+        $0.font = .caption2
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .neutral900
-        $0.contentHorizontalAlignment = .left
-        $0.contentEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
+        $0.textAlignment = .left
     }
     private let earlyLeaveReasonLabel = UILabel().then {
         $0.text = "조기 귀가 사유를 적어주세요"
@@ -46,11 +45,31 @@ public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyVi
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     public override func bind() {
-        departureTimeButton.rx.tap
-            .bind { [weak self] in
+        let input = EarlyLeaveApplyViewModel.Input(
+            reasonText: earlyLeaveReasonTextView.rx.text.orEmpty.asObservable(),
+            startTimeText: depatureTimeText.asObservable(),
+            earlyLeaveApplyButton: earlyLeaveApplyButton.rx.tap.asObservable()
+        )
+        let output =  viewModel.transform(input: input)
+        
+        output.isApplyButtonEnable.asObservable()
+            .subscribe(
+                onNext: { [self] status in
+                    earlyLeaveApplyButton.isEnabled = status
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        departureTimeLabel.rx.tapGesture()
+            .when(.recognized)
+            .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { depatureTime in
-                    self?.departureTimeButton.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
-                    self?.departureTimeButton.setTitleColor(.neutral50, for: .normal)
+                    self?.depatureTimeText.accept("\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")")
+                    
+                    self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
+                    self?.departureTimeLabel.textColor = .neutral50
+                    
+                    print(self?.depatureTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -60,7 +79,7 @@ public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyVi
     public override func addView() {
         [
             earlyLeaveTimeSelectLabel,
-            departureTimeButton,
+            departureTimeLabel,
             earlyLeaveReasonLabel,
             earlyLeaveReasonTextView
         ].forEach { view.addSubview($0) }
@@ -70,13 +89,13 @@ public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyVi
             $0.top.equalToSuperview().inset(120)
             $0.left.equalToSuperview().inset(24)
         }
-        departureTimeButton.snp.makeConstraints {
+        departureTimeLabel.snp.makeConstraints {
             $0.top.equalTo(earlyLeaveTimeSelectLabel.snp.bottom).offset(12)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(44)
         }
         earlyLeaveReasonLabel.snp.makeConstraints {
-            $0.top.equalTo(departureTimeButton.snp.bottom).offset(40)
+            $0.top.equalTo(departureTimeLabel.snp.bottom).offset(40)
             $0.left.equalToSuperview().inset(24)
         }
         earlyLeaveReasonTextView.snp.makeConstraints {
