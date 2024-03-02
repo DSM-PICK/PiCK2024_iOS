@@ -4,15 +4,16 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
 import Core
 import DesignSystem
 
-public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveApplyViewModel>, Stepper {
+public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveApplyViewModel> {
     
-    public let steps = PublishRelay<Step>()
-    private lazy var currentFloorClassroomArray: [String] = firstFloorClassroomArray
+    private let floorText = BehaviorRelay<Int>(value: 1)
+    private let classroomNameText = BehaviorRelay<String>(value: "")
+    private lazy var currentFloorClassroomArray = BehaviorRelay<[String]>(value: firstFloorClassroomArray)
+    
     private lazy var firstFloorClassroomArray = [
         "산학협력부", "새롬홀", "무한 상상실", "청죽관", "탁구실", "운동장"
     ]
@@ -44,7 +45,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private let classroomMoveApplyButton = PiCKApplyButton(type: .system)
+    private let classroomMoveApplyButton = PiCKNavigationApplyButton(type: .system)
     private let floorButtonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 8
@@ -91,32 +92,64 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: classroomMoveApplyButton)
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
-    public override func attribute() {
-        super.attribute()
-        floorCollectionView.delegate = self
-        floorCollectionView.dataSource = self
-    }
     public override func bind() {
+        let input = ClassroomMoveApplyViewModel.Input(
+            floorText: floorText.asObservable(),
+            classroomNameText: classroomNameText.asObservable(),
+            classroomMoveApplyButton: classroomMoveApplyButton.rx.tap.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.isApplyButtonEnable.asObservable()
+            .subscribe(
+                onNext: { [self] status in
+                    classroomMoveApplyButton.isEnabled = status
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        currentFloorClassroomArray
+            .bind(to: floorCollectionView.rx.items(
+                cellIdentifier: FloorCell.identifier,
+                cellType: FloorCell.self
+            )) { row, element, cell in
+                cell.classroomLabel.text = element
+            }
+            .disposed(by: disposeBag)
+        
+        floorCollectionView.rx.itemSelected
+            .subscribe(
+                onNext: { [self] index in
+                    classroomNameText.accept(currentFloorClassroomArray.value[index.row])
+                    print(classroomNameText.value)
+                    print(floorText.value)
+                }
+            )
+            .disposed(by: disposeBag)
+        
         floorButtonArray.forEach { button in
             button.rx.tap
                 .subscribe(onNext: { [weak self] in
                     self?.clickRadioButtons(selectedButton: button)
+                    self?.floorText.accept(button.tag)
+                    self?.classroomNameText.accept("")
                     self?.floorCollectionView.reloadData()
+                    
                     switch button.tag {
                         case 1:
-                            self?.currentFloorClassroomArray = self?.firstFloorClassroomArray ?? []
+                            self?.currentFloorClassroomArray.accept(self?.firstFloorClassroomArray ?? [])
                             return
                         case 2:
-                            self?.currentFloorClassroomArray = self?.secondFloorClassroomArray ?? []
+                            self?.currentFloorClassroomArray.accept(self?.secondFloorClassroomArray ?? [])
                             return
                         case 3:
-                            self?.currentFloorClassroomArray = self?.thirdFloorClassroomArray ?? []
+                            self?.currentFloorClassroomArray.accept(self?.thirdFloorClassroomArray ?? [])
                             return
                         case 4:
-                            self?.currentFloorClassroomArray = self?.fourthFloorClassroomArray ?? []
+                            self?.currentFloorClassroomArray.accept(self?.fourthFloorClassroomArray ?? [])
                             return
                         case 5:
-                            self?.currentFloorClassroomArray = self?.fifthFloorClassroomArray ?? []
+                            self?.currentFloorClassroomArray.accept(self?.fifthFloorClassroomArray ?? [])
                             return
                         default:
                             return
@@ -156,28 +189,6 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         
         floorButtonArray.filter { $0 != selectedButton }.forEach { button in
             button.isSelected = false
-        }
-    }
-    
-}
-
-extension ClassroomMoveApplyViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currentFloorClassroomArray.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FloorCell.identifier, for: indexPath) as? FloorCell
-        else {
-            return UICollectionViewCell()
-        }
-        cell.classroomLabel.text = currentFloorClassroomArray[indexPath.row]
-        return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? FloorCell {
-            print(cell.classroomLabel.text ?? "")
         }
     }
     
