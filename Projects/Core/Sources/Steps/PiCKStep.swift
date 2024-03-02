@@ -18,6 +18,7 @@ public enum PiCKStep: Step {
     case outingApplyRequired
     case earlyLeaveApplyRequired
     case timePickerAlertRequired(time: [String])
+    case popRequired
     
     //schoolMeal
     case schoolMealRequired
@@ -31,10 +32,12 @@ public enum PiCKStep: Step {
     case noticeRequired
     case detailNoticeRequired
     
-    //teacherInquiry
-    case teacherInquiryRequired
+    //selfStudyTeacher
+    case selfStudyTeacherRequired
     
     //test
     case testRequired
+    //dev
+    case devRequired
 
 }

@@ -14,6 +14,7 @@ public class TestFlow: Flow {
     }
 
     private let rootPresentable = BaseNavigationController()
+    private let container = StepperDI.shared
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -27,8 +28,8 @@ public class TestFlow: Flow {
     }
     
     private func navigateToTest() -> FlowContributors {
-        let viewModel = ScheduleViewModel()
-        let viewController = ScheduleViewController(viewModel: viewModel)
+        let viewModel = container.applyViewModel
+        let viewController = ApplyViewController(viewModel: viewModel)
         self.rootPresentable.pushViewController(viewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,

@@ -12,9 +12,10 @@ public class MainFlow: Flow {
     }
 
     private let rootViewController: MainViewController
+    private let container = StepperDI.shared
     
     public init() {
-        self.rootViewController = MainViewController(viewModel: MainViewModel())
+        self.rootViewController = MainViewController(viewModel: container.mainViewModel)
     }
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -37,6 +38,8 @@ public class MainFlow: Flow {
                 return presentOutingPass()
             case .noticeRequired:
                 return navigateToNotice()
+            case .devRequired:
+                return presentDevPage()
             default:
                 return .none
         }
@@ -45,7 +48,7 @@ public class MainFlow: Flow {
     private func navigateToMain() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController//MARK: 향후에 ViewModel로 변경
+            withNextStepper: rootViewController.viewModel//MARK: 향후에 ViewModel로 변경
         ))
     }
     
@@ -129,6 +132,12 @@ public class MainFlow: Flow {
             withNextPresentable: noticeFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.noticeRequired)
         ))
+    }
+    
+    private func presentDevPage() -> FlowContributors {
+        let vc = DevVC()
+        self.rootViewController.navigationController?.pushViewController(vc, animated: true)
+        return .one(flowContributor: .contribute(withNext: vc))
     }
     
     

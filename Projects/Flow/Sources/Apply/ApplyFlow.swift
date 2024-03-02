@@ -14,8 +14,10 @@ public class ApplyFlow: Flow {
 
     private let rootViewController: ApplyViewController
     
+    private let container = StepperDI.shared
+    
     public init() {
-        self.rootViewController = ApplyViewController(viewModel: ApplyViewModel())
+        self.rootViewController = ApplyViewController(viewModel: container.applyViewModel)
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -32,6 +34,8 @@ public class ApplyFlow: Flow {
                 return navigateToEarlyLeaveApply()
             case .timePickerAlertRequired(let button):
                 return presentTimePickerAlert(button)
+            case .popRequired:
+                return popRequired()
             default:
                 return .none
         }
@@ -40,12 +44,12 @@ public class ApplyFlow: Flow {
     private func navigateToApply() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController
+            withNextStepper: rootViewController.viewModel
         ))
     }
     
     private func navigateToClassroomMoveApply() -> FlowContributors {
-        let viewModel = ClassroomMoveApplyViewModel()
+        let viewModel = container.classroomMoveViewModel
         let viewController = ClassroomMoveApplyViewController(viewModel: viewModel)
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
         return .one(flowContributor: .contribute(
@@ -55,7 +59,7 @@ public class ApplyFlow: Flow {
     }
     
     private func navigateToOutingApply() -> FlowContributors {
-        let viewModel = OutingApplyViewModel()
+        let viewModel = container.outingViewModel
         let viewController = OutingApplyViewController(viewModel: viewModel)
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
         return .one(flowContributor: .contribute(
@@ -65,7 +69,7 @@ public class ApplyFlow: Flow {
     }
     
     private func navigateToEarlyLeaveApply() -> FlowContributors {
-        let viewModel = EarlyLeaveApplyViewModel()
+        let viewModel = container.earlyLeaveViewModel
         let viewController = EarlyLeaveApplyViewController(viewModel: viewModel)
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
         return .one(flowContributor: .contribute(
@@ -84,5 +88,19 @@ public class ApplyFlow: Flow {
         rootViewController.present(timePickerAlert, animated: true)
         return .none
     }
+    
+    private func popRequired() -> FlowContributors {
+//        self.rootViewController.navigationController?.popViewController(animated: true)
+        //        return .none
+            let mainFlow = MainFlow()
+            Flows.use(mainFlow, when: .created) { [weak self] root in
+                self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            }
+            
+            return .one(flowContributor: .contribute(
+                withNextPresentable: mainFlow,
+                withNextStepper: OneStepper(withSingleStep: PiCKStep.mainRequired)
+            ))
+        }
 
 }
