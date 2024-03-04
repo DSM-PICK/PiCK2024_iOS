@@ -22,6 +22,9 @@ public struct ServiceDI {
     //weekendMeal
     public let weekendMealCheckUseCase: WeekendMealCheckUseCase
     public let weekendMealApplyUseCase: WeekendMealApplyUseCase
+    
+    //selfStudyTeacher
+    public let fetchSelfStudyTeacherUseCase: FetchSelfStudyTeacherUseCase
 }
 
 extension ServiceDI {
@@ -32,6 +35,7 @@ extension ServiceDI {
         let earlyLeaveRepo = EarlyLeaveRepositoryImpl()
         let classroomRepo = ClassroomRepositoryImpl()
         let weekendMealRepo = WeekendMealRepositoryImpl()
+        let selfStudyTeacherRepo = SelfStudyTeacherImpl()
 
         //MARK: Auth관련 UseCase
         let loginUseCaseInject = LoginUseCase(
@@ -69,6 +73,11 @@ extension ServiceDI {
         let weekendMealApplyUseCaseInject = WeekendMealApplyUseCase(
             repository: weekendMealRepo
         )
+        
+        //MARK: 자습 감독 관련 UseCase
+        let fetchSelfStudyTeacherUseCaseInject = FetchSelfStudyTeacherUseCase(
+            repository: selfStudyTeacherRepo
+        )
 
         return .init(
             loginUseCase: loginUseCaseInject,
@@ -78,7 +87,8 @@ extension ServiceDI {
             earlyLeaveUseCase: earlyLeaveApplyUseCaseInject,
             classroomMoveUseCase: classroomMoveApplyUseCaseInject,
             weekendMealCheckUseCase: weekendMealCheckUseCaseInject,
-            weekendMealApplyUseCase: weekendMealApplyUseCaseInject
+            weekendMealApplyUseCase: weekendMealApplyUseCaseInject,
+            fetchSelfStudyTeacherUseCase: fetchSelfStudyTeacherUseCaseInject
         )
     }
     
