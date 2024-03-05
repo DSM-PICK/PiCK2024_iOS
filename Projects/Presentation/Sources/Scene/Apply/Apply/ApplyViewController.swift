@@ -13,8 +13,15 @@ import DesignSystem
 public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
+    private let viewWillAppearRelay = PublishRelay<Void>()
+    private let weekendMealApply = PublishRelay<WeekendMealTypeEnum>()
     
     private let applyDate = Date()
+    
+    private lazy var weekendMealButtons = [
+        applyButton,
+        noApplyButton
+    ]
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "신청"
@@ -70,9 +77,31 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
+    public override func bindAction() {
+        viewWillAppearRelay.accept(())
+    }
     public override func bind() {
+        let input = ApplyViewModel.Input(
+            viewWillAppear: viewWillAppearRelay.asObservable(),
+            weekendMealApply: weekendMealApply.asObservable(),
+            classroomMoveApplyViewDidClick: classroomMoveApplyView.rx.tapGesture().when(.recognized),
+            outingApplyViewDidClick: outingApplyView.rx.tapGesture().when(.recognized),
+            earlyLeaveApplyViewDidClick: earlyLeaveApplyView.rx.tapGesture().when(.recognized)
+        )
+        let output = viewModel.transform(input: input)
         
-        //버튼을 radio로 할지 고민해보기
+        output.weekendMealCheck.asObservable()
+            .subscribe(
+                onNext: { type in
+                    if type.status == "OK" {
+                        self.clickRadioButtons(selectedButton: self.applyButton)
+                    } else {
+                        self.clickRadioButtons(selectedButton: self.noApplyButton)
+                    }
+                }
+            )
+            .disposed(by: disposeBag)
+        
         applyButton.rx.tap
             .bind { [weak self] in
                 let modal = PiCKAlert(
@@ -80,7 +109,8 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
                     cancelButtonTitle: "취소",
                     checkButtonTitle: "확인",
                     clickToAction: {
-                        self?.applyButton.isSelected = true
+                        self?.weekendMealApply.accept(.ok)
+                        self?.clickRadioButtons(selectedButton: self?.applyButton ?? UIButton())
                     })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -94,31 +124,13 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
                     cancelButtonTitle: "취소",
                     checkButtonTitle: "확인",
                     clickToAction: {
-                        self?.noApplyButton.isSelected = true
+                        self?.weekendMealApply.accept(.no)
+                        self?.clickRadioButtons(selectedButton: self?.noApplyButton ?? UIButton())
                     })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
                 self?.present(modal, animated: true)
             }.disposed(by: disposeBag)
-        
-        classroomMoveApplyView.rx.tapGesture()
-            .when(.recognized)
-            .bind {_ in
-                self.steps.accept(PiCKStep.classroomMoveApplyRequired)
-            }.disposed(by: disposeBag)
-        
-        outingApplyView.rx.tapGesture()
-            .when(.recognized)
-            .bind {_ in
-                self.steps.accept(PiCKStep.outingApplyRequired)
-            }.disposed(by: disposeBag)
-        
-        earlyLeaveApplyView.rx.tapGesture()
-            .when(.recognized)
-            .bind {_ in
-                self.steps.accept(PiCKStep.earlyLeaveApplyRequired)
-            }.disposed(by: disposeBag)
-        
     }
     public override func addView() {
         [
@@ -179,6 +191,16 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
             $0.top.equalTo(additionApplyLabel.snp.bottom).offset(16)
             $0.left.right.equalToSuperview().inset(24)
             $0.bottom.equalToSuperview().inset(120)
+        }
+    }
+    
+    private func clickRadioButtons(selectedButton: UIButton) {
+        guard !selectedButton.isSelected else { return }
+        
+        selectedButton.isSelected.toggle()
+        
+        weekendMealButtons.filter { $0 != selectedButton }.forEach { button in
+            button.isSelected = false
         }
     }
     

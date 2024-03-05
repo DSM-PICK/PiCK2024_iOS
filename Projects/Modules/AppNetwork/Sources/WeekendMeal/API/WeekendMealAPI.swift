@@ -5,7 +5,7 @@ import Moya
 import Core
 
 public enum WeekendMealAPI {
-    case weekendMealApply(status: WeekendMealTypeEnum)
+    case weekendMealApply(status: WeekendMealTypeEnum.RawValue)
     case weekendMealCheck
 }
 
@@ -16,12 +16,8 @@ extension WeekendMealAPI: TargetType {
     
     public var path: String {
         switch self {
-            case .weekendMealApply(let status):
-                let dd = "/weekend-meal/status?status=\(status)"
-                dd.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-                
-                return dd
-//                return "/weekend-meal/statusstatus=\(status)"
+            case .weekendMealApply:
+                return "/weekend-meal/status"
             case .weekendMealCheck:
                 return "/weekend-meal/my"
         }
@@ -38,9 +34,10 @@ extension WeekendMealAPI: TargetType {
     
     public var task: Moya.Task {
         switch self {
-            case .weekendMealApply:
-                
-                return .requestParameters(parameters: [:], encoding: URLEncoding.queryString
+            case .weekendMealApply(let status):
+                return .requestParameters(
+                    parameters: ["status": status],
+                    encoding: URLEncoding.queryString
                 )
             case .weekendMealCheck:
                 return .requestPlain
