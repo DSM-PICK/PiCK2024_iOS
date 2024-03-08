@@ -12,7 +12,7 @@ public struct OutingPassDTO: Decodable {
     let grade: Int
     let classNum: Int
     let num: Int
-    let image: [String]
+    let image: String
     let type: OutingPassType.RawValue
     
     enum CodingKeys: String, CodingKey {

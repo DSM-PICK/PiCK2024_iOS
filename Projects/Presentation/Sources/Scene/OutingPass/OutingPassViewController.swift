@@ -4,14 +4,13 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
 import Core
 import DesignSystem
 
-public class OutingPassViewController: BaseViewController<OutingPassViewModel>, Stepper {
+public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     
-    public var steps = PublishRelay<Step>()
+    private let outingPassRelay = PublishRelay<Void>()
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -78,6 +77,29 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel>, 
     
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
+    }
+    public override func bindAction() {
+        outingPassRelay.accept(())
+    }
+    public override func bind() {
+        let input = OutingPassViewModel.Input(
+            outingPassLoad: outingPassRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.outingPassData.asObservable()
+            .subscribe(
+                onNext: { data in
+                    self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
+                    self.outingTypeLabel.text = data.type
+                    self.approvedTeacherNameLabel.text = data.teacherName
+//                    self.qrCodeImageView.image = data.image
+                    self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
+                    self.outingReasonDescriptionLabel.text = data.reason
+                    self.approvedTeacherNameLabel.text = data.teacherName
+            }
+            )
+            .disposed(by: disposeBag)
     }
     public override func addView() {
         view.addSubview(scrollView)

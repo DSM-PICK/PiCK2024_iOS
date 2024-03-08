@@ -2,7 +2,7 @@ import Foundation
 
 import RxSwift
 
-public class OutingPassUseCase {
+public class FetchOutingPassUseCase {
     
     let repository: OutingRepository
     

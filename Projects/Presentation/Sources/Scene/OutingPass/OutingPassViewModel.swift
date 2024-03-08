@@ -9,21 +9,42 @@ import Domain
 
 public class OutingPassViewModel: BaseViewModel, Stepper {
     
+    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
-    public init(steps: PublishRelay<Step> = PublishRelay<Step>()) {
-        self.steps = steps
+    private let fetchOutingPassUseCase: FetchOutingPassUseCase
+    
+    public init(
+        fetchOutingPassUseCase: FetchOutingPassUseCase
+    ) {
+        self.fetchOutingPassUseCase = fetchOutingPassUseCase
     }
     
     public struct Input {
-        
-    }
-    public struct Output {
-        
+        let outingPassLoad: Observable<Void>
     }
     
+    public struct Output {
+        let outingPassData: Signal<OutingPassEntity>
+    }
+    
+    let outingPassData = PublishRelay<OutingPassEntity>()
+    
     public func transform(input: Input) -> Output {
-        return Output()
+        input.outingPassLoad.asObservable()
+            .flatMap {
+                self.fetchOutingPassUseCase.excute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: outingPassData)
+            .disposed(by: disposeBag)
+        
+        return Output(
+            outingPassData: outingPassData.asSignal()
+        )
     }
     
 }

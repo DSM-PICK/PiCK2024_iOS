@@ -11,7 +11,7 @@ public struct OutingPassEntity {
     public let grade: Int
     public let classNum: Int
     public let num: Int
-    public let image: [String]
+    public let image: String
     public let type: OutingPassType.RawValue
     
     public init(
@@ -23,7 +23,7 @@ public struct OutingPassEntity {
         grade: Int,
         classNum: Int,
         num: Int,
-        image: [String],
+        image: String,
         type: OutingPassType.RawValue
     ) {
         self.userName = userName
