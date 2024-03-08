@@ -48,7 +48,7 @@ public class MainFlow: Flow {
     private func navigateToMain() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController.viewModel//MARK: 향후에 ViewModel로 변경
+            withNextStepper: rootViewController.viewModel
         ))
     }
     
@@ -113,12 +113,12 @@ public class MainFlow: Flow {
     }
     
     private func presentOutingPass() -> FlowContributors {
-        let viewModel = OutingPassViewModel()
+        let viewModel = container.outingPassViewModel
         let viewController = OutingPassViewController(viewModel: viewModel)
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,
-            withNextStepper: viewController
+            withNextStepper: viewModel
         ))
     }
     

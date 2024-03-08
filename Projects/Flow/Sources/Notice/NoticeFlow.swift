@@ -13,8 +13,12 @@ public class NoticeFlow: Flow {
     
     private let rootViewController: NoticeListViewController
     
+    let container = StepperDI.shared
+    
     public init() {
-        self.rootViewController = NoticeListViewController(viewModel: NoticeListViewModel())
+        self.rootViewController = NoticeListViewController(
+            viewModel: container.noticeListViewModel
+        )
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -23,8 +27,8 @@ public class NoticeFlow: Flow {
         switch step {
             case .noticeRequired:
                 return navigateTosNotice()
-            case .detailNoticeRequired:
-                return navigateToDetailNotice()
+            case .detailNoticeRequired(let id):
+                return navigateToDetailNotice(id: id)
             default:
                 return .none
         }
@@ -32,13 +36,14 @@ public class NoticeFlow: Flow {
     private func navigateTosNotice() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController//MARK: 향후에 ViewModel로 변경
+            withNextStepper: rootViewController.viewModel
         ))
     }
     
-    private func navigateToDetailNotice() -> FlowContributors {
-        let viewModel = DetailNoticeViewModel()
+    private func navigateToDetailNotice(id: UUID) -> FlowContributors {
+        let viewModel = container.detailNoticeViewModel
         let viewController = DetailNoticeViewController(viewModel: viewModel)
+        viewController.id = id
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
         return .none
     }

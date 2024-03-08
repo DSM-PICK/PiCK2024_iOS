@@ -13,9 +13,10 @@ public class SelfStudyTeacherFlow: Flow {
     }
 
     private let rootViewController: SelfStudyTeacherViewController
+    private let container = StepperDI.shared
     
     public init() {
-        self.rootViewController = SelfStudyTeacherViewController(viewModel: SelfStudyTeacherViewModel())
+        self.rootViewController = SelfStudyTeacherViewController(viewModel: container.selfStudyTeacherViewModel)
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -32,7 +33,7 @@ public class SelfStudyTeacherFlow: Flow {
     private func navigateToSelfStudyTeacher() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController//.viewModel
+            withNextStepper: rootViewController.viewModel
         ))
         
     }

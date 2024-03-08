@@ -13,8 +13,10 @@ public class ScheduleFlow: Flow {
 
     private let rootViewController: ScheduleViewController
     
+    let container = StepperDI.shared
+    
     public init() {
-        self.rootViewController = ScheduleViewController(viewModel: ScheduleViewModel())
+        self.rootViewController = ScheduleViewController(viewModel: container.scheduleViewModel)
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
