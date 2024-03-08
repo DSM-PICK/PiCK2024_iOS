@@ -20,6 +20,7 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
         super.viewDidLoad()
         attribute()
         bind()
+        configureNavigationBar()
     }
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,11 +30,14 @@ open class BaseViewController<ViewModel: BaseViewModel>: UIViewController {
         super.viewDidLayoutSubviews()
         addView()
         setLayout()
-        configureNavigationBar()
+        configureNavgationBarLayOutSubviews()
     }
     
     open func configureNavigationBar() {
         //네비게이션바 관련 코드를 설정하는 함수
+    }
+    open func configureNavgationBarLayOutSubviews() {
+        //viewDidLayoutSubviews에서 네비게이션바 관련 코드를 호출하는 함수
     }
     open func attribute() {
         view.backgroundColor = .white

@@ -10,6 +10,7 @@ open class BaseView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         attribute()
+        bindAction()
         bind()
     }
     required public init?(coder: NSCoder) {
@@ -24,6 +25,9 @@ open class BaseView: UIView {
     open func attribute() {
         self.backgroundColor = .white
         //UIView에 관련된 설정을 하는 함수
+    }
+    open func bindAction() {
+        //Rx 액션을 설정하는 함수
     }
     open func bind() {
         //UIView의 버튼 동작을 설정하는 함수
