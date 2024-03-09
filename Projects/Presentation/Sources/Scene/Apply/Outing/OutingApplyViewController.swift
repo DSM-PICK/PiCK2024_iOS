@@ -91,8 +91,6 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
                     
                     self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
                     self?.departureTimeLabel.textColor = .neutral50
-                    
-                    print(self?.depatureTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
@@ -107,8 +105,6 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
                     
                     self?.arrivalTimeLabel.text = "\(arrialTime[0] ?? "") : \(arrialTime[1] ?? "")"
                     self?.arrivalTimeLabel.textColor = .neutral50
-                    
-                    print(self?.arrivalTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve

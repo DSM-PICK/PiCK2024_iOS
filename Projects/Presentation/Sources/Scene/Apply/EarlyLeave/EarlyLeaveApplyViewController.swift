@@ -68,8 +68,6 @@ public class EarlyLeaveApplyViewController: BaseViewController<EarlyLeaveApplyVi
                     
                     self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
                     self?.departureTimeLabel.textColor = .neutral50
-                    
-                    print(self?.depatureTimeText.value ?? "")
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
