@@ -45,6 +45,10 @@ let dependencies = Dependencies.init(
             .remote(
                 url: "https://github.com/Swinject/Swinject.git",
                 requirement: .upToNextMajor(from: "2.8.0")
+            ),
+            .remote(
+                url: "https://github.com/airbnb/lottie-ios",
+                requirement: .upToNextMajor(from: "4.3.3")
             )
         ],
         baseSettings: .settings(
