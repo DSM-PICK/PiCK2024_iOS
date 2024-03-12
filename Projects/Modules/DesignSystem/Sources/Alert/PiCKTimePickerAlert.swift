@@ -84,10 +84,17 @@ public class PiCKTimePickerAlert: UIViewController {
             .bind { [weak self] in
                 self?.dismiss(animated: true)
             }.disposed(by: disposeBag)
+        
         checkButton.rx.tap
             .bind { [weak self] in
-                let hourIndex = String(format: "%02d", self?.hourPicker.selectedRow(inComponent: 0) ?? 0)
-                let minIndex = String(format: "%02d", self?.minPicker.selectedRow(inComponent: 0) ?? 0)
+                let hourIndex = String(
+                    format: "%02d",
+                    self?.hourPicker.selectedRow(inComponent: 0) ?? 0
+                )
+                let minIndex = String(
+                    format: "%02d",
+                    self?.minPicker.selectedRow(inComponent: 0) ?? 0
+                )
                 self?.hourIndex = hourIndex
                 self?.minIndex = minIndex
                 self?.clickToAction([self?.hourIndex, self?.minIndex])
