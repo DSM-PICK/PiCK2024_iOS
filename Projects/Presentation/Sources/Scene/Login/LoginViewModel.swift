@@ -10,10 +10,10 @@ import AppNetwork
 
 public class LoginViewModel: BaseViewModel, Stepper {
     
-    private let loginUseCase: LoginUseCase
-    
     private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
+    
+    private let loginUseCase: LoginUseCase
     
     public init(loginUseCase: LoginUseCase) {
         self.loginUseCase = loginUseCase
@@ -40,7 +40,7 @@ public class LoginViewModel: BaseViewModel, Stepper {
             .withLatestFrom(info)
             .filter { self.checkLoginData($0.0, $0.1) }
             .flatMap { [self] id, password in
-                loginUseCase.login(accountID: id, password: password)
+                loginUseCase.execute(accountID: id, password: password)
                 .catch { id in
                     self.idErrorDescription.accept("아이디를 다시 확인해주세요")
                     self.passwordErrorDescription.accept("비밀번호를 다시 확인해주세요")

@@ -4,6 +4,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import Lottie
 
 import AppNetwork
 import Core
@@ -19,9 +20,11 @@ public class LoginViewController: BaseViewController<LoginViewModel> {
     }
     private let idTextField = PiCKTextField().then {
         $0.placeholder = "아이디"
+        $0.textContentType = .username
     }
     private let passwordTextField = PiCKTextField().then {
         $0.placeholder = "비밀번호"
+        $0.textContentType = .password
         $0.isSecurity = true
     }
     private let loginButton = UIButton(type: .system).then {
