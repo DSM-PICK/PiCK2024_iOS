@@ -2,13 +2,24 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 import Core
+import Domain
 import DesignSystem
 
 public class AcademicScheduleView: BaseView {
     
-    private let calendarView = PiCKAcademicScheduleCalendarView()
+    private var clickToAction: (String) -> Void
+    
+    private var scheduleArray = BehaviorRelay<AcademicScheduleEntity>(value: [])
+    private var month = String()
+    
+    private lazy var calendarView = PiCKAcademicScheduleCalendarView(click: { date in
+        self.month = date.toStringEng(DateFormatIndicated.fullMonth.rawValue)
+        self.clickToAction(self.month)
+    })
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.itemSize = .init(width: self.frame.width, height: 60)
@@ -25,12 +36,40 @@ public class AcademicScheduleView: BaseView {
         $0.register(AcademicScheduleCell.self, forCellWithReuseIdentifier: AcademicScheduleCell.identifier)
     }
     
-    public override func attribute() {
-        self.backgroundColor = .white
-        scheduleCollectionView.delegate = self
-        scheduleCollectionView.dataSource = self
+    public func setup(
+        academicSchedule: AcademicScheduleEntity
+    ) {
+        self.scheduleArray.accept(academicSchedule)
     }
     
+    public init(
+        clickToAction: @escaping (String) -> Void,
+        frame: CGRect
+    ) {
+        self.clickToAction = clickToAction
+        super.init(frame: frame)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func bind() {
+        scheduleArray.bind(to: scheduleCollectionView.rx.items(
+            cellIdentifier: AcademicScheduleCell.identifier,
+            cellType: AcademicScheduleCell.self
+        )) { row, element, cell in
+            let date = element.date
+            let ddd = date.toDate(type: .day)
+            let dd = ddd?.toString(DateFormatIndicated.day.rawValue)
+            cell.setup(
+                id: element.id,
+                date: dd ?? "",
+                dayOfWeek: element.date,
+                schedule: element.eventName
+            )
+        }
+        .disposed(by: disposeBag)
+    }
     public override func addView() {
         [
             calendarView,
@@ -41,28 +80,12 @@ public class AcademicScheduleView: BaseView {
         calendarView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.left.right.equalToSuperview()
-            $0.height.equalTo(300)
+            $0.height.equalTo(330)
         }
         scheduleCollectionView.snp.makeConstraints {
             $0.top.equalTo(calendarView.snp.bottom).offset(16)
             $0.left.right.bottom.equalToSuperview()
         }
     }
-    
-}
-
-extension AcademicScheduleView: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AcademicScheduleCell.identifier, for: indexPath) as? AcademicScheduleCell
-        else {
-            return UICollectionViewCell()
-        }
-        return cell
-    }
-    
     
 }

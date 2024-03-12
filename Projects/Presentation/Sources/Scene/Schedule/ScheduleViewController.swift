@@ -12,6 +12,11 @@ import DesignSystem
 public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Stepper {
     
     public let steps = PublishRelay<Step>()
+    private let academicScheduleLoadRelay = PublishRelay<String>()
+    private let timeTableLoadRelay = PublishRelay<String>()
+    
+    private let date = Date()
+    private lazy var month = date.toStringEng(DateFormatIndicated.fullMonth.rawValue)
     
     private lazy var viewSize = CGRect(
         x: 0,
@@ -21,7 +26,13 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Step
     )
     
     private lazy var segmentedTimetableView = ScrollTimeTableView(frame: viewSize)
-    private lazy var segmentedCalendarView = AcademicScheduleView(frame: viewSize)
+    private lazy var segmentedCalendarView = AcademicScheduleView(
+        clickToAction: { month in
+            self.month = month
+            self.academicScheduleLoadRelay.accept(self.month)
+        },
+        frame: viewSize
+    )
     private let navigationTitleLabel = UILabel().then {
         $0.text = "일정"
         $0.textColor = .neutral50
@@ -35,9 +46,38 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Step
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
+    public override func bindAction() {
+        timeTableLoadRelay.accept(date.toString(DateFormatIndicated.fullDate.rawValue))
+       academicScheduleLoadRelay.accept(self.month)
+    }
     public override func bind() {
         self.segmentedControl.addTarget(self, action: #selector(didChangeValue(segment:)), for: .valueChanged)
         self.didChangeValue(segment: self.segmentedControl)
+        
+        let input = ScheduleViewModel.Input(
+            academicScheduleLoad: academicScheduleLoadRelay.asObservable(),
+            timeTableLoad: timeTableLoadRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.academicScheduleDataLoad.asObservable()
+            .subscribe(
+                onNext: { data in
+                    self.segmentedCalendarView.setup(
+                        academicSchedule: data
+                    )
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        output.dateLoad.asObservable()
+            .subscribe(
+                onNext: { date in
+                    self.segmentedTimetableView.setup(date: date)
+                }
+            )
+            .disposed(by: disposeBag)
+        
     }
     public override func addView() {
         [

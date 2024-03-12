@@ -10,24 +10,35 @@ public class AcademicScheduleCell: BaseCollectionViewCell {
     
     static let identifier = "academicScheduleCellID"
     
+    private var id = UUID()
+    
     private let lineView = UIView().then {
         $0.backgroundColor = .secondary500
         $0.layer.cornerRadius = 1.5
     }
-    public let dateLabel = UILabel().then {
-        $0.text = "1"
+    private var dateLabel = UILabel().then {
         $0.textColor = .neutral50
         $0.font = .subTitle2M
     }
-    public let dayLabel = UILabel().then {
-        $0.text = "월요일"
+    private var dayOfWeekLabel = UILabel().then {
         $0.textColor = .neutral300
         $0.font = .body3
     }
-    public let scheduleLabel = UILabel().then {
-        $0.text = "신정"
+    private var scheduleLabel = UILabel().then {
         $0.textColor = .neutral50
         $0.font = .subTitle2M
+    }
+    
+    public func setup(
+        id: UUID,
+        date: String,
+        dayOfWeek: String,
+        schedule: String
+    ) {
+        self.id = id
+        self.dateLabel.text = date
+        self.dayOfWeekLabel.text = dayOfWeek
+        self.scheduleLabel.text = schedule
     }
     
     public override func attribute() {
@@ -38,7 +49,7 @@ public class AcademicScheduleCell: BaseCollectionViewCell {
         [
             lineView,
             dateLabel,
-            dayLabel,
+            dayOfWeekLabel,
             scheduleLabel
         ].forEach { contentView.addSubview($0) }
         
@@ -51,13 +62,13 @@ public class AcademicScheduleCell: BaseCollectionViewCell {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(lineView.snp.right).offset(20)
         }
-        dayLabel.snp.makeConstraints {
+        dayOfWeekLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(dateLabel.snp.right).offset(12)
         }
         scheduleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().inset(40)
+            $0.right.equalToSuperview().inset(15)
         }
     }
     
