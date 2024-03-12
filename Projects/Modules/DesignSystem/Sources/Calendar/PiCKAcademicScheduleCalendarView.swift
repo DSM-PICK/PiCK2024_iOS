@@ -9,6 +9,8 @@ import Core
 
 public class PiCKAcademicScheduleCalendarView: BaseView {
     
+    public var clickToAction: (Date) -> Void
+    
     private var calendar = Calendar.current
     private var dateFormatter = DateFormatter()
     private var date = Date()
@@ -42,7 +44,22 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
         collectionViewLayout: calendarCollectionViewFlowLayout
     ).then {
         $0.backgroundColor = .primary1200
-        $0.register(AcademicScheduleCalendarCell.self, forCellWithReuseIdentifier: AcademicScheduleCalendarCell.identifier)
+        $0.register(
+            AcademicScheduleCalendarCell.self,
+            forCellWithReuseIdentifier: AcademicScheduleCalendarCell.identifier
+        )
+        $0.showsVerticalScrollIndicator = false
+        $0.showsHorizontalScrollIndicator = false
+        $0.bounces = false
+    }
+    
+    public init(click: @escaping (Date) -> Void) {
+        self.clickToAction = click
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     public override func attribute() {
@@ -54,7 +71,6 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
         self.configureCalendar()
     }
     public override func bind() {
-        
         previousButton.rx.tap
             .bind { [weak self] in
                 self?.minusMonth()
@@ -101,7 +117,7 @@ extension PiCKAcademicScheduleCalendarView: UICollectionViewDelegate, UICollecti
         else {
             return UICollectionViewCell()
         }
-        cell.daysLabel.text = "\(days[indexPath.row])"
+        cell.setup(day: days[indexPath.row])
         return cell
     }
     
@@ -151,11 +167,13 @@ extension PiCKAcademicScheduleCalendarView {
     
     private func minusMonth() {
         self.date = self.calendar.date(byAdding: DateComponents(month: -1), to: self.date) ?? Date()
+        self.clickToAction(date)
         self.updateCalendar()
     }
     
     private func plusMonth() {
         self.date = self.calendar.date(byAdding: DateComponents(month: 1), to: self.date) ?? Date()
+        self.clickToAction(date)
         self.updateCalendar()
     }
     

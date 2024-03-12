@@ -7,7 +7,9 @@ import RxCocoa
 
 import Core
 
-public class PiCKSchoolMealCalendarView: BaseView {
+public class PiCKSchoolMealCalendarView: UIView {
+    
+    private let disposeBag = DisposeBag()
     
     var clickCell: (String) -> Void
     
@@ -52,18 +54,23 @@ public class PiCKSchoolMealCalendarView: BaseView {
     ) {
         self.clickCell = clickCell
         super.init(frame: .zero)
+        attribute()
+        bind()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    public override func layoutSubviews() {
+        addView()
+        setLayout()
+    }
     
-    public override func attribute() {
+    public func attribute() {
         calendarCollectionView.delegate = self
         calendarCollectionView.dataSource = self
         self.configureCalendar()
     }
-    public override func bind() {
-        
+    public func bind() {
         previousButton.rx.tap
             .bind { [weak self] in
                 self?.minusMonth()
@@ -74,7 +81,7 @@ public class PiCKSchoolMealCalendarView: BaseView {
                 self?.plusMonth()
             }.disposed(by: disposeBag)
     }
-    public override func addView() {
+    public func addView() {
         [
             calendarStackView,
             calendarCollectionView
@@ -86,13 +93,13 @@ public class PiCKSchoolMealCalendarView: BaseView {
             nextButton
         ].forEach { calendarStackView.addArrangedSubview($0) }
     }
-    public override func setLayout() {
+    public func setLayout() {
         calendarStackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview()
         }
         calendarCollectionView.snp.makeConstraints {
-            $0.top.equalTo(calendarStackView.snp.bottom).offset(16)
+            $0.top.equalTo(calendarStackView.snp.bottom).offset(5)
             $0.left.right.bottom.equalToSuperview()
         }
     }
@@ -110,19 +117,19 @@ extension PiCKSchoolMealCalendarView: UICollectionViewDelegate, UICollectionView
             return UICollectionViewCell()
         }
         cell.daysLabel.text = "\(days[indexPath.row])"
-        return cell
+    return cell
+}
+
+public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else {
+        return false
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else {
-            return false
-        }
-        let date = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
-        self.clickCell("\(date)")
-        return !cell.daysLabel.text!.isEmpty
-    }
-    
-    
+    let date = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
+    self.clickCell("\(date)")
+    return !cell.daysLabel.text!.isEmpty
+}
+
+
 }
 
 extension PiCKSchoolMealCalendarView {
