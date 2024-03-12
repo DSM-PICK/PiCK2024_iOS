@@ -1,3 +1,5 @@
+import Foundation
+
 import RxFlow
 
 public enum PiCKStep: Step {
@@ -30,7 +32,7 @@ public enum PiCKStep: Step {
     
     //notice
     case noticeRequired
-    case detailNoticeRequired
+    case detailNoticeRequired(id: UUID)
     
     //selfStudyTeacher
     case selfStudyTeacherRequired
