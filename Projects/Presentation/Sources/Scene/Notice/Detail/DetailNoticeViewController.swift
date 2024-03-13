@@ -2,55 +2,80 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 import Core
 import DesignSystem
 
 public class DetailNoticeViewController: BaseViewController<DetailNoticeViewModel> {
     
+    private let viewWillAppearRelay = PublishRelay<UUID>()
+    public var id = UUID()
+    
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    private let mainView = UIView()
+    
     private lazy var navigationTitleLabel = UILabel().then {
-        $0.text = "[중요] 오리엔테이션날 일정 안내"
         $0.textColor = .neutral50
         $0.font = .subTitle1M
     }
     private let titleLabel = UILabel().then {
-        $0.text = "[중요] 오리엔테이션날 일정 안내"
         $0.textColor = .neutral50
         $0.font = .subTitle2M
     }
     private let dateLabel = UILabel().then {
-        $0.text = "2024-02-09"
         $0.textColor = .neutral400
         $0.font = .caption2
     }
     private let lineView = UIView().then {
         $0.backgroundColor = .neutral900
     }
-    private let tableView = UITableView().then {
-        $0.backgroundColor = .white
-        $0.separatorStyle = .none
-        $0.register(DetailNoticeCell.self, forCellReuseIdentifier: DetailNoticeCell.identifier)
+    private let contentLabel = UILabel().then {
+        $0.textColor = .neutral50
+        $0.font = .caption2
+        $0.numberOfLines = 0
     }
     
-    public override func attribute() {
-        super.attribute()
-        tableView.delegate = self
-        tableView.dataSource = self
+    public override func configureNavigationBar() {
+        navigationItem.titleView = navigationTitleLabel
+    }
+    public override func bindAction() {
+        viewWillAppearRelay.accept(id)
+    }
+    public override func bind() {
+        let input = DetailNoticeViewModel.Input(
+            viewWillAppear: viewWillAppearRelay.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.contentData.asObservable()
+            .subscribe(
+                onNext: { notice in
+                    self.titleLabel.text = notice.title
+                    self.dateLabel.text = notice.createAt
+                    self.contentLabel.text = notice.content
+                }
+            )
+            .disposed(by: disposeBag)
+        
     }
     public override func addView() {
         [
-            navigationTitleLabel,
             titleLabel,
             dateLabel,
             lineView,
-            tableView
+            scrollView
         ].forEach { view.addSubview($0) }
+        
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(mainView)
+        
+        mainView.addSubview(contentLabel)
     }
     public override func setLayout() {
-        navigationTitleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(55)
-            $0.left.right.equalToSuperview().inset(95)
-        }
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(119)
             $0.left.equalToSuperview().inset(24)
@@ -64,25 +89,23 @@ public class DetailNoticeViewController: BaseViewController<DetailNoticeViewMode
             $0.left.right.equalToSuperview()
             $0.height.equalTo(5)
         }
-        tableView.snp.makeConstraints {
+        scrollView.snp.makeConstraints {
             $0.top.equalTo(lineView.snp.bottom)
             $0.left.right.bottom.equalToSuperview()
         }
-    }
-    
-}
-
-extension DetailNoticeViewController: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailNoticeCell.identifier, for: indexPath) as? DetailNoticeCell
-        else {
-            return UITableViewCell()
+        contentView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.leading.trailing.equalTo(self.view)
         }
-        return cell
+        mainView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalTo(self.view.frame.height * 1.2)
+        }
+        contentLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16)
+            $0.left.right.equalToSuperview().inset(24)
+        }
+        
     }
     
 }

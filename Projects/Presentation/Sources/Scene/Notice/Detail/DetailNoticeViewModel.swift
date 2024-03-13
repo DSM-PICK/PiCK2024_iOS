@@ -9,21 +9,39 @@ import Domain
 
 public class DetailNoticeViewModel: BaseViewModel, Stepper {
     
+    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
-    public init(steps: PublishRelay<Step> = PublishRelay<Step>()) {
-        self.steps = steps
+    private let fetchDetailNoticeUseCase: FetchDetailNoticeUseCase
+    
+    public init(fetchDetailNoticeUseCase: FetchDetailNoticeUseCase) {
+        self.fetchDetailNoticeUseCase = fetchDetailNoticeUseCase
     }
     
     public struct Input {
-        
+        let viewWillAppear: Observable<UUID>
     }
     public struct Output {
-        
+        let contentData: Signal<DetailNoticeEntity>
     }
     
+    let contentData = PublishRelay<DetailNoticeEntity>()
+    
     public func transform(input: Input) -> Output {
-        return Output()
+        input.viewWillAppear
+            .flatMap { id in
+                self.fetchDetailNoticeUseCase.execute(id: id)
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: contentData)
+            .disposed(by: disposeBag)
+        
+        return Output(
+            contentData: contentData.asSignal()
+        )
     }
     
 }
