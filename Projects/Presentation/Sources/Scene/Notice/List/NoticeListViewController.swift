@@ -4,14 +4,15 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
 import Core
+import Domain
 import DesignSystem
 
-public class NoticeListViewController: BaseViewController<NoticeListViewModel>, Stepper {
+public class NoticeListViewController: BaseViewController<NoticeListViewModel> {
     
-    public let steps = PublishRelay<Step>()
+    private let viewWillAppearRelay = PublishRelay<Void>()
+    private let clickNoticeCell = PublishRelay<UUID>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "공지사항"
@@ -27,16 +28,46 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel>, 
         collectionViewLayout: collectionViewFlowLayout
     ).then {
         $0.backgroundColor = .white
-        $0.register(NoticeCell.self, forCellWithReuseIdentifier: NoticeCell.identifier)
+        $0.register(
+            NoticeCell.self,
+            forCellWithReuseIdentifier: NoticeCell.identifier
+        )
     }
     
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
     }
-    public override func attribute() {
-        super.attribute()
-        noticeCollectionView.delegate = self
-        noticeCollectionView.dataSource = self
+    public override func bindAction() {
+        viewWillAppearRelay.accept(())
+    }
+    public override func bind() {
+        let input = NoticeListViewModel.Input(
+            viewWillAppear: viewWillAppearRelay.asObservable(),
+            noticeCellDidClick: clickNoticeCell.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.noticeListData.asObservable()
+            .bind(to: noticeCollectionView.rx.items(
+                cellIdentifier: NoticeCell.identifier,
+                cellType: NoticeCell.self
+            )) { row, element, cell in
+                cell.setup(
+                    id: element.id,
+                    title: element.title,
+                    date: element.createAt
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        noticeCollectionView.rx.modelSelected(NoticeListEntityElement.self)
+            .bind(
+                onNext: { [weak self] data in
+                    self?.clickNoticeCell.accept(data.id)
+                }
+            )
+            .disposed(by: disposeBag)
+        
     }
     public override func addView() {
         view.addSubview(noticeCollectionView)
@@ -46,26 +77,6 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel>, 
             $0.top.equalToSuperview().inset(106)
             $0.left.right.bottom.equalToSuperview()
         }
-    }
-
-}
-
-extension NoticeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoticeCell.identifier, for: indexPath) as? NoticeCell
-        else {
-            return UICollectionViewCell()
-        }
-        return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? NoticeCell
-        self.steps.accept(PiCKStep.detailNoticeRequired)
     }
     
 }
