@@ -116,6 +116,7 @@ public class MainFlow: Flow {
         let viewModel = container.outingPassViewModel
         let viewController = OutingPassViewController(viewModel: viewModel)
         self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,
             withNextStepper: viewModel

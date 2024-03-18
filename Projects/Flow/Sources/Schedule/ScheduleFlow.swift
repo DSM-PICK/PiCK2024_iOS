@@ -33,7 +33,7 @@ public class ScheduleFlow: Flow {
     private func navigateToschedule() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
-            withNextStepper: rootViewController
+            withNextStepper: rootViewController.viewModel
         ))
     }
 

@@ -13,8 +13,12 @@ public class SchoolMealFlow: Flow {
 
     private let rootViewController: SchoolMealViewController
     
+    private let container = StepperDI.shared
+    
     public init() {
-        self.rootViewController = SchoolMealViewController(viewModel: SchoolMealViewModel())
+        self.rootViewController = SchoolMealViewController(
+            viewModel: container.schoolMealViewModel
+        )
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -29,11 +33,10 @@ public class SchoolMealFlow: Flow {
     }
 
     private func navigateToSchoolMeal() -> FlowContributors {
-//        return .one(flowContributor: .contribute(
-//            withNextPresentable: rootViewController,
-//            withNextStepper: rootViewController.viewModel
-//        ))
-        return .one(flowContributor: .contribute(withNext: rootViewController))
+        return .one(flowContributor: .contribute(
+            withNextPresentable: rootViewController,
+            withNextStepper: rootViewController.viewModel
+        ))
     }
 
 }

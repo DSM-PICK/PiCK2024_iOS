@@ -16,7 +16,9 @@ public class ProfileFlow: Flow {
     private let container = StepperDI.shared
     
     public init() {
-        self.rootViewController = ProfileViewController(viewModel: container.profileViewModel)
+        self.rootViewController = ProfileViewController(
+            viewModel: container.profileViewModel
+        )
     }
 
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -45,12 +47,13 @@ public class ProfileFlow: Flow {
             cancelButtonTitle: "아니요",
             checkButtonTitle: "예",
             clickToAction: {
-                print("로그아웃")
-            })
+            }
+        )
         logoutAlert.modalPresentationStyle = .overFullScreen
         logoutAlert.modalTransitionStyle = .crossDissolve
         rootViewController.present(logoutAlert, animated: true)
         return .none
     }
+
 
 }

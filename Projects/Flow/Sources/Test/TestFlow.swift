@@ -14,6 +14,7 @@ public class TestFlow: Flow {
     }
 
     private let rootPresentable = BaseNavigationController()
+    
     private let container = StepperDI.shared
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
@@ -28,8 +29,8 @@ public class TestFlow: Flow {
     }
     
     private func navigateToTest() -> FlowContributors {
-        let viewModel = container.applyViewModel
-        let viewController = ApplyViewController(viewModel: viewModel)
+        let viewModel = container.mainViewModel
+        let viewController = MainViewController(viewModel: viewModel)
         self.rootPresentable.pushViewController(viewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,
