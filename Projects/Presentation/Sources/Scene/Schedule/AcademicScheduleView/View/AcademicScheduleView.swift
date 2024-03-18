@@ -17,7 +17,7 @@ public class AcademicScheduleView: BaseView {
     private var month = String()
     
     private lazy var calendarView = PiCKAcademicScheduleCalendarView(click: { date in
-        self.month = date.toStringEng(DateFormatIndicated.fullMonth.rawValue)
+        self.month = date.toStringEng(type:.fullMonth)
         self.clickToAction(self.month)
     })
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
@@ -58,13 +58,10 @@ public class AcademicScheduleView: BaseView {
             cellIdentifier: AcademicScheduleCell.identifier,
             cellType: AcademicScheduleCell.self
         )) { row, element, cell in
-            let date = element.date
-            let ddd = date.toDate(type: .day)
-            let dd = ddd?.toString(DateFormatIndicated.day.rawValue)
             cell.setup(
                 id: element.id,
-                date: dd ?? "",
-                dayOfWeek: element.date,
+                day: element.day,
+                dayOfWeek: element.dayName,
                 schedule: element.eventName
             )
         }

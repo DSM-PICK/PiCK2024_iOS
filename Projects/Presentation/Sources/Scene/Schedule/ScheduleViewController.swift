@@ -4,19 +4,17 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
 import Core
 import DesignSystem
 
-public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Stepper {
+public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
     
-    public let steps = PublishRelay<Step>()
     private let academicScheduleLoadRelay = PublishRelay<String>()
-    private let timeTableLoadRelay = PublishRelay<String>()
+    private let timeTableLoadRelay = PublishRelay<Void>()
     
     private let date = Date()
-    private lazy var month = date.toStringEng(DateFormatIndicated.fullMonth.rawValue)
+    private lazy var month = date.toStringEng(type: .fullMonth)
     
     private lazy var viewSize = CGRect(
         x: 0,
@@ -25,7 +23,9 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Step
         height: self.view.frame.height - 184
     )
     
-    private lazy var segmentedTimetableView = ScrollTimeTableView(frame: viewSize)
+    private lazy var segmentedTimetableView = ScrollTimeTableView(
+        frame: viewSize
+    )
     private lazy var segmentedCalendarView = AcademicScheduleView(
         clickToAction: { month in
             self.month = month
@@ -47,8 +47,8 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Step
         navigationItem.titleView = navigationTitleLabel
     }
     public override func bindAction() {
-        timeTableLoadRelay.accept(date.toString(DateFormatIndicated.fullDate.rawValue))
-       academicScheduleLoadRelay.accept(self.month)
+        timeTableLoadRelay.accept(())
+        academicScheduleLoadRelay.accept(self.month)
     }
     public override func bind() {
         self.segmentedControl.addTarget(self, action: #selector(didChangeValue(segment:)), for: .valueChanged)
@@ -62,21 +62,33 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel>, Step
         
         output.academicScheduleDataLoad.asObservable()
             .subscribe(
-                onNext: { data in
+                onNext: { academicSchedule in
                     self.segmentedCalendarView.setup(
-                        academicSchedule: data
+                        academicSchedule: academicSchedule
                     )
                 }
             )
             .disposed(by: disposeBag)
         
-        output.dateLoad.asObservable()
+        output.timeTableDataLoad.asObservable()
             .subscribe(
-                onNext: { date in
-                    self.segmentedTimetableView.setup(date: date)
+                onNext: { timeTableData in
+                    self.segmentedTimetableView.timeTableSetup(
+                        timeTableData: timeTableData
+                    )
                 }
             )
             .disposed(by: disposeBag)
+//        
+//        output.dateLoad.asObservable()
+//            .subscribe(
+//                onNext: { date in
+//                    self.segmentedTimetableView.dateSetup(
+//                        date: date
+//                    )
+//                }
+//            )
+//            .disposed(by: disposeBag)
         
     }
     public override func addView() {

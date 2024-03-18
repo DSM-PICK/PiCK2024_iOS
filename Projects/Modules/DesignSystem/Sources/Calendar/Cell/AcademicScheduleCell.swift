@@ -20,9 +20,15 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
     
     static let identifier = "academicScheduleCalendarCellID"
     
-    public let daysLabel = UILabel().then {
+    private var daysLabel = UILabel().then {
         $0.textColor = .neutral100
         $0.font = .buttonS
+    }
+    
+    public func setup(
+        day: String
+    ) {
+        self.daysLabel.text = day
     }
     
     public override func attribute() {

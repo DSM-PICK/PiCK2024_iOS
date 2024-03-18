@@ -31,12 +31,12 @@ public class AcademicScheduleCell: BaseCollectionViewCell {
     
     public func setup(
         id: UUID,
-        date: String,
+        day: Int,
         dayOfWeek: String,
         schedule: String
     ) {
         self.id = id
-        self.dateLabel.text = date
+        self.dateLabel.text = "\(day)"
         self.dayOfWeekLabel.text = dayOfWeek
         self.scheduleLabel.text = schedule
     }

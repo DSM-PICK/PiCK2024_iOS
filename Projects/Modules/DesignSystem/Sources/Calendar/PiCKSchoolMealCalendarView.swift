@@ -11,7 +11,7 @@ public class PiCKSchoolMealCalendarView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    var clickCell: (String) -> Void
+    var clickCell: (String, Date) -> Void
     
     private var calendar = Calendar.current
     private var dateFormatter = DateFormatter()
@@ -50,7 +50,7 @@ public class PiCKSchoolMealCalendarView: UIView {
     }
     
     public init(
-        clickCell: @escaping (String) -> Void
+        clickCell: @escaping (String, Date) -> Void
     ) {
         self.clickCell = clickCell
         super.init(frame: .zero)
@@ -107,29 +107,41 @@ public class PiCKSchoolMealCalendarView: UIView {
 }
 
 extension PiCKSchoolMealCalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         return days.count
     }
     
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchoolMealCalendarCell.identifier, for: indexPath) as? SchoolMealCalendarCell
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: SchoolMealCalendarCell.identifier,
+            for: indexPath
+        ) as? SchoolMealCalendarCell
         else {
             return UICollectionViewCell()
         }
         cell.daysLabel.text = "\(days[indexPath.row])"
-    return cell
-}
-
-public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-    guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else {
-        return false
+        return cell
     }
-    let date = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
-    self.clickCell("\(date)")
-    return !cell.daysLabel.text!.isEmpty
-}
-
-
+    
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        shouldSelectItemAt indexPath: IndexPath
+    ) -> Bool {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else {
+            return false
+        }
+        let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
+        let loadDate = clickDate.toDate(type: .fullDate)
+        self.clickCell(clickDate, loadDate ?? Date())
+        return !cell.daysLabel.text!.isEmpty
+    }
+    
 }
 
 extension PiCKSchoolMealCalendarView {

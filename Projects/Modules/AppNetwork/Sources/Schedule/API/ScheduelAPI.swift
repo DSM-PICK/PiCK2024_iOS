@@ -5,8 +5,9 @@ import Moya
 import Core
 
 public enum ScheduelAPI {
-    case fetchMonthAcademicSchedule(month: Int)
-    case fetchTimeTable(date: MonthType.RawValue)
+    case fetchMonthAcademicSchedule(year: String, month: MonthType.RawValue)
+    case fetchTodayTimeTable
+    case fetchWeekTimeTable
 }
 
 extension ScheduelAPI: TargetType {
@@ -16,10 +17,12 @@ extension ScheduelAPI: TargetType {
     
     public var path: String {
         switch self {
-            case .fetchMonthAcademicSchedule(let month):
-                return "/schedule/month=\(month)"
-            case .fetchTimeTable(let date):
-                return "/calendar/\(date)"
+            case .fetchMonthAcademicSchedule:
+                return "/schedule/month"
+            case .fetchTodayTimeTable:
+                return "/timetable/today"
+            case .fetchWeekTimeTable:
+                return "/timetable/week"
         }
     }
     
@@ -28,7 +31,18 @@ extension ScheduelAPI: TargetType {
     }
     
     public var task: Moya.Task {
-        return .requestPlain
+        switch self {
+            case let .fetchMonthAcademicSchedule(year, month):
+                return .requestParameters(
+                    parameters: [
+                        "year": year,
+                        "month": month
+                    ],
+                    encoding: URLEncoding.queryString
+                )
+            default:
+                return .requestPlain
+        }
     }
     
     public var headers: [String : String]? {

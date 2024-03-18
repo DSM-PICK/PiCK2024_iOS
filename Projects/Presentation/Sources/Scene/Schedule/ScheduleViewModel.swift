@@ -13,37 +13,37 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
     public var steps = PublishRelay<Step>()
     
     private let fetchMonthAcademicSchduleUseCase: FetchMonthAcademicScheduleUseCase
-    private let fetchTimeTableUseCase: FetchTimeTableUseCase
+    private let fetchWeekTimeTableUseCase: FetchWeekTimeTableUseCase
     
     public init(
         fetchMonthAcademicSchduleUseCase: FetchMonthAcademicScheduleUseCase,
-        fetchTimeTableUseCase: FetchTimeTableUseCase
+        fetchWeekTimeTableUseCase: FetchWeekTimeTableUseCase
     ) {
         self.fetchMonthAcademicSchduleUseCase = fetchMonthAcademicSchduleUseCase
-        self.fetchTimeTableUseCase = fetchTimeTableUseCase
+        self.fetchWeekTimeTableUseCase = fetchWeekTimeTableUseCase
     }
     
     public struct Input {
         let academicScheduleLoad: Observable<String>
-        let timeTableLoad: Observable<String>
+        let timeTableLoad: Observable<Void>
     }
     public struct Output {
         //academicSchedule
-        let academicScheduleDataLoad: Signal<AcademicScheduleEntity>
+        let academicScheduleDataLoad: Driver<AcademicScheduleEntity>
         //timeTable
-        let dateLoad: Driver<String>
-        let timeTableDataLoad: Signal<[TimeTableEntityElement]>
+//        let dateLoad: Driver<String>
+        let timeTableDataLoad: Driver<WeekTimeTableEntity>
     }
     
     //academicSchedule
     let academicScheduleDataLoad = PublishRelay<AcademicScheduleEntity>()
     //timeTable
-    let dateDataLoad = PublishRelay<String>()
-    let timeTableDataLoad = PublishRelay<[TimeTableEntityElement]>()
+//    let dateDataLoad = PublishRelay<String>()
+    let timeTableDataLoad = PublishRelay<WeekTimeTableEntity>()
     
     public func transform(input: Input) -> Output {
         let date = Date()
-        let thisYear = date.toString(DateFormatIndicated.year.rawValue)
+        let thisYear = date.toString(type: .year)
         
         input.academicScheduleLoad.asObservable()
             .flatMap { month in
@@ -56,29 +56,24 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
                         return .never()
                     }
             }
-            .bind(to: academicScheduleDataLoad)     
+            .bind(to: academicScheduleDataLoad)
             .disposed(by: disposeBag)
         
         input.timeTableLoad.asObservable()
-            .flatMap { date in
-                self.fetchTimeTableUseCase.excute(date: date)
+            .flatMap {
+                self.fetchWeekTimeTableUseCase.excute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()
                     }
             }
-            .subscribe(
-                onNext: {
-                    self.dateDataLoad.accept($0.date)
-                    self.timeTableDataLoad.accept($0.times)
-                }
-            )
+            .bind(to: timeTableDataLoad)
             .disposed(by: disposeBag)
         
         return Output(
-            academicScheduleDataLoad: academicScheduleDataLoad.asSignal(),
-            dateLoad: dateDataLoad.asDriver(onErrorJustReturn: String()),
-            timeTableDataLoad: timeTableDataLoad.asSignal()
+            academicScheduleDataLoad: academicScheduleDataLoad.asDriver(onErrorJustReturn: []),
+//            dateLoad: dateDataLoad.asDriver(onErrorJustReturn: String()),
+            timeTableDataLoad: timeTableDataLoad.asDriver(onErrorJustReturn: [])
         )
     }
     
