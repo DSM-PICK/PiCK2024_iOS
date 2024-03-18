@@ -61,7 +61,7 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel> {
             .disposed(by: disposeBag)
         
         noticeCollectionView.rx.modelSelected(NoticeListEntityElement.self)
-            .bind(
+            .subscribe(
                 onNext: { [weak self] data in
                     self?.clickNoticeCell.accept(data.id)
                 }
