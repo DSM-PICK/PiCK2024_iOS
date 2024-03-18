@@ -5,7 +5,7 @@ import RxSwift
 import Domain
 
 class ProfileRepositoryImpl: ProfileRepository {
-    
+
     let remoteDataSource = ProfileDataSource.shared
     
     func fetchSimpleProfile() -> Single<SimpleProfileEntity> {

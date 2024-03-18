@@ -5,6 +5,7 @@ open class BaseCollectionViewCell: UICollectionViewCell {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         attribute()
+        bind()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -12,8 +13,15 @@ open class BaseCollectionViewCell: UICollectionViewCell {
     open override func layoutSubviews() {
         super.layoutSubviews()
         layout()
+        configureUI()
     }
     
+    open func bind() {
+        
+    }
+    open func configureUI() {
+        
+    }
     open func attribute() {
         //cell 관련 설정을 하는 함수
     }
