@@ -10,22 +10,28 @@ public class TimeTableCell: BaseCollectionViewCell {
     
     static let identifier = "timeTableCellID"
     
-    public var periodLabel = UILabel().then {
+    private var periodLabel = UILabel().then {
         $0.textColor = .primary50
         $0.font = .subTitle3B
     }
-    public var periodImageView = UIImageView().then {
+    private var periodImageView = UIImageView().then {
         $0.backgroundColor = .black
     }
-    public var subjectLabel = UILabel().then {
-        $0.text = "창체"
+    private var subjectLabel = UILabel().then {
         $0.textColor = .black
         $0.font = .subTitle3M
     }
-    public var timeLabel = UILabel().then {
-        $0.text = "08:30 ~ 09:20"
+    private var timeLabel = UILabel().then {
         $0.textColor = .neutral500
         $0.font = .caption3
+    }
+    
+    public func setup(
+        period: Int,
+        subject: String
+    ) {
+        self.periodLabel.text = "\(period)"
+        self.subjectLabel.text = subject
     }
     
     public override func layout() {

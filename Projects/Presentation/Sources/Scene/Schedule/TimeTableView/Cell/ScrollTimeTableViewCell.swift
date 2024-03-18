@@ -2,16 +2,22 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 import Core
+import Domain
 import DesignSystem
 
 public class ScrollTimeTableViewCell: BaseCollectionViewCell {
     
+    private lazy var timeTableData = PublishRelay<[TimeTableEntityElement]>()
+    
+    private let disposeBag = DisposeBag()
+    
     static let identifier = "scrollTimeTableViewCellID"
     
     private let dateLabel = UILabel().then {
-        $0.text = "2월 4일 (일)"
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
@@ -25,13 +31,35 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
         collectionViewLayout: collectionviewLayout
     ).then {
         $0.backgroundColor = .white
-        $0.register(TimeTableCell.self, forCellWithReuseIdentifier: TimeTableCell.identifier)
+        $0.register(
+            TimeTableCell.self,
+            forCellWithReuseIdentifier: TimeTableCell.identifier
+        )
     }
     
-    public override func attribute() {
-        self.backgroundColor = .white
-        collectionView.delegate = self
-        collectionView.dataSource = self
+    public func dateSetup(
+        date: String
+    ) {
+        self.dateLabel.text = date
+    }
+    public func timeTableSetup(
+        timeTableData: [TimeTableEntityElement]
+    ) {
+        self.timeTableData.accept(timeTableData)
+    }
+    
+    public override func bind() {
+        timeTableData.asObservable()
+            .bind(to: collectionView.rx.items(
+                cellIdentifier: TimeTableCell.identifier,
+                cellType: TimeTableCell.self
+            )) { row, element, cell in
+                cell.setup(
+                    period: element.period,
+                    subject: element.subjectName
+                )
+            }
+            .disposed(by: disposeBag)
     }
     public override func layout() {
         [
@@ -48,22 +76,6 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
             $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview().inset(40)
         }
-    }
-    
-}
-
-extension ScrollTimeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimeTableCell.identifier, for: indexPath) as? TimeTableCell
-        else {
-            return UICollectionViewCell()
-        }
-        cell.periodLabel.text = "\(indexPath.row + 1)교시"
-        return cell
     }
     
 }
