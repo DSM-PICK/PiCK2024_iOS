@@ -21,37 +21,53 @@ public class PassView: BaseView, Stepper {
         $0.backgroundColor = .clear
     }
     private let topLabel = UILabel().then {
-        $0.text = "조영준님의 조기 귀가 가능 시간은"
         $0.textColor = .neutral300
         $0.font = .caption2
         $0.numberOfLines = 0
     }
-    private let bottomLabel = UILabel().then {
+    
+    var firstText = String()
+    var secondText = String()
+
+    private lazy var bottomLabel = UILabel().then {
         let attributedText = NSMutableAttributedString()
         
         let attributes1 = [
             NSAttributedString.Key.foregroundColor: UIColor.primary400,
             .font: UIFont.subTitle3M
         ]
-        let firstText = NSAttributedString(string: "12 : 34", attributes: attributes1)
+        let text1 = NSAttributedString(string: firstText, attributes: attributes1)
         
         let attributes2 = [
             NSAttributedString.Key.foregroundColor: UIColor.neutral50,
             .font: UIFont.caption1
         ]
-        let secondText = NSAttributedString(string: " 부터 입니다.", attributes: attributes2)
+        let text2 = NSAttributedString(string: secondText, attributes: attributes2)
         
-        attributedText.append(firstText)
-        attributedText.append(secondText)
+        attributedText.append(text1)
+        attributedText.append(text2)
         
         $0.attributedText = attributedText
     }
     private let checkButton = UIButton(type: .system).then {
-        $0.setTitle("외출증 보러가기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .buttonES
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .secondary500
+    }
+    
+    public func setup(
+        topLabel: String,
+        bottomLabel: String,
+        buttonTitle: String,
+        firstPointText: String,
+        secondPoinText: String
+    ) {
+        self.topLabel.text = topLabel
+        self.bottomLabel.text = bottomLabel
+        self.checkButton.setTitle(buttonTitle, for: .normal)
+        self.firstText = firstPointText
+        self.secondText = secondPoinText
     }
     
     init(

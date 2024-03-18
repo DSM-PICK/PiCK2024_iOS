@@ -21,5 +21,14 @@ class ClassroomDataSource {
         .asCompletable()
     }
     
+    func fetchClassroomCheck() -> Single<Response> {
+        return provider.rx.request(.classroomCheck)
+            .filterSuccessfulStatusCodes()
+    }
+    
+    func classroomReturn() -> Completable {
+        return provider.rx.request(.classroomReturn)
+            .asCompletable()
+    }
     
 }

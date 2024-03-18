@@ -120,9 +120,9 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         floorCollectionView.rx.itemSelected
             .subscribe(
                 onNext: { [self] index in
-                    classroomNameText.accept(currentFloorClassroomArray.value[index.row])
-                    print(classroomNameText.value)
-                    print(floorText.value)
+                    classroomNameText.accept(
+                        currentFloorClassroomArray.value[index.row]
+                    )
                 }
             )
             .disposed(by: disposeBag)

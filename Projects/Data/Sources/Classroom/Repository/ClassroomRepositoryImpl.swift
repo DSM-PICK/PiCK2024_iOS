@@ -13,4 +13,14 @@ class ClassroomRepositoryImpl: ClassroomRepository {
         )
     }
     
+    func fetchClassroomCheck() -> Single<ClassroomCheckEntity> {
+        return remoteDataSource.fetchClassroomCheck()
+            .map(ClassroomCheckDTO.self)
+            .map { $0.toDomain() }
+    }
+    
+    func classroomReturn() -> Completable {
+        return remoteDataSource.classroomReturn()
+    }
+    
 }
