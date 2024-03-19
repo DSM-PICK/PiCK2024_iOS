@@ -20,7 +20,7 @@ public class ScrollTimeTableView: BaseView {
         $0.minimumLineSpacing = 0
         $0.itemSize = .init(width: self.frame.width, height: self.frame.height)
     }
-    private lazy var colletionView = UICollectionView(
+    private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout
     ).then {
@@ -59,7 +59,7 @@ public class ScrollTimeTableView: BaseView {
     
     public override func bind() {
         timeTableData.asObservable()
-            .bind(to: colletionView.rx.items(
+            .bind(to: collectionView.rx.items(
                 cellIdentifier: ScrollTimeTableViewCell.identifier,
                 cellType: ScrollTimeTableViewCell.self
             )) { row, element, cell in
@@ -71,27 +71,28 @@ public class ScrollTimeTableView: BaseView {
                 )
             }
             .disposed(by: disposeBag)
+        
+        collectionView.rx.didScroll
+            .bind { [weak self] _ in
+                guard let collectionView = self?.collectionView else { return }
+                self?.pageControl.scrollViewDidScroll(collectionView)
+            }
+            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
-            colletionView,
+            collectionView,
             pageControl
         ].forEach { self.addSubview($0) }
     }
     public override func setLayout() {
-        colletionView.snp.makeConstraints {
-            //            $0.top.left.right.equalToSuperview()
-            //            $0.bottom.equalToSuperview().inset(30)
+        collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         pageControl.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(colletionView.snp.bottom).offset(17)
+            $0.top.equalTo(collectionView.snp.bottom).inset(50)
         }
-    }
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pageControl.scrollViewDidScroll(scrollView)
     }
     
 }

@@ -79,17 +79,6 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
                 }
             )
             .disposed(by: disposeBag)
-//        
-//        output.dateLoad.asObservable()
-//            .subscribe(
-//                onNext: { date in
-//                    self.segmentedTimetableView.dateSetup(
-//                        date: date
-//                    )
-//                }
-//            )
-//            .disposed(by: disposeBag)
-        
     }
     public override func addView() {
         [

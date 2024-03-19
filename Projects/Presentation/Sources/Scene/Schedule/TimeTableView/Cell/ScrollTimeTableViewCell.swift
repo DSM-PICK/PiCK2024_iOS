@@ -74,7 +74,7 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
         collectionView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(7)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(40)
+            $0.bottom.equalToSuperview().inset(100)
         }
     }
     
