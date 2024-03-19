@@ -39,6 +39,9 @@ public class LoginViewModel: BaseViewModel, Stepper {
         input.loginButtonSignal
             .withLatestFrom(info)
             .filter { self.checkLoginData($0.0, $0.1) }
+            .distinctUntilChanged { (prevent, current) -> Bool in
+                return prevent.0 == current.0 && prevent.1 == current.1
+            }
             .flatMap { [self] id, password in
                 loginUseCase.execute(accountID: id, password: password)
                 .catch { id in
