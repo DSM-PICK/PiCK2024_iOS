@@ -16,16 +16,9 @@ public class OnboardingViewController: UIViewController, Stepper {
     
     private lazy var cellSize: CGFloat =  self.view.frame.width - 94
     
-    private let logoImageView = UIView().then { //임시
-        $0.backgroundColor = .gray
-    }
-    private let pickLabel = UILabel().then {
-        $0.text = "PiCK"
-        $0.textColor = .primary300
-        $0.font = .heading3
-    }
+    private let logoImageView = UIImageView(image: .PiCKLogo)
     private let explainLabel = UILabel().then {
-        $0.text = "편리한 학교 생활을편리한 학교 생활을\nㅍ편리한 학교 생활을"
+        $0.text = "학교 생활을 한 곳에서, PiCK"
         $0.textColor = .neutral400
         $0.font = .body2
         $0.numberOfLines = 2
@@ -89,7 +82,6 @@ public class OnboardingViewController: UIViewController, Stepper {
     private func addView() {
         [
             logoImageView,
-            pickLabel,
             explainLabel,
             onboardingCollectionview,
             pageControl,
@@ -100,14 +92,11 @@ public class OnboardingViewController: UIViewController, Stepper {
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(144)
             $0.left.equalToSuperview().inset(24)
-            $0.width.height.equalTo(50)
-        }
-        pickLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(194)
-            $0.left.equalToSuperview().inset(24)
+            $0.width.height.equalTo(120)
+            $0.height.equalTo(68)
         }
         explainLabel.snp.makeConstraints {
-            $0.top.equalTo(pickLabel.snp.bottom).offset(15)
+            $0.top.equalTo(logoImageView.snp.bottom).offset(15)
             $0.left.equalToSuperview().inset(24)
         }
         onboardingCollectionview.snp.makeConstraints {
