@@ -11,7 +11,7 @@ public class WeekendMealCheckUseCase {
         self.repository = repository
     }
 
-    public func excute() -> Single<WeekendMealCheckEntity> {
+    public func execute() -> Single<WeekendMealCheckEntity> {
         return repository.weekendMealCheck()
     }
 }

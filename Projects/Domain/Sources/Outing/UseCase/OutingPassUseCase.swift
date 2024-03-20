@@ -10,7 +10,7 @@ public class FetchOutingPassUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<OutingPassEntity> {
+    public func execute() -> Single<OutingPassEntity> {
         return repository.fetchOutingPass()
     }
     

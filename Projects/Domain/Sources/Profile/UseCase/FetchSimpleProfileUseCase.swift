@@ -9,7 +9,7 @@ public class FetchSimpleProfileUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<SimpleProfileEntity> {
+    public func execute() -> Single<SimpleProfileEntity> {
         return repository.fetchSimpleProfile()
     }
     

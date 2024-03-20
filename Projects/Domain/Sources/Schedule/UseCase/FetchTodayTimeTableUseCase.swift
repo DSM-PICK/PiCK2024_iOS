@@ -11,7 +11,7 @@ public class FetchTodayTimeTableUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<TimeTableEntity> {
+    public func execute() -> Single<TimeTableEntity> {
         return repository.fetchTodayTimeTable()
     }
     

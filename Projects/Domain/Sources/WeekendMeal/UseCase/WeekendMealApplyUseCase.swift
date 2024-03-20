@@ -12,7 +12,7 @@ public class WeekendMealApplyUseCase {
         self.repository = repository
     }
 
-    public func excute(status: WeekendMealTypeEnum.RawValue) -> Completable {
+    public func execute(status: WeekendMealTypeEnum.RawValue) -> Completable {
         return repository.weekendMealApply(status: status)
     }
 }

@@ -11,7 +11,7 @@ public class FetchMonthAcademicScheduleUseCase {
         self.repository = repository
     }
     
-    public func excute(year: String, month: String) -> Single<AcademicScheduleEntity> {
+    public func execute(year: String, month: String) -> Single<AcademicScheduleEntity> {
         return repository.fetchMonthAcademicSchedule(year: year, month: month)
     }
     

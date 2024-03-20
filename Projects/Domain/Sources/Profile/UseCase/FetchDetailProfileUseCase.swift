@@ -9,7 +9,7 @@ public class FetchDetailProfileUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<DetailProfileEntity> {
+    public func execute() -> Single<DetailProfileEntity> {
         return repository.fetchDetailProfile()
     }
     

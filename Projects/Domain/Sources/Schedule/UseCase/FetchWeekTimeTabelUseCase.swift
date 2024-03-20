@@ -11,7 +11,7 @@ public class FetchWeekTimeTableUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<WeekTimeTableEntity> {
+    public func execute() -> Single<WeekTimeTableEntity> {
         return repository.fetchWeekTimeTable()
     }
     

@@ -11,7 +11,7 @@ public class FetchSchoolMealUseCase {
         self.repository = repository
     }
     
-    public func excute(date: String) -> Single<SchoolMealEntity> {
+    public func execute(date: String) -> Single<SchoolMealEntity> {
         return repository.fetchSchoolMeal(date: date)
     }
     

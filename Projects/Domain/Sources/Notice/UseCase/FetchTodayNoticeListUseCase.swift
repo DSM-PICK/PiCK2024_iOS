@@ -9,7 +9,7 @@ public class FetchTodayNoticeListUseCase {
         self.repository = repository
     }
     
-    public func excute() -> Single<TodayNoticeListEntity> {
+    public func execute() -> Single<TodayNoticeListEntity> {
         return repository.fetchTodayNoticeList()
     }
     
