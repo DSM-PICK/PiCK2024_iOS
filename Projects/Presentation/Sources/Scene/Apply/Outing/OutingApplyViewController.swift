@@ -87,7 +87,9 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
             .when(.recognized)
             .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { depatureTime in
-                    self?.depatureTimeText.accept("\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")")
+                    self?.depatureTimeText.accept(
+                        "\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")"
+                    )
                     
                     self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
                     self?.departureTimeLabel.textColor = .neutral50

@@ -50,7 +50,7 @@ public class EarlyLeaveApplyViewModel: BaseViewModel, Stepper {
         input.earlyLeaveApplyButton.asObservable()
             .withLatestFrom(info)
             .flatMap { reason, startTime in
-                self.earlyLeaveApplyUseCase.excute(
+                self.earlyLeaveApplyUseCase.execute(
                     reason: reason,
                     startTime: startTime
                 )

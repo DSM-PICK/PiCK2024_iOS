@@ -57,7 +57,7 @@ public class OutingApplyViewModel: BaseViewModel, Stepper {
         input.outingApplyButton.asObservable()
             .withLatestFrom(info)
             .flatMap { reason, startTime, endTime in
-                self.outingApplyUseCase.excute(
+                self.outingApplyUseCase.execute(
                     reason: reason,
                     startTime: startTime,
                     endTime: endTime

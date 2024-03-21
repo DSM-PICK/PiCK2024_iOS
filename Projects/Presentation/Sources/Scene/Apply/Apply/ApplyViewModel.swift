@@ -41,7 +41,7 @@ public class ApplyViewModel: BaseViewModel, Stepper {
     public func transform(input: Input) -> Output {
         input.viewWillAppear.asObservable()
             .flatMap {
-                self.weekendMealCheckUseCase.excute()
+                self.weekendMealCheckUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()
@@ -52,7 +52,7 @@ public class ApplyViewModel: BaseViewModel, Stepper {
         
         input.weekendMealApply.asObservable()
             .flatMap { status in
-                self.weekendMealApplyUseCase.excute(status: status.rawValue)
+                self.weekendMealApplyUseCase.execute(status: status.rawValue)
             }.subscribe(
                 onCompleted: {
                     print("Completed")

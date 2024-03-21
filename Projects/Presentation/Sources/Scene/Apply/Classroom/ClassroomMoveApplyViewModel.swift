@@ -58,13 +58,13 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
                     print($0.localizedDescription)
                     return .never()
                 }
-                    .andThen(Single.just(PiCKStep.popRequired))
+                .andThen(Single.just(PiCKStep.popRequired))
             }
             .bind(to: steps)
             .disposed(by: disposeBag)
         
-        return Output(isApplyButtonEnable: isApplyButtonEnable.asSignal(
-            onErrorJustReturn: false)
+        return Output(
+            isApplyButtonEnable: isApplyButtonEnable.asSignal(onErrorJustReturn: false)
         )
     }
     

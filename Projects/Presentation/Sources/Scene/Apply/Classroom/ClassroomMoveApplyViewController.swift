@@ -84,7 +84,10 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
     ).then {
         $0.bounces = false
         $0.backgroundColor = .white
-        $0.register(FloorCell.self, forCellWithReuseIdentifier: FloorCell.identifier)
+        $0.register(
+            FloorCell.self,
+            forCellWithReuseIdentifier: FloorCell.identifier
+        )
     }
     
     public override func configureNavigationBar() {
