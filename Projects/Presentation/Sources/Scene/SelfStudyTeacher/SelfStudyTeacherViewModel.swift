@@ -9,21 +9,40 @@ import Domain
 
 public class SelfStudyTeacherViewModel: BaseViewModel, Stepper {
     
+    private let disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
-    public init(steps: PublishRelay<Step> = PublishRelay<Step>()) {
-        self.steps = steps
-    }
+    let fetchSelfStudyTeacherUseCase: FetchSelfStudyTeacherUseCase
     
+    public init(
+        fetchSelfStudyTeacherUseCase: FetchSelfStudyTeacherUseCase
+    ) {
+        self.fetchSelfStudyTeacherUseCase = fetchSelfStudyTeacherUseCase
+    }
     public struct Input {
-        
+        let fetchTeacherList: Observable<String>
     }
     public struct Output {
-        
+        let teacherList: Driver<SelfStudyTeacherEntity>
     }
     
+    private let teacherList = BehaviorRelay<SelfStudyTeacherEntity>(value: [])
+    
     public func transform(input: Input) -> Output {
-        return Output()
+        input.fetchTeacherList.asObservable()
+            .flatMap { date in
+                self.fetchSelfStudyTeacherUseCase.execute(date: date)
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: teacherList)
+            .disposed(by: disposeBag)
+        
+        return Output(
+            teacherList: teacherList.asDriver()
+        )
     }
     
 }
