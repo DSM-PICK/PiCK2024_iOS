@@ -33,7 +33,7 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
     public func transform(input: Input) -> Output {
         input.outingPassLoad.asObservable()
             .flatMap {
-                self.fetchOutingPassUseCase.excute()
+                self.fetchOutingPassUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()

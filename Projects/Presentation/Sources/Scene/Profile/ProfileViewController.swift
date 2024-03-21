@@ -4,15 +4,14 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
-import RxFlow
 
 import Core
 import DesignSystem
 
-public class ProfileViewController: BaseViewController<ProfileViewModel>, Stepper {
+public class ProfileViewController: BaseViewController<ProfileViewModel> {
     
     private let viewWillAppearRelay = PublishRelay<Void>()
-    public let steps = PublishRelay<Step>()
+    private let logoutAlertRelay = PublishRelay<Void>()
     
     private let navigationTitleLabel = UILabel().then {
         $0.text = "my"
@@ -99,7 +98,9 @@ public class ProfileViewController: BaseViewController<ProfileViewModel>, Steppe
     }
     public override func bind() {
         let input = ProfileViewModel.Input(
-            viewWillAppear: viewWillAppearRelay.asObservable()
+            viewWillAppear: viewWillAppearRelay.asObservable(),
+            logoutButtonDidClick: logOutButton.rx.tap.asObservable(),
+            logoutAlertClick: logoutAlertRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
         
@@ -114,10 +115,6 @@ public class ProfileViewController: BaseViewController<ProfileViewModel>, Steppe
             )
             .disposed(by: disposeBag)
         
-        logOutButton.rx.tap
-            .bind { [weak self] in
-                self?.steps.accept(PiCKStep.logoutAlertRequired)
-            }.disposed(by: disposeBag)
     }
     public override func addView() {
         [

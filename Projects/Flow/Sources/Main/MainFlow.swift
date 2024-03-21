@@ -10,13 +10,12 @@ public class MainFlow: Flow {
     public var root: Presentable {
         return rootViewController
     }
-
-    private let rootViewController: MainViewController
+    
+    private let rootViewController = BaseNavigationController()
+    
     private let container = StepperDI.shared
     
-    public init() {
-        self.rootViewController = MainViewController(viewModel: container.mainViewModel)
-    }
+    public init() {}
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -38,24 +37,25 @@ public class MainFlow: Flow {
                 return presentOutingPass()
             case .noticeRequired:
                 return navigateToNotice()
-            case .devRequired:
-                return presentDevPage()
             default:
                 return .none
         }
     }
     
     private func navigateToMain() -> FlowContributors {
+        let viewModel = container.mainViewModel
+        let viewController = MainViewController(viewModel: viewModel)
+        self.rootViewController.pushViewController(viewController, animated: true)
         return .one(flowContributor: .contribute(
-            withNextPresentable: rootViewController,
-            withNextStepper: rootViewController.viewModel
+            withNextPresentable: viewController,
+            withNextStepper: viewController.viewModel
         ))
     }
     
     private func navigateToProfile() -> FlowContributors {
         let profileFlow = ProfileFlow()
         Flows.use(profileFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -67,7 +67,7 @@ public class MainFlow: Flow {
     private func navigateToSchedule() -> FlowContributors {
         let scheduleFlow = ScheduleFlow()
         Flows.use(scheduleFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -79,7 +79,7 @@ public class MainFlow: Flow {
     private func navigateToApply() -> FlowContributors {
         let applyFlow = ApplyFlow()
         Flows.use(applyFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -91,7 +91,7 @@ public class MainFlow: Flow {
     private func navigateToSchoolMeal() -> FlowContributors {
         let schoolMealFlow = SchoolMealFlow()
         Flows.use(schoolMealFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -103,7 +103,7 @@ public class MainFlow: Flow {
     private func navigateToSelfStudyTeacher() -> FlowContributors {
         let noticeFlow = SelfStudyTeacherFlow()
         Flows.use(noticeFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -115,7 +115,7 @@ public class MainFlow: Flow {
     private func presentOutingPass() -> FlowContributors {
         let viewModel = container.outingPassViewModel
         let viewController = OutingPassViewController(viewModel: viewModel)
-        self.rootViewController.navigationController?.pushViewController(viewController, animated: true)
+        self.rootViewController.pushViewController(viewController, animated: true)
         
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,
@@ -126,7 +126,7 @@ public class MainFlow: Flow {
     private func navigateToNotice() -> FlowContributors {
         let noticeFlow = NoticeFlow()
         Flows.use(noticeFlow, when: .created) { [weak self] root in
-            self?.rootViewController.navigationController?.pushViewController(root, animated: true)
+            self?.rootViewController.pushViewController(root, animated: true)
         }
         
         return .one(flowContributor: .contribute(
@@ -134,12 +134,5 @@ public class MainFlow: Flow {
             withNextStepper: OneStepper(withSingleStep: PiCKStep.noticeRequired)
         ))
     }
-    
-    private func presentDevPage() -> FlowContributors {
-        let vc = DevVC()
-        self.rootViewController.navigationController?.pushViewController(vc, animated: true)
-        return .one(flowContributor: .contribute(withNext: vc))
-    }
-    
     
 }

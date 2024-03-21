@@ -20,6 +20,8 @@ public class ProfileViewModel: BaseViewModel, Stepper {
     
     public struct Input {
         let viewWillAppear: Observable<Void>
+        let logoutButtonDidClick: Observable<Void>
+        let logoutAlertClick: Observable<Void>
     }
     public struct Output {
         let userProfileData: Signal<DetailProfileEntity>
@@ -30,7 +32,7 @@ public class ProfileViewModel: BaseViewModel, Stepper {
     public func transform(input: Input) -> Output {
         input.viewWillAppear
             .flatMap {
-                self.fetchDetailProfileUseCase.excute()
+                self.fetchDetailProfileUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()
@@ -39,7 +41,19 @@ public class ProfileViewModel: BaseViewModel, Stepper {
             .bind(to: userProfileData)
             .disposed(by: disposeBag)
         
-        return Output(userProfileData: userProfileData.asSignal())
+        input.logoutButtonDidClick
+            .map { PiCKStep.logoutAlertRequired }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        
+        input.logoutAlertClick
+            .map { PiCKStep.logoutRequired }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        
+        return Output(
+            userProfileData: userProfileData.asSignal()
+        )
     }
     
 }

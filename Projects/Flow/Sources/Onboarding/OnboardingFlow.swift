@@ -14,6 +14,7 @@ public class OnboardingFlow: Flow {
     }
 
     private var rootViewController = BaseNavigationController()
+    private let container = StepperDI.shared
     
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
@@ -29,15 +30,21 @@ public class OnboardingFlow: Flow {
     }
     
     private func navigateToOnboarding() -> FlowContributors {
-        let onboardingViewController = OnboardingViewController()
+        let onboardingViewController = OnboardingViewController(
+            viewModel: container.onboardingViewModel
+        )
         self.rootViewController.pushViewController(onboardingViewController, animated: true)
-        return .one(flowContributor: .contribute(withNext: onboardingViewController))
+        return .one(flowContributor: .contribute(
+            withNextPresentable: onboardingViewController,
+            withNextStepper: onboardingViewController.viewModel
+        ))
     }
 
     private func navigateToLogin() -> FlowContributors {
         let loginFlow = LoginFlow()
         Flows.use(loginFlow, when: .created) { [weak self] root in
             self?.rootViewController.pushViewController(root, animated: true)
+            
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: loginFlow,

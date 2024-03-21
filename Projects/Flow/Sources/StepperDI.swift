@@ -5,6 +5,7 @@ import Presentation
 public struct StepperDI {
     public static let shared = resolve()
     
+    public let onboardingViewModel: OnboardingViewModel
     public let loginViewModel: LoginViewModel
     public let mainViewModel: MainViewModel
     public let applyViewModel: ApplyViewModel
@@ -17,8 +18,6 @@ public struct StepperDI {
     public let noticeListViewModel: NoticeListViewModel
     public let detailNoticeViewModel: DetailNoticeViewModel
     public let scheduleViewModel: ScheduleViewModel
-//    public let academicScheduleViewModel: AcademicScheduleViewModel
-//    public let timeTableViewModel: TimeTableViewModel
     public let schoolMealViewModel: SchoolMealViewModel
 }
 
@@ -26,6 +25,9 @@ extension StepperDI {
     private static func resolve() -> StepperDI {
 
         let serviceDI = ServiceDI.shared
+        
+        //MARK: OnboardingViewModel
+        let onboardingViewModel = OnboardingViewModel()
         
         //MARK: LoginViewModel
         let loginViewModel = LoginViewModel(
@@ -95,8 +97,9 @@ extension StepperDI {
         )
         
         return .init(
+            onboardingViewModel: onboardingViewModel,
             loginViewModel: loginViewModel,
-            mainViewModel: mainViewModel, 
+            mainViewModel: mainViewModel,
             applyViewModel: applyViewModel,
             profileViewModel: profileViewModel,
             outingViewModel: outingViewModel,

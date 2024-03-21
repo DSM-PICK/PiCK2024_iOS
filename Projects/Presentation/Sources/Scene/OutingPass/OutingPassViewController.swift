@@ -22,12 +22,10 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.font = .subTitle3M
     }
     private let userInfoLabel = UILabel().then {
-        $0.text = "1115 조영준"
         $0.textColor = .neutral100
         $0.font = .subTitle1M
     }
     private let outingTypeLabel = UILabel().then {
-        $0.text = "외출"
         $0.textColor = .primary500
         $0.font = .subTitle1M
     }
@@ -41,7 +39,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.font = .label1
     }
     private let outingTimeRangeLabel = PiCKPaddingLabel().then {
-        $0.text = "16:30 ~ 20:30"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
         $0.backgroundColor = .primary1200
@@ -54,7 +51,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.font = .label1
     }
     private let outingReasonDescriptionLabel = PiCKPaddingLabel().then {
-        $0.text = "집 가고싶다"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
         $0.backgroundColor = .primary1200
@@ -67,7 +63,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.font = .label1
     }
     private let approvedTeacherNameLabel = PiCKPaddingLabel().then {
-        $0.text = "아 몰라"
         $0.textColor = .neutral100
         $0.font = .subTitle3M
         $0.backgroundColor = .primary1200
@@ -93,11 +88,11 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
                     self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
                     self.outingTypeLabel.text = data.type
                     self.approvedTeacherNameLabel.text = data.teacherName
-//                    self.qrCodeImageView.image = data.image
+                    //                    self.qrCodeImageView.image = data.image
                     self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = data.teacherName
-            }
+                }
             )
             .disposed(by: disposeBag)
     }

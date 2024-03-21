@@ -47,7 +47,7 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
         
         input.academicScheduleLoad.asObservable()
             .flatMap { month in
-                self.fetchMonthAcademicSchduleUseCase.excute(
+                self.fetchMonthAcademicSchduleUseCase.execute(
                     year: thisYear,
                     month: month
                 )
@@ -61,7 +61,7 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
         
         input.timeTableLoad.asObservable()
             .flatMap {
-                self.fetchWeekTimeTableUseCase.excute()
+                self.fetchWeekTimeTableUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()

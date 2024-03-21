@@ -1,5 +1,7 @@
 import UIKit
 
+import RxSwift
+import RxCocoa
 import RxFlow
 
 import Core
@@ -29,6 +31,8 @@ public class ProfileFlow: Flow {
                 return navigateToProfile()
             case .logoutAlertRequired:
                 return presentLogoutAlert()
+            case .logoutRequired:
+                return logout()
             default:
                 return .none
         }
@@ -54,6 +58,9 @@ public class ProfileFlow: Flow {
         rootViewController.present(logoutAlert, animated: true)
         return .none
     }
-
+    
+    private func logout() -> FlowContributors {
+        return .end(forwardToParentFlowWithStep: PiCKStep.loginRequired)
+    }
 
 }

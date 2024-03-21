@@ -11,7 +11,7 @@ public class ApplyFlow: Flow {
     public var root: Presentable {
         return rootViewController
     }
-
+    
     private let rootViewController: ApplyViewController
     
     private let container = StepperDI.shared
@@ -19,7 +19,7 @@ public class ApplyFlow: Flow {
     public init() {
         self.rootViewController = ApplyViewController(viewModel: container.applyViewModel)
     }
-
+    
     public func navigate(to step: RxFlow.Step) -> RxFlow.FlowContributors {
         guard let step = step as? PiCKStep else { return .none }
         
@@ -40,7 +40,7 @@ public class ApplyFlow: Flow {
                 return .none
         }
     }
-
+    
     private func navigateToApply() -> FlowContributors {
         return .one(flowContributor: .contribute(
             withNextPresentable: rootViewController,
@@ -80,8 +80,8 @@ public class ApplyFlow: Flow {
     
     private func presentTimePickerAlert(_ button: [String]) -> FlowContributors {
         let timePickerAlert = PiCKTimePickerAlert(clickToAction: { depatureTime in
-//            button.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
-//            button.setTitleColor(.neutral50, for: .normal)
+            //            button.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
+            //            button.setTitleColor(.neutral50, for: .normal)
         })
         timePickerAlert.modalPresentationStyle = .overFullScreen
         timePickerAlert.modalTransitionStyle = .crossDissolve
@@ -90,17 +90,15 @@ public class ApplyFlow: Flow {
     }
     
     private func popRequired() -> FlowContributors {
-//        self.rootViewController.navigationController?.popViewController(animated: true)
-        //        return .none
-            let mainFlow = MainFlow()
-            Flows.use(mainFlow, when: .created) { [weak self] root in
-                self?.rootViewController.navigationController?.pushViewController(root, animated: true)
-            }
-            
-            return .one(flowContributor: .contribute(
-                withNextPresentable: mainFlow,
-                withNextStepper: OneStepper(withSingleStep: PiCKStep.mainRequired)
-            ))
+        let mainFlow = MainFlow()
+        Flows.use(mainFlow, when: .created) { [weak self] root in
+            self?.rootViewController.navigationController?.popToRootViewController(animated: true)
         }
-
+        
+        return .one(flowContributor: .contribute(
+            withNextPresentable: mainFlow,
+            withNextStepper: OneStepper(withSingleStep: PiCKStep.mainRequired)
+        ))
+    }
+    
 }

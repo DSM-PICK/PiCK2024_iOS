@@ -5,15 +5,35 @@ import RxFlow
 import RxSwift
 
 import Core
+import Domain
+import Data
 
 public final class AppStepper: Stepper {
     public let steps = PublishRelay<Step>()
+    
     private let disposeBag = DisposeBag()
+    
+    private let container = ServiceDI.shared
+    private let keychainStorage = KeychainStorage.shared
     
     public init() {}
     
-    //TODO: 서버통신 시작하면 분기처리하기
+    
     public var initialStep: Step {
-        return PiCKStep.testRequired
+        return PiCKStep.onBoardingRequired
     }
+    
+    public func readyToEmitSteps() {
+        container.loginUseCase.execute(
+            accountID: keychainStorage.id ?? "",
+            password: keychainStorage.password ?? ""
+        )
+        .delay(.seconds(Int(1.5)), scheduler: MainScheduler.asyncInstance)
+        .subscribe(
+            with: self,
+            onCompleted: { $0.steps.accept(PiCKStep.mainRequired) },
+            onError: { owner, _ in owner.steps.accept(PiCKStep.onBoardingRequired) }
+        ).disposed(by: disposeBag)
+    }
+    
 }

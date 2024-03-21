@@ -40,6 +40,7 @@ public class AcademicScheduleView: BaseView {
         academicSchedule: AcademicScheduleEntity
     ) {
         self.scheduleArray.accept(academicSchedule)
+        self.calendarView.setup(academicSchedule: academicSchedule)
     }
     
     public init(

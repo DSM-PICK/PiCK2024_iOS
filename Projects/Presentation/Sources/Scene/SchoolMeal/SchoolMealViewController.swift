@@ -30,8 +30,9 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
             } else {
                 self?.todaysSchoolMealLabel.text = "\(date) 급식"
             }
-            self?.schoolMealLoadRelay.accept(loadDate.toString(type: .fullDate))
-        })
+            self?.schoolMealLoadRelay.accept(loadDate)
+        }
+    )
     private lazy var todaysSchoolMealLabel = UILabel().then {
         $0.text = "\(todayDate) 오늘의 급식"
         $0.textColor = .black
@@ -57,14 +58,8 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
         navigationItem.titleView = navigationTitleLabel
     }
     public override func bindAction() {
-//        schoolMealLoadRelay.accept(schoolMealDate)
-        schoolMealLoadRelay.accept("2024-03-18")
+        schoolMealLoadRelay.accept(schoolMealDate)
     }
-//    public override func attribute() {
-//        super.attribute()
-//        schoolMealCollectionView.delegate = self
-//        schoolMealCollectionView.dataSource = self
-//    }
     public override func bind() {
         let input = SchoolMealViewModel.Input(
             schoolMealLoad: schoolMealLoadRelay.asObservable()
@@ -72,7 +67,8 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
         let output = viewModel.transform(input: input)
         
         output.schoolMealDataLoad.asObservable()
-            .map { $0.meals }
+            .compactMap { $0.meals }
+//            .map { $0.meals }
             .bind(to: schoolMealCollectionView.rx.items(
                 cellIdentifier: SchoolMealCell.identifier,
                 cellType: SchoolMealCell.self
@@ -109,31 +105,3 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
     }
     
 }
-//
-//extension SchoolMealViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return 3
-//    }
-//    
-//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SchoolMealCell.identifier, for: indexPath) as? SchoolMealCell
-//        else {
-//            return UICollectionViewCell()
-//        }
-//        switch indexPath.row {
-//            case 0:
-//                cell.schoolMealTimeLabel.text = "조식"
-//                return cell
-//            case 1:
-//                cell.schoolMealTimeLabel.text = "중식"
-//                return cell
-//            case 2:
-//                cell.schoolMealTimeLabel.text = "석식"
-//                return cell
-//            default:
-//                return cell
-//        }
-//    }
-//    
-//    
-//}

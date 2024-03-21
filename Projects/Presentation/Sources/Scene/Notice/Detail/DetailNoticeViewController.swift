@@ -38,7 +38,7 @@ public class DetailNoticeViewController: BaseViewController<DetailNoticeViewMode
         $0.numberOfLines = 0
     }
     
-    public override func configureNavigationBar() {
+    public override func configureNavgationBarLayOutSubviews() {
         navigationItem.titleView = navigationTitleLabel
     }
     public override func bindAction() {
@@ -53,6 +53,7 @@ public class DetailNoticeViewController: BaseViewController<DetailNoticeViewMode
         output.contentData.asObservable()
             .subscribe(
                 onNext: { notice in
+                    self.navigationTitleLabel.text = notice.title
                     self.titleLabel.text = notice.title
                     self.dateLabel.text = notice.createAt
                     self.contentLabel.text = notice.content

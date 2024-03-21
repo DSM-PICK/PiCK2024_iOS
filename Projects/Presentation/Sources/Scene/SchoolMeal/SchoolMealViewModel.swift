@@ -25,17 +25,15 @@ public class SchoolMealViewModel: BaseViewModel, Stepper {
     }
     
     public struct Output {
-        //        let date: Signal<String>
         let schoolMealDataLoad: Driver<SchoolMealEntity>
     }
     
-//        let date = PublishRelay<String>()
     let schoolMealDataLoad = PublishRelay<SchoolMealEntity>()
     
     public func transform(input: Input) -> Output {
         input.schoolMealLoad.asObservable()
             .flatMap { date in
-                self.fetchSchoolMealUseCase.excute(date: date)
+                self.fetchSchoolMealUseCase.execute(date: date)
                     .catch {
                         print($0.localizedDescription)
                         return .never()
@@ -43,17 +41,15 @@ public class SchoolMealViewModel: BaseViewModel, Stepper {
             }
             .subscribe(
                 onNext: {
-                    self.schoolMealDataLoad.accept(.init(meals: $0.meals))
+                    self.schoolMealDataLoad.accept($0)
                 }
             )
             .disposed(by: disposeBag)
         
         return Output(
-            //            date: date.asSignal(),
             schoolMealDataLoad: schoolMealDataLoad.asDriver(onErrorJustReturn: .init(
                 meals: [String() : [String()]]
-                    )
-            )
+            ))
         )
     }
     
