@@ -13,6 +13,7 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
         }
     }
     public var isToday: Bool = false
+    public var haveSchedule: Bool = false
     
     private var borderColor: UIColor {
         !isSelected ? .primary1200 : .secondary400
@@ -20,6 +21,11 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
     
     static let identifier = "academicScheduleCalendarCellID"
     
+    private var dotView = UIView().then {
+        $0.backgroundColor = .primary500
+        $0.layer.cornerRadius = 2
+        $0.isHidden = true
+    }
     private var daysLabel = UILabel().then {
         $0.textColor = .neutral100
         $0.font = .buttonS
@@ -37,10 +43,22 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = borderColor.cgColor
         self.isUserInteractionEnabled = false
+        
+        if haveSchedule == true {
+            self.dotView.isHidden = false
+        }
     }
     public override func layout() {
-        contentView.addSubview(daysLabel)
+        [
+            dotView,
+            daysLabel
+        ].forEach { contentView.addSubview($0) }
         
+        dotView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(3)
+            $0.width.height.equalTo(4)
+        }
         daysLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }

@@ -6,10 +6,13 @@ import RxSwift
 import RxCocoa
 
 import Core
+import Domain
 
 public class PiCKAcademicScheduleCalendarView: BaseView {
     
     public var clickToAction: (Date) -> Void
+    
+    private var scheduleArray = BehaviorRelay<AcademicScheduleEntity>(value: [])
     
     private var calendar = Calendar.current
     private var dateFormatter = DateFormatter()
@@ -51,6 +54,12 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         $0.bounces = false
+    }
+    
+    public func setup(
+        academicSchedule: AcademicScheduleEntity
+    ) {
+        self.scheduleArray.accept(academicSchedule)
     }
     
     public init(click: @escaping (Date) -> Void) {
@@ -118,6 +127,7 @@ extension PiCKAcademicScheduleCalendarView: UICollectionViewDelegate, UICollecti
             return UICollectionViewCell()
         }
         cell.setup(day: days[indexPath.row])
+//        if scheduleArray.value
         return cell
     }
     

@@ -11,7 +11,7 @@ public class PiCKSchoolMealCalendarView: UIView {
     
     private let disposeBag = DisposeBag()
     
-    var clickCell: (String, Date) -> Void
+    var clickCell: (String, String) -> Void
     
     private var calendar = Calendar.current
     private var dateFormatter = DateFormatter()
@@ -50,7 +50,7 @@ public class PiCKSchoolMealCalendarView: UIView {
     }
     
     public init(
-        clickCell: @escaping (String, Date) -> Void
+        clickCell: @escaping (String, String) -> Void
     ) {
         self.clickCell = clickCell
         super.init(frame: .zero)
@@ -137,8 +137,8 @@ extension PiCKSchoolMealCalendarView: UICollectionViewDelegate, UICollectionView
             return false
         }
         let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
-        let loadDate = clickDate.toDate(type: .fullDate)
-        self.clickCell(clickDate, loadDate ?? Date())
+        let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(cell.daysLabel.text ?? "")"
+        self.clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
         return !cell.daysLabel.text!.isEmpty
     }
     
