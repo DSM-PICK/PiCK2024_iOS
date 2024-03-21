@@ -2,19 +2,21 @@ import UIKit
 
 import SnapKit
 import Then
-import RxFlow
 import RxSwift
 import RxCocoa
+import Lottie
 
 import Core
 import DesignSystem
 
-public class OnboardingViewController: UIViewController, Stepper {
-
-    public var steps = PublishRelay<Step>()
-    private let disposeBag = DisposeBag()
+public class OnboardingViewController: BaseViewController<OnboardingViewModel> {
+    
+    private let viewWillAppearRelay = PublishRelay<Void>()
+    private let componentAppearRelay = PublishRelay<Void>()
     
     private lazy var cellSize: CGFloat =  self.view.frame.width - 94
+    
+    private let animationView = PiCKLottieView()
     
     private let logoImageView = UIImageView(image: .PiCKLogo)
     private let explainLabel = UILabel().then {
@@ -38,6 +40,7 @@ public class OnboardingViewController: UIViewController, Stepper {
         $0.isPagingEnabled = true
         $0.bounces = false
         $0.register(OnboardingCell.self, forCellWithReuseIdentifier: OnboardingCell.identifier)
+        $0.isHidden = true
     }
     private let pageControl = PiCKPageControl().then {
         $0.numberOfPages = 3
@@ -57,30 +60,61 @@ public class OnboardingViewController: UIViewController, Stepper {
         $0.backgroundColor = .primary400
         $0.layer.cornerRadius = 4
     }
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        attribute()
-    }
-    public override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        addView()
-        setLayout()
-    }
-
-    private func attribute() {
-        view.backgroundColor = .white
-        
+    
+    public override func attribute() {
+        super.attribute()
         onboardingCollectionview.delegate = self
         onboardingCollectionview.dataSource = self
         
-        loginButton.rx.tap
-            .bind(onNext: {
-                self.steps.accept(PiCKStep.loginRequired)
-            }).disposed(by: disposeBag)
-    }
-    private func addView() {
         [
+            logoImageView,
+            explainLabel,
+            onboardingCollectionview,
+            pageControl,
+            loginButton
+        ].forEach { $0.isHidden = true }
+    }
+    private var isOnLoading = false
+    public override func bindAction() {
+        viewWillAppearRelay.accept(())
+    }
+    public override func bind() {
+        
+        let input = OnboardingViewModel.Input(
+            viewWillAppear: viewWillAppearRelay.asObservable(),
+            componentAppear: componentAppearRelay.asObservable(),
+            loginButtonDidClick: loginButton.rx.tap.asObservable()
+        )
+        let output = viewModel.transform(input: input)
+        
+        output.animate.asObservable()
+            .map { _ in self.componentAppearRelay.accept(()) }
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                
+                if !isOnLoading {
+                    animationView.play()
+                    isOnLoading = true
+                }
+            }).disposed(by: disposeBag)
+        
+        output.showComponet.asObservable()
+            .bind(onNext: { [weak self] in
+                guard let self, isOnLoading else { return }
+                UIView.transition(
+                    with: self.view,
+                    duration: 0.5,
+                    options: .transitionCrossDissolve,
+                    animations: {
+                        self.setComponetAppear()
+                    }
+                )
+            }).disposed(by: disposeBag)
+        
+    }
+    public override func addView() {
+        [
+            animationView,
             logoImageView,
             explainLabel,
             onboardingCollectionview,
@@ -88,11 +122,15 @@ public class OnboardingViewController: UIViewController, Stepper {
             loginButton
         ].forEach { view.addSubview($0) }
     }
-    private func setLayout() {
+    public override func setLayout() {
+        animationView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.width.height.equalTo(300)
+        }
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(144)
             $0.left.equalToSuperview().inset(24)
-            $0.width.height.equalTo(120)
+            $0.width.equalTo(120)
             $0.height.equalTo(68)
         }
         explainLabel.snp.makeConstraints {
@@ -114,14 +152,26 @@ public class OnboardingViewController: UIViewController, Stepper {
             $0.height.equalTo(47)
         }
     }
-
+    
+    private func setComponetAppear() {
+        [
+            logoImageView,
+            explainLabel,
+            onboardingCollectionview,
+            pageControl,
+            loginButton
+        ].forEach { $0.isHidden = false }
+        
+        animationView.isHidden = true
+    }
+    
 }
 
 extension OnboardingViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnboardingCell.identifier, for: indexPath) as? OnboardingCell
         else {
@@ -145,5 +195,5 @@ extension OnboardingViewController: UICollectionViewDelegate, UICollectionViewDa
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         pageControl.scrollViewDidScroll(scrollView)
     }
-
+    
 }

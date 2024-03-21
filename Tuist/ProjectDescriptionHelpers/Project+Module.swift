@@ -10,6 +10,7 @@ extension Project {
         infoPlist: InfoPlist = .default,
         sources: SourceFilesList = ["Sources/**"],
         resources: ResourceFileElements? = nil,
+        resourceSynthesizers: [ResourceSynthesizer] = .default + [],
         platform: Platform = env.platform,
         product: Product,
         packages: [Package] = [],
@@ -62,7 +63,8 @@ extension Project {
             packages: packages,
             settings: settings,
             targets: allTargets,
-            schemes: schemes
+            schemes: schemes,
+            resourceSynthesizers: resourceSynthesizers
         )
     }
 }
