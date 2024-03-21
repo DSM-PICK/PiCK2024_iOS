@@ -11,6 +11,15 @@ import DesignSystem
 
 public class ScrollTimeTableViewCell: BaseCollectionViewCell {
     
+    private let timeArray: [String] = [
+        "08:40 ~ 09:30",
+        "09:40 ~ 10:30",
+        "10:40 ~ 11:30",
+        "11:40 ~ 12:30",
+        "01:30 ~ 02:20",
+        "02:30 ~ 03:20",
+        "03:30 ~ 04:20"
+    ]
     private lazy var timeTableData = PublishRelay<[TimeTableEntityElement]>()
     
     private let disposeBag = DisposeBag()
@@ -56,7 +65,8 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
             )) { row, element, cell in
                 cell.setup(
                     period: element.period,
-                    subject: element.subjectName
+                    subject: element.subjectName,
+                    time: self.timeArray[row]
                 )
             }
             .disposed(by: disposeBag)

@@ -22,16 +22,18 @@ public class TimeTableCell: BaseCollectionViewCell {
         $0.font = .subTitle3M
     }
     private var timeLabel = UILabel().then {
-        $0.textColor = .neutral500
+        $0.textColor = .neutral300
         $0.font = .caption3
     }
     
     public func setup(
         period: Int,
-        subject: String
+        subject: String,
+        time: String
     ) {
         self.periodLabel.text = "\(period)"
         self.subjectLabel.text = subject
+        self.timeLabel.text = time
     }
     
     public override func layout() {

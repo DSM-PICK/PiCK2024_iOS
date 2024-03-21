@@ -64,7 +64,7 @@ public class ScrollTimeTableView: BaseView {
                 cellType: ScrollTimeTableViewCell.self
             )) { row, element, cell in
                 cell.dateSetup(
-                    date: element.date.toDate(type: .fullDate)?.toString(type: .dateAndDays) ?? ""
+                    date: element.date.toDate(type: .fullDate).toString(type: .dateAndDays)
                 )
                 cell.timeTableSetup(
                     timeTableData: element.timetables
