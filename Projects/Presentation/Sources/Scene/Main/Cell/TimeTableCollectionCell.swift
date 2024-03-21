@@ -18,9 +18,16 @@ public class TimeTableCollectionCell: BaseCollectionViewCell {
         $0.backgroundColor = .black
     }
     public var subjectLabel = UILabel().then {
-        $0.text = "창체"
         $0.textColor = .black
-        $0.font = DesignSystemFontFamily.NotoSansKR.medium.font(size: 14)
+        $0.font = .subTitle4M
+    }
+    
+    public func setup(
+        period: Int,
+        subject: String
+    ) {
+        self.periodLabel.text = "\(period)"
+        self.subjectLabel.text = subject
     }
     
     public override func attribute() {

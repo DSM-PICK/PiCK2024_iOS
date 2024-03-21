@@ -2,29 +2,40 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 import Core
+import Domain
 import DesignSystem
 
 public class SchoolMealCell: BaseCollectionViewCell {
     
+    private let disposeBag = DisposeBag()
+    
     static let identifier = "schoolMealCellID"
     
-    public lazy var schoolMealTimeLabel = UILabel().then {
+    public var schoolMealTimeLabel = UILabel().then {
         $0.textColor = .primary200
         $0.font = .subTitle2B
     }
-    public lazy var menuLabel = UILabel().then {
-        $0.text = "녹두찰밥\n스팸구이\n시리얼(블루베리)\n우유\n한우궁중떡볶이\n미니고구마파이"
+    private var menuLabel = UILabel().then {
         $0.textColor = .neutral50
         $0.font = .body1
         $0.numberOfLines = 0
     }
     
+    public func setup(
+        mealTime: String,
+        todaySchoolMeal: [String]
+    ) {
+        self.schoolMealTimeLabel.text = mealTime
+        self.menuLabel.text = todaySchoolMeal.joined(separator: "\n")
+    }
+    
     public override func attribute() {
         contentView.backgroundColor = .primary1000
         contentView.layer.cornerRadius = 4
-        
     }
     public override func layout() {
         [
@@ -38,7 +49,8 @@ public class SchoolMealCell: BaseCollectionViewCell {
         }
         menuLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().inset(38)
+            $0.left.equalTo(schoolMealTimeLabel.snp.right).offset(94)
+            $0.right.equalToSuperview().inset(15)
         }
     }
 

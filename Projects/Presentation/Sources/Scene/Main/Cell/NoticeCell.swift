@@ -5,10 +5,13 @@ import Then
 
 import Core
 import DesignSystem
+import Domain
 
 public class NoticeCell: BaseCollectionViewCell {
     
     static let identifier = "noticeCellID"
+    
+    public var id: UUID?
     
     private let noticeIconImageView = UIImageView(image: .noticeIcon)
     private let noticeLabel = UILabel().then {
@@ -17,19 +20,29 @@ public class NoticeCell: BaseCollectionViewCell {
         $0.font = .caption3
     }
     private let titleLabel = UILabel().then {
-        $0.text = "[중요] 오리엔테이션날 일정 안내"
         $0.textColor = .black
         $0.font = .body3
     }
-    private lazy var dateLabel = UILabel().then {
-        $0.text = "1일전"
+    private let dateLabel = UILabel().then {
         $0.textColor = .neutral200
         $0.font = .caption3
     }
     public lazy var newNoticeIconImageView = UIImageView(image: .newNoticeIcon).then {
         $0.isHidden = true
     }
+    private let lineView = UIView().then {
+        $0.backgroundColor = .primary900
+    }
     
+    public func setup(
+        id: UUID,
+        title: String,
+        date: String
+    ) {
+        self.id = id
+        self.titleLabel.text = title
+        self.dateLabel.text = date
+    }
     public override func attribute() {
         contentView.backgroundColor = .white
     }
@@ -39,7 +52,8 @@ public class NoticeCell: BaseCollectionViewCell {
             noticeLabel,
             titleLabel,
             dateLabel,
-            newNoticeIconImageView
+            newNoticeIconImageView,
+            lineView
         ].forEach { contentView.addSubview($0) }
         
         noticeIconImageView.snp.makeConstraints {
@@ -61,6 +75,11 @@ public class NoticeCell: BaseCollectionViewCell {
         newNoticeIconImageView.snp.makeConstraints {
             $0.top.equalTo(noticeLabel.snp.bottom).offset(7)
             $0.left.equalTo(titleLabel.snp.right).offset(3)
+        }
+        lineView.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(1)
         }
     }
     
