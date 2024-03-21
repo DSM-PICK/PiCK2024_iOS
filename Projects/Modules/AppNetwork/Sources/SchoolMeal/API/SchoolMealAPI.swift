@@ -4,32 +4,29 @@ import Moya
 
 import Core
 
-public enum SelfStudyTeacherAPI {
-    case fetchSelfstudyTeacherCheck(date: String)
+public enum SchoolMealAPI {
+    case fetchSchoolMeal(date: String)
 }
 
-extension SelfStudyTeacherAPI: TargetType {
+extension SchoolMealAPI: TargetType {
     public var baseURL: URL {
         return URLUtil.baseURL
     }
     
     public var path: String {
         switch self {
-            case .fetchSelfstudyTeacherCheck:
-                return "/self-study/today"
+            case .fetchSchoolMeal:
+                return "/meal/date"
         }
     }
     
     public var method: Moya.Method {
-        switch self {
-            case .fetchSelfstudyTeacherCheck:
-                return .get
-        }
+        return .get
     }
     
     public var task: Moya.Task {
         switch self {
-            case .fetchSelfstudyTeacherCheck(let date):
+            case .fetchSchoolMeal(let date):
                 return .requestParameters(
                     parameters: ["date": date],
                     encoding: URLEncoding.queryString
@@ -38,11 +35,9 @@ extension SelfStudyTeacherAPI: TargetType {
     }
     
     public var headers: [String : String]? {
-        switch self {
-            case .fetchSelfstudyTeacherCheck:
-                return TokenStorage.shared.toHeader(.accessToken)
-        }
+        return TokenStorage.shared.toHeader(.accessToken)
     }
     
     
 }
+

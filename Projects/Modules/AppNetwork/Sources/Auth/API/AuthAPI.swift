@@ -6,7 +6,7 @@ import Core
 
 public enum AuthAPI {
     case login(accountID: String, password: String)
-    case refreshToken
+    case refreshToken(refreshToken: String)
 }
 
 extension AuthAPI: TargetType {
@@ -43,8 +43,11 @@ extension AuthAPI: TargetType {
                     encoding: JSONEncoding.default
                 )
                 
-            case .refreshToken:
-                return .requestPlain
+            case .refreshToken(let refreshToken):
+                return .requestParameters(
+                    parameters: ["X-Refresh-Token": refreshToken],
+                    encoding: JSONEncoding.default
+                )
         }
     }
     
