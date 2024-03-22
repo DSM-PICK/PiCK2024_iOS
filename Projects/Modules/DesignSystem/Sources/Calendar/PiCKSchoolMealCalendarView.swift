@@ -125,21 +125,28 @@ extension PiCKSchoolMealCalendarView: UICollectionViewDelegate, UICollectionView
         else {
             return UICollectionViewCell()
         }
+        
         cell.daysLabel.text = "\(days[indexPath.row])"
+        
+        let todayDate = Date()
+        if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+            cell.todaySettting()
+        }
         return cell
     }
     
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        shouldSelectItemAt indexPath: IndexPath
-    ) -> Bool {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else {
-            return false
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else { return }
+        let todayDate = Date()
+        if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+            cell.todaySettting()
         }
+        
         let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
+        
         let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(cell.daysLabel.text ?? "")"
+        
         self.clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
-        return !cell.daysLabel.text!.isEmpty
     }
     
 }

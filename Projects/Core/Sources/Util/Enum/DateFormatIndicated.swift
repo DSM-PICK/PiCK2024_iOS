@@ -18,5 +18,5 @@ public enum DateFormatIndicated: String {
     ///M월 d일
     case monthAndDay = "M월 d일"
     ///yyyy년 M월 d일
-    case fullDateKor = "yyyy년 M월 d일"
+    case fullDateKor = "yyyy년 MM월 dd일"
 }

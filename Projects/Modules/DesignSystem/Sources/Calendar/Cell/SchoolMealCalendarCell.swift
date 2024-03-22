@@ -22,7 +22,7 @@ public class SchoolMealCalendarCell: BaseCollectionViewCell {
     
     static let identifier = "calendarCellID"
     
-    public let daysLabel = UILabel().then {
+    public lazy var daysLabel = UILabel().then {
         $0.textColor = .neutral100
         $0.font = .buttonES
     }
@@ -39,6 +39,13 @@ public class SchoolMealCalendarCell: BaseCollectionViewCell {
         daysLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
+    }
+    
+    public func todaySettting() {
+        self.contentView.backgroundColor = .primary500
+        self.backgroundColor = .clear
+        self.daysLabel.textColor = .white
+        self.contentView.layer.borderColor = UIColor.primary500.cgColor
     }
     
 }
