@@ -10,6 +10,7 @@ import DesignSystem
 
 public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
     
+    private let shouldHideFirstViewRelay = BehaviorRelay<Bool>(value: true)
     private let academicScheduleLoadRelay = PublishRelay<String>()
     private let timeTableLoadRelay = PublishRelay<Void>()
     
@@ -50,15 +51,30 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
         timeTableLoadRelay.accept(())
         academicScheduleLoadRelay.accept(self.month)
     }
+    
+    var shouldHideFirstView: Observable<Bool> {
+        return shouldHideFirstViewRelay.asObservable()
+    }
     public override func bind() {
-        self.segmentedControl.addTarget(self, action: #selector(didChangeValue(segment:)), for: .valueChanged)
-        self.didChangeValue(segment: self.segmentedControl)
-        
         let input = ScheduleViewModel.Input(
             academicScheduleLoad: academicScheduleLoadRelay.asObservable(),
             timeTableLoad: timeTableLoadRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
+        
+        segmentedControl.rx.selectedSegmentIndex
+            .map { $0 != 0 }
+            .bind(to: shouldHideFirstViewRelay)
+            .disposed(by: disposeBag)
+        
+        shouldHideFirstView
+            .subscribe(
+                onNext: { [weak self] shouldHide in
+                    self?.segmentedTimetableView.isHidden = shouldHide
+                    self?.segmentedCalendarView.isHidden = !shouldHide
+                }
+            )
+            .disposed(by: disposeBag)
         
         output.academicScheduleDataLoad.asObservable()
             .subscribe(
@@ -105,15 +121,4 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
         }
     }
     
-    @objc private func didChangeValue(segment: UISegmentedControl) {
-        self.shouldHideFirstView = segment.selectedSegmentIndex != 0
-    }
-    
-    var shouldHideFirstView: Bool? {
-        didSet {
-            guard let shouldHideFirstView = self.shouldHideFirstView else { return }
-            self.segmentedTimetableView.isHidden = shouldHideFirstView
-            self.segmentedCalendarView.isHidden = !self.segmentedTimetableView.isHidden
-        }
-    }
 }
