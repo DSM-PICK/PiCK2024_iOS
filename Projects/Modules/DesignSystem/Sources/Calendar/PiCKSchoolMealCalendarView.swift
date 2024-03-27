@@ -7,9 +7,7 @@ import RxCocoa
 
 import Core
 
-public class PiCKSchoolMealCalendarView: UIView {
-    
-    private let disposeBag = DisposeBag()
+public class PiCKSchoolCalendarView: BaseView {
     
     var clickCell: (String, String) -> Void
     
@@ -17,6 +15,8 @@ public class PiCKSchoolMealCalendarView: UIView {
     private var dateFormatter = DateFormatter()
     private var date = Date()
     private var days: [String] = []
+    private var observeDays = BehaviorRelay<[String]>(value: [])
+    private var closureArray = BehaviorRelay<[String]>(value: [])
     
     private let calendarStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -46,7 +46,10 @@ public class PiCKSchoolMealCalendarView: UIView {
         collectionViewLayout: calendarCollectionViewFlowLayout
     ).then {
         $0.backgroundColor = .white
-        $0.register(SchoolMealCalendarCell.self, forCellWithReuseIdentifier: SchoolMealCalendarCell.identifier)
+        $0.register(
+            SchoolCalendarCell.self,
+            forCellWithReuseIdentifier: SchoolCalendarCell.identifier
+        )
     }
     
     public init(
@@ -54,23 +57,15 @@ public class PiCKSchoolMealCalendarView: UIView {
     ) {
         self.clickCell = clickCell
         super.init(frame: .zero)
-        attribute()
-        bind()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    public override func layoutSubviews() {
-        addView()
-        setLayout()
-    }
     
-    public func attribute() {
-        calendarCollectionView.delegate = self
-        calendarCollectionView.dataSource = self
+    public override func attribute() {
         self.configureCalendar()
     }
-    public func bind() {
+    public override func bind() {
         previousButton.rx.tap
             .bind { [weak self] in
                 self?.minusMonth()
@@ -80,8 +75,34 @@ public class PiCKSchoolMealCalendarView: UIView {
             .bind { [weak self] in
                 self?.plusMonth()
             }.disposed(by: disposeBag)
+        
+        observeDays.bind(to: calendarCollectionView.rx.items(
+            cellIdentifier: SchoolCalendarCell.identifier,
+            cellType: SchoolCalendarCell.self
+        )) { [self] row, element, cell in
+            cell.daysLabel.text = element
+            
+            let todayDate = Date()
+            
+            if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+                cell.todaySetting()
+            }
+        }.disposed(by: disposeBag)
+        
+        calendarCollectionView.rx.itemSelected
+            .bind(
+                onNext: { [self] value in
+                    let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(closureArray.value[value.row])일"
+                    
+                    let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(closureArray.value[value.row])"
+                    
+                    clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
+                }
+            )
+            .disposed(by: disposeBag)
+        
     }
-    public func addView() {
+    public override func addView() {
         [
             calendarStackView,
             calendarCollectionView
@@ -93,7 +114,7 @@ public class PiCKSchoolMealCalendarView: UIView {
             nextButton
         ].forEach { calendarStackView.addArrangedSubview($0) }
     }
-    public func setLayout() {
+    public override func setLayout() {
         calendarStackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview()
@@ -106,52 +127,7 @@ public class PiCKSchoolMealCalendarView: UIView {
     
 }
 
-extension PiCKSchoolMealCalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        return days.count
-    }
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: SchoolMealCalendarCell.identifier,
-            for: indexPath
-        ) as? SchoolMealCalendarCell
-        else {
-            return UICollectionViewCell()
-        }
-        
-        cell.daysLabel.text = "\(days[indexPath.row])"
-        
-        let todayDate = Date()
-        if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
-            cell.todaySettting()
-        }
-        return cell
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? SchoolMealCalendarCell else { return }
-        let todayDate = Date()
-        if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
-            cell.todaySettting()
-        }
-        
-        let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(cell.daysLabel.text ?? "")일"
-        
-        let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(cell.daysLabel.text ?? "")"
-        
-        self.clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
-    }
-    
-}
-
-extension PiCKSchoolMealCalendarView {
+extension PiCKSchoolCalendarView {
     private func configureCalendar() {
         let components = self.calendar.dateComponents([.year, .month], from: Date())
         self.date = self.calendar.date(from: components) ?? Date()
@@ -189,7 +165,8 @@ extension PiCKSchoolMealCalendarView {
             }
             self.days.append("\(day - startDayOfTheWeek + 1)")
         }
-        
+        observeDays.accept(days)
+        closureArray.accept(days)
         self.calendarCollectionView.reloadData()
     }
     

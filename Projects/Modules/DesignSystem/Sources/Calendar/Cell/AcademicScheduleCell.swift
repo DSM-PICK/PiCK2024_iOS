@@ -12,8 +12,8 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
             self.attribute()
         }
     }
-    public var isToday: Bool = false
-    public var haveSchedule: Bool = false
+//    public var isToday: Bool = false
+//    public var haveSchedule: Bool = false
     
     private var borderColor: UIColor {
         !isSelected ? .primary1200 : .secondary400
@@ -21,32 +21,28 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
     
     static let identifier = "academicScheduleCalendarCellID"
     
-    private var dotView = UIView().then {
+    public var dotView = UIView().then {
         $0.backgroundColor = .primary500
         $0.layer.cornerRadius = 2
         $0.isHidden = true
     }
-    private var daysLabel = UILabel().then {
+    public var daysLabel = UILabel().then {
         $0.textColor = .neutral100
         $0.font = .buttonS
     }
     
-    public func setup(
-        day: String
-    ) {
-        self.daysLabel.text = day
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        self.attribute()
+        self.layout()
+        self.daysLabel.textColor = .neutral100
     }
-    
     public override func attribute() {
         contentView.backgroundColor = .primary1200
         contentView.layer.cornerRadius = 20
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = borderColor.cgColor
         self.isUserInteractionEnabled = false
-        
-        if haveSchedule == true {
-            self.dotView.isHidden = false
-        }
     }
     public override func layout() {
         [
@@ -63,7 +59,7 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
             $0.center.equalToSuperview()
         }
     }
-    private func dateCheck() {
+    public func todaySetting() {
         self.contentView.backgroundColor = .primary500
         self.daysLabel.textColor = .white
     }

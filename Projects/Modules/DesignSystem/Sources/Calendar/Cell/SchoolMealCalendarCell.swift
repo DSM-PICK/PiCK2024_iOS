@@ -5,7 +5,7 @@ import Then
 
 import Core
 
-public class SchoolMealCalendarCell: BaseCollectionViewCell {
+public class SchoolCalendarCell: BaseCollectionViewCell {
     
     public override var isSelected: Bool {
         didSet {
@@ -27,6 +27,13 @@ public class SchoolMealCalendarCell: BaseCollectionViewCell {
         $0.font = .buttonES
     }
     
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        self.attribute()
+        self.layout()
+        self.daysLabel.textColor = .neutral100
+    }
+    
     public override func attribute() {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 16
@@ -41,7 +48,7 @@ public class SchoolMealCalendarCell: BaseCollectionViewCell {
         }
     }
     
-    public func todaySettting() {
+    public func todaySetting() {
         self.contentView.backgroundColor = .primary500
         self.backgroundColor = .clear
         self.daysLabel.textColor = .white

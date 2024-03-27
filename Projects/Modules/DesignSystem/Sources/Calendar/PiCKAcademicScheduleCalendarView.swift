@@ -18,6 +18,7 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
     private var dateFormatter = DateFormatter()
     private var date = Date()
     private var days: [String] = []
+    private var observeDays = BehaviorRelay<[String]>(value: [])
     
     private let calendarStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -74,9 +75,6 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
     public override func attribute() {
         self.backgroundColor = .primary1200
         self.layer.cornerRadius = 8
-        
-        calendarCollectionView.delegate = self
-        calendarCollectionView.dataSource = self
         self.configureCalendar()
     }
     public override func bind() {
@@ -89,6 +87,20 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
             .bind { [weak self] in
                 self?.plusMonth()
             }.disposed(by: disposeBag)
+        
+        observeDays.bind(to: calendarCollectionView.rx.items(
+            cellIdentifier: AcademicScheduleCalendarCell.identifier,
+            cellType: AcademicScheduleCalendarCell.self
+        )) { [self] row, element, cell in
+            cell.daysLabel.text = element
+            
+            let todayDate = Date()
+            
+            if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+                cell.todaySetting()
+            }
+        }
+        .disposed(by: disposeBag)
     }
     public override func addView() {
         [
@@ -112,23 +124,6 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
             $0.left.right.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview()
         }
-    }
-    
-}
-
-extension PiCKAcademicScheduleCalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return days.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AcademicScheduleCalendarCell.identifier, for: indexPath) as? AcademicScheduleCalendarCell
-        else {
-            return UICollectionViewCell()
-        }
-        cell.setup(day: days[indexPath.row])
-//        if scheduleArray.value
-        return cell
     }
     
 }
@@ -172,6 +167,7 @@ extension PiCKAcademicScheduleCalendarView {
             self.days.append("\(day - startDayOfTheWeek + 1)")
         }
         
+        observeDays.accept(days)
         self.calendarCollectionView.reloadData()
     }
     
