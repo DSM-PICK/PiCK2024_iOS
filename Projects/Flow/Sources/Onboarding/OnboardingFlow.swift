@@ -30,8 +30,9 @@ public class OnboardingFlow: Flow {
     }
     
     private func navigateToOnboarding() -> FlowContributors {
+        let viewModel = container.onboardingViewModel
         let onboardingViewController = OnboardingViewController(
-            viewModel: container.onboardingViewModel
+            viewModel: viewModel
         )
         self.rootViewController.pushViewController(onboardingViewController, animated: true)
         return .one(flowContributor: .contribute(
@@ -41,15 +42,7 @@ public class OnboardingFlow: Flow {
     }
 
     private func navigateToLogin() -> FlowContributors {
-        let loginFlow = LoginFlow()
-        Flows.use(loginFlow, when: .created) { [weak self] root in
-            self?.rootViewController.pushViewController(root, animated: true)
-            
-        }
-        return .one(flowContributor: .contribute(
-            withNextPresentable: loginFlow,
-            withNextStepper: OneStepper(withSingleStep: PiCKStep.loginRequired)
-        ))
+        return .end(forwardToParentFlowWithStep: PiCKStep.loginRequired)
     }
 
 }
