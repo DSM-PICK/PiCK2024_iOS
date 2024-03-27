@@ -22,7 +22,7 @@ public class SelfStudyTeacherViewController: BaseViewController<SelfStudyTeacher
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private lazy var calendarView = PiCKSchoolMealCalendarView(
+    private lazy var calendarView = PiCKSchoolCalendarView(
         clickCell: { [weak self] date, loadDate in
             if date == self?.calendarTodayDate {
                 self?.todaySelfStudyTeacherLabel.text = "\(date) 오늘의 자습감독 선생님"
