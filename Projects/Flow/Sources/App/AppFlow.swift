@@ -58,7 +58,13 @@ public class AppFlow: Flow {
     private func presentMainView() -> FlowContributors {
         let mainFlow = MainFlow()
         Flows.use(mainFlow, when: .created) { [weak self] root in
-            self?.window.rootViewController = root
+            UIView.transition(
+                with: self!.window,
+                duration: 0.5,
+                options: .transitionCrossDissolve
+            ) {
+                self!.window.rootViewController = root
+            }
         }
         return .one(flowContributor: .contribute(
             withNextPresentable: mainFlow,

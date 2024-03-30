@@ -115,6 +115,20 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
             )
             .disposed(by: disposeBag)
         
+//        logOutButton.rx.tap
+//            .subscribe(onNext: {
+//                self.logoutAlertRelay.accept(())
+//            })
+//            .disposed(by: disposeBag)
+//
+        logOutButton.rx.tap
+            .subscribe(onNext: {
+                let dd = PiCKAlert(questionText: "정말 로그아웃 하시겠습니까?", cancelButtonTitle: "아니요", checkButtonTitle: "예", clickToAction: {
+                    logoutAlertRelay.accept(()))
+                })
+                self.present(dd, animated: true)
+            .disposed(by: disposeBag)
+        
     }
     public override func addView() {
         [

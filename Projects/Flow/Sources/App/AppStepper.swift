@@ -18,21 +18,26 @@ public final class AppStepper: Stepper {
     
     public init() {}
     
-    
     public var initialStep: Step {
         return PiCKStep.onBoardingRequired
     }
     
     public func readyToEmitSteps() {
+//        keychainStorage.id = ""
+//        keychainStorage.password = ""
         container.loginUseCase.execute(
             accountID: keychainStorage.id ?? "",
             password: keychainStorage.password ?? ""
         )
-        .delay(.seconds(Int(1.5)), scheduler: MainScheduler.asyncInstance)
+        .delay(.seconds(1), scheduler: MainScheduler.asyncInstance)
         .subscribe(
             with: self,
-            onCompleted: { $0.steps.accept(PiCKStep.mainRequired) },
-            onError: { owner, _ in owner.steps.accept(PiCKStep.onBoardingRequired) }
+            onCompleted: {
+                $0.steps.accept(PiCKStep.mainRequired)
+            },
+            onError: { owner, _ in
+                owner.steps.accept(PiCKStep.onBoardingRequired)
+            }
         ).disposed(by: disposeBag)
     }
     
