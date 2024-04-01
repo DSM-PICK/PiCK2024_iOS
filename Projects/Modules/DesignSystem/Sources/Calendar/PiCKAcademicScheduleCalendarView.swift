@@ -96,7 +96,7 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
             
             let todayDate = Date()
             
-            if todayDate.toString(type: .fullDateKor) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+            if todayDate.toString(type: .fullDateKorForCalendar) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
                 cell.todaySetting()
             }
         }
