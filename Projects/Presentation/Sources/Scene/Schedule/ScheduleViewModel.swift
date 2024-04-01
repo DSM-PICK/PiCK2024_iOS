@@ -31,7 +31,6 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
         //academicSchedule
         let academicScheduleDataLoad: Driver<AcademicScheduleEntity>
         //timeTable
-//        let dateLoad: Driver<String>
         let timeTableDataLoad: Driver<WeekTimeTableEntity>
     }
     

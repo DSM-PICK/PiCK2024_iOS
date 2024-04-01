@@ -14,9 +14,7 @@ public class TimeTableCell: BaseCollectionViewCell {
         $0.textColor = .primary50
         $0.font = .subTitle3B
     }
-    private var periodImageView = UIImageView().then {
-        $0.backgroundColor = .black
-    }
+    private var subjectImageView = UIImageView()
     private var subjectLabel = UILabel().then {
         $0.textColor = .black
         $0.font = .subTitle3M
@@ -28,10 +26,12 @@ public class TimeTableCell: BaseCollectionViewCell {
     
     public func setup(
         period: Int,
+        subjectImage: UIImage,
         subject: String,
         time: String
     ) {
-        self.periodLabel.text = "\(period)"
+        self.periodLabel.text = "\(period)교시"
+        self.subjectImageView.image = subjectImage
         self.subjectLabel.text = subject
         self.timeLabel.text = time
     }
@@ -39,7 +39,7 @@ public class TimeTableCell: BaseCollectionViewCell {
     public override func layout() {
         [
             periodLabel,
-            periodImageView,
+            subjectImageView,
             subjectLabel,
             timeLabel
         ].forEach { contentView.addSubview($0) }
@@ -48,18 +48,19 @@ public class TimeTableCell: BaseCollectionViewCell {
             $0.centerY.equalToSuperview()
             $0.left.equalToSuperview()//.inset(10)
         }
-        periodImageView.snp.makeConstraints {
+        subjectImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalToSuperview().inset(64)
+//            $0.left.equalToSuperview().inset(64)
+            $0.left.equalTo(periodLabel.snp.right).offset(24)
             $0.width.height.equalTo(32)
         }
         subjectLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(7)
-            $0.left.equalTo(periodImageView.snp.right).offset(24)
+            $0.left.equalTo(subjectImageView.snp.right).offset(24)
         }
         timeLabel.snp.makeConstraints {
             $0.top.equalTo(subjectLabel.snp.bottom)
-            $0.left.equalTo(periodImageView.snp.right).offset(24)
+            $0.left.equalTo(subjectImageView.snp.right).offset(24)
         }
     }
     

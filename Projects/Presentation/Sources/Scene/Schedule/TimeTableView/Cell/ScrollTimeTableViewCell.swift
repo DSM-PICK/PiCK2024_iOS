@@ -46,14 +46,11 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
         )
     }
     
-    public func dateSetup(
-        date: String
-    ) {
-        self.dateLabel.text = date
-    }
-    public func timeTableSetup(
+    public func setup(
+        date: String,
         timeTableData: [TimeTableEntityElement]
     ) {
+        self.dateLabel.text = date
         self.timeTableData.accept(timeTableData)
     }
     
@@ -65,6 +62,7 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
             )) { row, element, cell in
                 cell.setup(
                     period: element.period,
+                    subjectImage: SubjectImageType(rawValue: element.subjectName)?.toImage() ?? UIImage(),
                     subject: element.subjectName,
                     time: self.timeArray[row]
                 )
