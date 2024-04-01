@@ -13,6 +13,8 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
     private let viewWillAppearRelay = PublishRelay<Void>()
     private let logoutAlertRelay = PublishRelay<Void>()
     
+    private let keychain = KeychainStorage.shared
+    
     private let navigationTitleLabel = UILabel().then {
         $0.text = "my"
         $0.textColor = .neutral50
@@ -89,6 +91,16 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
         $0.contentHorizontalAlignment = .left
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
     }
+    private let withdrawalButton = UIButton(type: .system).then {
+        $0.setTitle("회원탈퇴", for: .normal)
+        $0.setTitleColor(.red, for: .normal)
+        $0.titleLabel?.font = .body3
+        $0.backgroundColor = .primary1200
+        $0.layer.cornerRadius = 8
+        $0.contentHorizontalAlignment = .left
+        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+    }
+
     
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
@@ -99,8 +111,7 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
     public override func bind() {
         let input = ProfileViewModel.Input(
             viewWillAppear: viewWillAppearRelay.asObservable(),
-            logoutButtonDidClick: logOutButton.rx.tap.asObservable(),
-            logoutAlertClick: logoutAlertRelay.asObservable()
+            logoutDidClick: logoutAlertRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
         
@@ -115,18 +126,42 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
             )
             .disposed(by: disposeBag)
         
-//        logOutButton.rx.tap
-//            .subscribe(onNext: {
-//                self.logoutAlertRelay.accept(())
-//            })
-//            .disposed(by: disposeBag)
-//
         logOutButton.rx.tap
-            .subscribe(onNext: {
-                let dd = PiCKAlert(questionText: "정말 로그아웃 하시겠습니까?", cancelButtonTitle: "아니요", checkButtonTitle: "예", clickToAction: {
-                    logoutAlertRelay.accept(()))
-                })
-                self.present(dd, animated: true)
+            .subscribe(
+                onNext: {
+                    let logoutAlert = PiCKAlert(
+                        questionText: "정말 로그아웃 하시겠습니까?",
+                        cancelButtonTitle: "아니요",
+                        checkButtonTitle: "예",
+                        clickToAction: {
+                            self.logoutAlertRelay.accept(())
+                            self.keychain.removeKeychain()
+                        }
+                    )
+                    logoutAlert.modalPresentationStyle = .overFullScreen
+                    logoutAlert.modalTransitionStyle = .crossDissolve
+                    self.present(logoutAlert, animated: true)
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        withdrawalButton.rx.tap
+            .subscribe(
+                onNext: {
+                    let logoutAlert = PiCKAlert(
+                        questionText: "정말 회원탈퇴 하시겠습니까?",
+                        cancelButtonTitle: "아니요",
+                        checkButtonTitle: "예",
+                        clickToAction: {
+                            self.logoutAlertRelay.accept(())
+                            self.keychain.removeKeychain()
+                        }
+                    )
+                    logoutAlert.modalPresentationStyle = .overFullScreen
+                    logoutAlert.modalTransitionStyle = .crossDissolve
+                    self.present(logoutAlert, animated: true)
+                }
+            )
             .disposed(by: disposeBag)
         
     }
@@ -137,7 +172,8 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
             lineView,
             accountManagementLabel,
             accountManagementExplainLabel,
-            logOutButton
+            logOutButton,
+            withdrawalButton
         ].forEach { view.addSubview($0) }
         
         [
@@ -178,6 +214,11 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
         }
         logOutButton.snp.makeConstraints {
             $0.top.equalTo(accountManagementExplainLabel.snp.bottom).offset(8)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(56)
+        }
+        withdrawalButton.snp.makeConstraints {
+            $0.top.equalTo(logOutButton.snp.bottom).offset(8)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(56)
         }

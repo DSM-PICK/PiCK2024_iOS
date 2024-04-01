@@ -20,8 +20,7 @@ public class ProfileViewModel: BaseViewModel, Stepper {
     
     public struct Input {
         let viewWillAppear: Observable<Void>
-        let logoutButtonDidClick: Observable<Void>
-        let logoutAlertClick: Observable<Void>
+        let logoutDidClick: Observable<Void>
     }
     public struct Output {
         let userProfileData: Signal<DetailProfileEntity>
@@ -41,12 +40,7 @@ public class ProfileViewModel: BaseViewModel, Stepper {
             .bind(to: userProfileData)
             .disposed(by: disposeBag)
         
-        input.logoutButtonDidClick
-            .map { PiCKStep.logoutAlertRequired }
-            .bind(to: steps)
-            .disposed(by: disposeBag)
-        
-        input.logoutAlertClick
+        input.logoutDidClick
             .map { PiCKStep.logoutRequired }
             .bind(to: steps)
             .disposed(by: disposeBag)
