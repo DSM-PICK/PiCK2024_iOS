@@ -9,6 +9,9 @@ public extension UIImage {
     static let onboardingImage2 = DesignSystemAsset.Image.onboarding2.image
     static let onboardingImage3 = DesignSystemAsset.Image.onboarding3.image
     
+    //MARK: background
+    static let outingPassBackgroundIamge = DesignSystemAsset.Image.outingPassImage.image
+    
     //MARK: icon
     static let eyeOn = DesignSystemAsset.Image.eyeOn.image
     static let eyeOff = DesignSystemAsset.Image.eyeOff.image
