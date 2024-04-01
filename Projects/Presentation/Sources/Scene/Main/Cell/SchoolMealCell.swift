@@ -15,7 +15,7 @@ public class SchoolMealCell: BaseCollectionViewCell {
     
     static let identifier = "schoolMealCellID"
     
-    public var schoolMealTimeLabel = UILabel().then {
+    private var schoolMealTimeLabel = UILabel().then {
         $0.textColor = .primary200
         $0.font = .subTitle2B
     }

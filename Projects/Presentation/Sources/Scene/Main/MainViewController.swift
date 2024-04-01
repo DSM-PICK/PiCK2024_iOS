@@ -12,6 +12,7 @@ import DesignSystem
 public class MainViewController: BaseViewController<MainViewModel> {
     
     //DataRelay
+    private let mainDataLoadRelay = PublishRelay<Void>()
     private let userInfoLoadRelay = PublishRelay<Void>()
     private let classroomCheckRelay = PublishRelay<Void>()
     private let classroomReturnRelay = PublishRelay<Void>()
@@ -25,15 +26,22 @@ public class MainViewController: BaseViewController<MainViewModel> {
     private let viewNoticeButtonRelay = PublishRelay<Void>()
     private let outingPassButtonRelay = PublishRelay<Void>()
     
-    let todayTimeTable = BehaviorRelay<[TimeTableEntityElement]>(value: [])
-    let todaySchoolMeal = BehaviorRelay<[String: [String]]>(value: .init())
-    let todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
+    private let todayTimeTable = BehaviorRelay<[TimeTableEntityElement]>(value: [])
+    private let todaySchoolMeal = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    private let todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
     
     private let date = Date()
     private lazy var todayDate = date.toString(type: .fullDate)
     
+    private lazy var cellViewSize = CGRect(
+        x: 0,
+        y: 0,
+        width: collectionView.frame.width - 48,
+        height: collectionView.frame.height
+    )
+    
     private var itemSize: CGSize {
-        let height = self.view.frame.height - (outingPassView.isHidden ? 355 : 435)
+        let height = self.view.frame.height - (outingPassView.isHidden ? 365 : 445)
         return CGSize(width: self.view.frame.width - 48, height: height)
     }
     private let itemSpacing = 14.0
@@ -84,9 +92,8 @@ public class MainViewController: BaseViewController<MainViewModel> {
     private lazy var outingPassView = PassView(clickToAction: {
         //        self.outingPassButtonRelay.accept(())
         self.classroomReturnRelay.accept(())
-    }).then {
-        $0.isHidden = true
-    }
+        self.mainDataLoadRelay.accept(())
+    })
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
         $0.itemSize = itemSize
@@ -124,7 +131,6 @@ public class MainViewController: BaseViewController<MainViewModel> {
     
     public override func configureNavigationBar() {
         navigationItem.hidesBackButton = true
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileButton)
     }
     public override func configureNavgationBarLayOutSubviews() {
@@ -136,17 +142,19 @@ public class MainViewController: BaseViewController<MainViewModel> {
         collectionView.dataSource = self
     }
     public override func bindAction() {
+        mainDataLoadRelay.accept(())
         userInfoLoadRelay.accept(())
-        classroomCheckRelay.accept(())
-        
+        //cellRelay
+        //뷰모델에서 viewwillappear 하나로 합치기
         todayTimeTableRelay.accept(())
         todaySchoolMealRelay.accept(todayDate)
         todayNoticeLoadRelay.accept(())
     }
     public override func bind() {
         let input = MainViewModel.Input(
+            mainDataLoad: mainDataLoadRelay.asObservable(),
             userInfoLoad: userInfoLoadRelay.asObservable(),
-            classroomCheckLoad: classroomCheckRelay.asObservable(),
+            //            classroomCheckLoad: classroomCheckRelay.asObservable(),
             classroomReturn: classroomReturnRelay.asObservable(),
             todayTimeTableLoad: todayTimeTableRelay.asObservable(),
             todaySchoolMealLoad: todaySchoolMealRelay.asObservable(),
@@ -161,6 +169,26 @@ public class MainViewController: BaseViewController<MainViewModel> {
         )
         let output = viewModel.transform(input: input)
         
+        output.mainData.asObservable()
+            .subscribe(
+                onNext: { data in
+                    if data?.userName?.isEmpty == false && data?.classroom?.isEmpty == false {
+                        self.outingPassView.isHidden = false
+                        self.outingPassView.setup(
+                            topLabel: "\(data?.userName ?? "")님의 외출 시간은",
+                            bottomLabel: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "")입니다.",
+                            buttonTitle: "몰라 임마",
+                            firstPointText: "first",
+                            secondPoinText: "second"
+                        )
+                    } else {
+                        self.outingPassView.isHidden = true
+                        self.outingPassView.updateConstraints()
+                    }
+                }
+            )
+            .disposed(by: disposeBag)
+        
         output.userProfileData.asObservable()
             .subscribe(
                 onNext: {
@@ -169,42 +197,34 @@ public class MainViewController: BaseViewController<MainViewModel> {
             )
             .disposed(by: disposeBag)
         
-        output.classroomCheckData.asObservable()
-            .subscribe(
-                onNext: {
-                    self.outingPassView.setup(
-                        topLabel: "현재",
-                        bottomLabel: "\($0.userName)님은 \($0.classroom)에 있습니다.",
-                        buttonTitle: "돌아가기",
-                        firstPointText: "\($0.classroom)",
-                        secondPoinText: "dd"
-                    )
-                }
-            )
-            .disposed(by: disposeBag)
-        
         output.todayTimeTableData.asObservable()
             .subscribe(
                 onNext: {
                     self.todayTimeTable.accept($0)
+                    self.collectionView.reloadData()
                 }
             )
             .disposed(by: disposeBag)
         
         output.todaySchoolMealData.asObservable()
-//            .map { $0.meals }
             .subscribe(
                 onNext: {
-                    self.todaySchoolMeal.accept($0.meals)
+                    self.todaySchoolMeal.accept($0)
+                    self.collectionView.reloadData()
                 }
             )
             .disposed(by: disposeBag)
         
         output.todayNoticeListData.asObservable()
-            .bind(to: todayNoticeList)
+            .subscribe(
+                onNext: {
+                    self.todayNoticeList.accept($0)
+                    self.collectionView.reloadData()
+                }
+            )
             .disposed(by: disposeBag)
-        
     }
+    
     public override func addView() {
         [
             userInfoLabel,
@@ -257,8 +277,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
     }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: MainCell.identifier,
             for: indexPath
@@ -266,20 +288,53 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         else {
             return UICollectionViewCell()
         }
-        cell.registerCellIndex(index: indexPath.row)
-        cell.moreButton.rx.tap
-            .subscribe(
-                onNext: {
-                    self.viewNoticeButtonRelay.accept($0)
-                }
-            ).disposed(by: disposeBag)
-        cell.setup(
-            todayTimeTable: todayTimeTable.value,
-            todaySchoolMeal: todaySchoolMeal.value,
-            todayNoticeList: todayNoticeList.value
-        )
-        return cell
+        switch indexPath.row {
+            case 0:
+                let view = TimeTableCollectionView(frame: cellViewSize)
+                view.setup(todayTimeTable: todayTimeTable.value)
+                cell.configureUI(
+                    title: "시간표",
+                    buttonVisiable: true,
+                    dateVisiable: false
+                )
+                cell.view = view
+                return cell
+            case 1:
+                let view =  SchoolMealCollectionView(frame: cellViewSize)
+                view.setup(todaySchoolMeal: todaySchoolMeal.value)
+                cell.configureUI(
+                    title: "급식",
+                    buttonVisiable: true,
+                    dateVisiable: false
+                )
+                cell.view = view
+                return cell
+            case 2:
+                let view = NoticeCollectionView(frame: cellViewSize)
+                view.setup(todayNoticeList: todayNoticeList.value)
+                cell.configureUI(
+                    title: "공지",
+                    buttonVisiable: false,
+                    dateVisiable: true
+                )
+                cell.moreButton.rx.tap
+                    .bind(
+                        onNext: {
+                            self.viewNoticeButtonRelay.accept(())
+                        }
+                    )
+                    .disposed(by: cell.disposeBag)
+                cell.view = view
+                return cell
+            default:
+                return cell
+        }
     }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        pageControl.scrollViewDidScrollAtMain(scrollView)
+    }
+    
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
@@ -293,9 +348,4 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         let index = round(scrolledOffsetX / cellWidth)
         targetContentOffset.pointee = CGPoint(x: index * cellWidth - scrollView.contentInset.left, y: scrollView.contentInset.top)
     }
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pageControl.scrollViewDidScrollAtMain(scrollView)
-    }
-    
 }

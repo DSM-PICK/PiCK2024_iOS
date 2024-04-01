@@ -12,8 +12,9 @@ public class MainViewModel: BaseViewModel, Stepper {
     public var disposeBag = DisposeBag()
     public var steps = PublishRelay<Step>()
     
+    private let fetchMainUseCase: FetchMainUseCase
+    
     private let fetchSimpleProfileUseCase: FetchSimpleProfileUseCase
-    private let fetchClassroomCheckUseCase: FetchClassroomCheckUseCase
     private let classroomReturnUseCase: ClassroomReturnUseCase
     
     //CellData
@@ -22,15 +23,15 @@ public class MainViewModel: BaseViewModel, Stepper {
     private let fetchTodayNoticeListUseCase: FetchTodayNoticeListUseCase
     
     public init(
+        fetchMainUseCase: FetchMainUseCase,
         fetchSimpleProfileUseCase: FetchSimpleProfileUseCase,
-        fetchClassroomCheckUseCase: FetchClassroomCheckUseCase,
         classroomReturnUseCase: ClassroomReturnUseCase,
         fetchTodayTimeTableUseCase: FetchTodayTimeTableUseCase,
         fetchSchoolMealUseCase: FetchSchoolMealUseCase,
         fetchTodayNoticeListUseCase: FetchTodayNoticeListUseCase
     ) {
+        self.fetchMainUseCase = fetchMainUseCase
         self.fetchSimpleProfileUseCase = fetchSimpleProfileUseCase
-        self.fetchClassroomCheckUseCase = fetchClassroomCheckUseCase
         self.classroomReturnUseCase = classroomReturnUseCase
         self.fetchTodayTimeTableUseCase = fetchTodayTimeTableUseCase
         self.fetchTodaySchoolMealUseCase = fetchSchoolMealUseCase
@@ -39,8 +40,8 @@ public class MainViewModel: BaseViewModel, Stepper {
     
     public struct Input {
         //LoadData
+        let mainDataLoad: Observable<Void>
         let userInfoLoad: Observable<Void>
-        let classroomCheckLoad: Observable<Void>
         let classroomReturn: Observable<Void>
         
         //LoadCellData
@@ -59,26 +60,35 @@ public class MainViewModel: BaseViewModel, Stepper {
     }
     
     public struct Output {
+        let mainData: Signal<MainEntity?>
         let userProfileData: Signal<SimpleProfileEntity>
-        let classroomCheckData: Signal<ClassroomCheckEntity>
-        let isHiddenPassView: Signal<Bool>
         
         //CellData
         let todayTimeTableData: Driver<[TimeTableEntityElement]>
-        let todaySchoolMealData: Driver<SchoolMealEntity>
+        let todaySchoolMealData: Driver<[(Int, String, [String])]>
         let todayNoticeListData: Driver<TodayNoticeListEntity>
     }
     
+    let mainData = PublishRelay<MainEntity?>()
     let userProfileData = PublishRelay<SimpleProfileEntity>()
-    let classroomCheckData = PublishRelay<ClassroomCheckEntity>()
-    let isHiddenPassView = PublishRelay<Bool>()
     
     //CellData
-    let todayTimeTableData = PublishRelay<[TimeTableEntityElement]>()
-    let todaySchoolMealData = PublishRelay<SchoolMealEntity>()
-    let todayNoticeListData = PublishRelay<TodayNoticeListEntity>()
+    let todayTimeTableData = BehaviorRelay<[TimeTableEntityElement]>(value: [])
+    let todaySchoolMealData = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    let todayNoticeListData = BehaviorRelay<TodayNoticeListEntity>(value: [])
     
     public func transform(input: Input) -> Output {
+        input.mainDataLoad
+            .flatMap {
+                self.fetchMainUseCase.execute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: mainData)
+            .disposed(by: disposeBag)
+        
         input.userInfoLoad
             .flatMap {
                 self.fetchSimpleProfileUseCase.execute()
@@ -90,25 +100,21 @@ public class MainViewModel: BaseViewModel, Stepper {
             .bind(to: userProfileData)
             .disposed(by: disposeBag)
         
-        input.classroomCheckLoad.asObservable()
+        input.classroomReturn.asObservable()
             .flatMap {
-                self.fetchClassroomCheckUseCase.execute()
+                self.classroomReturnUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
                         return .never()
                     }
             }
-            .bind(to: classroomCheckData)
+            .subscribe(
+                onCompleted: {
+                    print("Completed")
+                }
+            )
             .disposed(by: disposeBag)
         
-        //                input.classroomReturn.asObservable()
-        //                    .flatMap {
-        //                        self.classroomReturnUseCase.execute()
-        //                            .catch {
-        //                                print($0.localizedDescription)
-        //                                return .never()
-        //                            }
-        //                    }
         
         input.todayTimeTableLoad.asObservable()
             .flatMap {
@@ -125,16 +131,25 @@ public class MainViewModel: BaseViewModel, Stepper {
             )
             .disposed(by: disposeBag)
         
-        input.todaySchoolMealLoad.asObservable()
-            .flatMap { date in
-                self.fetchTodaySchoolMealUseCase.execute(date: date)
-                    .catch {
-                        print($0.localizedDescription)
-                        return .never()
+                input.todaySchoolMealLoad.asObservable()
+                    .flatMap { date in
+                        self.fetchTodaySchoolMealUseCase.execute(date: date)
+                            .catch {
+                                print($0.localizedDescription)
+                                return .never()
+                            }
                     }
-            }
-            .bind(to: todaySchoolMealData)
-            .disposed(by: disposeBag)
+                    .map { $0.meals.mealBundle }
+                    .subscribe(
+                        onNext: {
+                            self.todaySchoolMealData.accept(
+                                $0.sorted(by: {
+                                    $0.0 < $1.0
+                                })
+                            )
+                        }
+                    )
+                    .disposed(by: disposeBag)
         
         input.todayNoticeListLoad.asObservable()
             .flatMap {
@@ -184,16 +199,13 @@ public class MainViewModel: BaseViewModel, Stepper {
             .disposed(by: disposeBag)
         
         return Output(
+            mainData: mainData.asSignal(),
             userProfileData: userProfileData.asSignal(),
-            classroomCheckData: classroomCheckData.asSignal(),
-            isHiddenPassView: isHiddenPassView.asSignal(),
-            todayTimeTableData: todayTimeTableData.asDriver(onErrorJustReturn: []),
-            todaySchoolMealData: todaySchoolMealData.asDriver(
-                onErrorJustReturn: .init(
-                    meals: [String() : [String()]]
-                )
-            ),
-            todayNoticeListData: todayNoticeListData.asDriver(onErrorJustReturn: [])
+//            classroomCheckData: classroomCheckData.asSignal(),
+//            isHiddenPassView: isHiddenPassView.asSignal(),
+            todayTimeTableData: todayTimeTableData.asDriver(),
+            todaySchoolMealData: todaySchoolMealData.asDriver(),
+            todayNoticeListData: todayNoticeListData.asDriver()
         )
     }
     
