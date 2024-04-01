@@ -25,10 +25,10 @@ public class SchoolMealViewModel: BaseViewModel, Stepper {
     }
     
     public struct Output {
-        let schoolMealDataLoad: Driver<SchoolMealEntity>
+        let schoolMealDataLoad: Driver<[(Int, String, [String])]>
     }
     
-    let schoolMealDataLoad = PublishRelay<SchoolMealEntity>()
+    let schoolMealDataLoad = BehaviorRelay<[(Int, String, [String])]>(value: [])
     
     public func transform(input: Input) -> Output {
         input.schoolMealLoad.asObservable()
@@ -39,17 +39,20 @@ public class SchoolMealViewModel: BaseViewModel, Stepper {
                         return .never()
                     }
             }
+            .map { $0.meals.mealBundle }
             .subscribe(
                 onNext: {
-                    self.schoolMealDataLoad.accept($0)
+                    self.schoolMealDataLoad.accept(
+                        $0.sorted(by: {
+                            $0.0 < $1.0
+                        })
+                    )
                 }
             )
             .disposed(by: disposeBag)
         
         return Output(
-            schoolMealDataLoad: schoolMealDataLoad.asDriver(onErrorJustReturn: .init(
-                meals: [String() : [String()]]
-            ))
+            schoolMealDataLoad: schoolMealDataLoad.asDriver()
         )
     }
     

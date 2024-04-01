@@ -6,11 +6,13 @@ import RxSwift
 import RxCocoa
 
 import Core
+import Domain
 import DesignSystem
 
 public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
     
     private let schoolMealLoadRelay = PublishRelay<String>()
+    private var schoolMealArray = BehaviorRelay<[String]>(value: [])
     
     private let date = Date()
     private lazy var todayDate = date.toString(type: .monthAndDay)
@@ -23,7 +25,7 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
-    private lazy var calendarView = PiCKSchoolMealCalendarView(
+    private lazy var calendarView = PiCKSchoolCalendarView(
         clickCell: { [weak self] date, loadDate in
             if date == self?.todayDate {
                 self?.todaysSchoolMealLabel.text = "\(date) 오늘의 급식"
@@ -65,17 +67,15 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
             schoolMealLoad: schoolMealLoadRelay.asObservable()
         )
         let output = viewModel.transform(input: input)
-        
+                
         output.schoolMealDataLoad.asObservable()
-            .compactMap { $0.meals }
-//            .map { $0.meals }
             .bind(to: schoolMealCollectionView.rx.items(
                 cellIdentifier: SchoolMealCell.identifier,
                 cellType: SchoolMealCell.self
-            )) { [self] row, element, cell in
+            )) { row, element, cell in
                 cell.setup(
-                    mealTime: mealTimeArray[row],
-                    todaySchoolMeal: element.value
+                    mealTime: element.1,
+                    todaySchoolMeal: element.2
                 )
             }
             .disposed(by: disposeBag)
