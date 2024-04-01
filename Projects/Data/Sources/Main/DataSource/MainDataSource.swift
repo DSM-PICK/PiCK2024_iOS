@@ -1,9 +1,21 @@
-//
-//  MainDataSource.swift
-//  Data
-//
-//  Created by 조영준 on 3/31/24.
-//  Copyright © 2024 com.pick.app. All rights reserved.
-//
-
 import Foundation
+
+import RxSwift
+import RxMoya
+import Moya
+
+import Core
+import AppNetwork
+
+class MainDataSource {
+    
+    private let provider = MoyaProvider<MainAPI>(plugins: [MoyaLoggingPlugin()])
+    
+    static let shared = MainDataSource()
+    private init() {}
+    
+    func fetchMainData() -> Single<Response> {
+        return provider.rx.request(.fetchMainData)
+            .filterSuccessfulStatusCodes()
+    }
+}

@@ -21,11 +21,5 @@ class EarlyLeaveDataSource {
         .asCompletable()
     }
     
-    //    func setAreaOfInterest(addressName: String) -> Completable {
-    //        return provider.rx.request(.setAreaOfInterest(addressName: addressName))
-    //            .asCompletable()
-    //            .catch { .error($0.toError(ProfileError.self))}
-    //    }
-    
     
 }

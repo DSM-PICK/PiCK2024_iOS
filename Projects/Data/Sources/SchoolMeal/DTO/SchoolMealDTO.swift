@@ -4,16 +4,13 @@ import Domain
 
 struct SchoolMealDTO: Decodable {
     public let date: String
-    public let meals: [String : [String]]
+    public let meals: SchoolMealDTOElement
     
 }
 
 extension SchoolMealDTO {
     func toDomain() -> SchoolMealEntity {
-        return .init(
-//            date: date,
-            meals: meals
-        )
+        return .init(meals: meals.toDomain())
     }
     
 }
@@ -28,9 +25,11 @@ struct SchoolMealDTOElement: Decodable {
 extension SchoolMealDTOElement {
     func toDomain() -> SchoolMealEntityElement {
         return .init(
-            breakfast: breakfast,
-            lunch: lunch,
-            dinner: dinner
+            mealBundle: [
+                (0, "조식", breakfast),
+                (1, "중식", lunch),
+                (2, "석식", dinner)
+            ]
         )
     }
     

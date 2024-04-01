@@ -1,5 +1,7 @@
 import Foundation
 
+import Core
+
 public struct TimeTableEntity {
     public let date: String
     public let timetables: [TimeTableEntityElement]
