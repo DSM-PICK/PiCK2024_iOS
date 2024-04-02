@@ -36,8 +36,8 @@ extension StepperDI {
         
         //MARK: MainViewModel
         let mainViewModel = MainViewModel(
+            fetchMainUseCase: serviceDI.fetchMainUseCase,
             fetchSimpleProfileUseCase: serviceDI.fetchSimpleUseCase,
-            fetchClassroomCheckUseCase: serviceDI.fetchClassroomCheckUseCase,
             classroomReturnUseCase: serviceDI.classroomReturn,
             fetchTodayTimeTableUseCase: serviceDI.fetchTodayTimeTableUseCase,
             fetchSchoolMealUseCase: serviceDI.fetchSchoolMealUseCase,
@@ -55,7 +55,8 @@ extension StepperDI {
         )
         
         let outingPassViewModel = OutingPassViewModel(
-            fetchOutingPassUseCase: serviceDI.fetchOutingPassUseCase
+            fetchOutingPassUseCase: serviceDI.fetchOutingPassUseCase,
+            fetchEarlyLeavePassUseCase: serviceDI.fetchEarlyLeavePassUseCase
         )
         
         let earlyLeaveViewModel = EarlyLeaveApplyViewModel(

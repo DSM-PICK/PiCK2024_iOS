@@ -6,6 +6,9 @@ public struct ServiceDI {
     // Auth
     public let loginUseCase: LoginUseCase
     
+    //main
+    public let fetchMainUseCase: FetchMainUseCase
+    
     //profile
     public let fetchSimpleUseCase: FetchSimpleProfileUseCase
     public let fetchDetailUseCase: FetchDetailProfileUseCase
@@ -16,6 +19,7 @@ public struct ServiceDI {
     
     //earlyLeave
     public let earlyLeaveUseCase: EarlyLeaveApplyUseCase
+    public let fetchEarlyLeavePassUseCase: FetchEarlyLeavePassUseCase
     
     //classroom
     public let classroomMoveUseCase: ClassroomMoveApplyUseCase
@@ -46,6 +50,7 @@ public struct ServiceDI {
 extension ServiceDI {
     private static func resolve() -> ServiceDI {
         let authRepo = AuthRepositoryImpl()
+        let mainRepo = MainRepositoryImpl()
         let profileRepo = ProfileRepositoryImpl()
         let outingRepo = OutingRepositoryImpl()
         let earlyLeaveRepo = EarlyLeaveRepositoryImpl()
@@ -59,6 +64,11 @@ extension ServiceDI {
         //MARK: Auth관련 UseCase
         let loginUseCaseInject = LoginUseCase(
             repository: authRepo
+        )
+        
+        //MARK: Main관련 UseCase
+        let fetchMainUseCaseInject = FetchMainUseCase(
+            repository: mainRepo
         )
         
         //MARK: Profile관련 UseCase
@@ -80,6 +90,9 @@ extension ServiceDI {
         
         //MARK: 조기귀가 관련 UseCase
         let earlyLeaveApplyUseCaseInject = EarlyLeaveApplyUseCase(
+            repository: earlyLeaveRepo
+        )
+        let fetchEarlyLeavePassUseCase = FetchEarlyLeavePassUseCase(
             repository: earlyLeaveRepo
         )
         
@@ -143,11 +156,13 @@ extension ServiceDI {
         
         return .init(
             loginUseCase: loginUseCaseInject,
+            fetchMainUseCase: fetchMainUseCaseInject,
             fetchSimpleUseCase: fetchSimpleProfileUseCaseInject,
             fetchDetailUseCase: fetchDetailProfileUseCaseInject,
             outingApplyUseCase: outingApplyUseCaseInject,
             fetchOutingPassUseCase: fetchOutingPassUseCaseInject,
             earlyLeaveUseCase: earlyLeaveApplyUseCaseInject,
+            fetchEarlyLeavePassUseCase: fetchEarlyLeavePassUseCase,
             classroomMoveUseCase: classroomMoveApplyUseCaseInject,
             fetchClassroomCheckUseCase: fetchClassroomCheckUseCaseInject,
             classroomReturn: classroomReturnUseCaseInject,

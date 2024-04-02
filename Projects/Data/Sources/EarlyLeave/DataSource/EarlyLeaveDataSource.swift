@@ -21,5 +21,9 @@ class EarlyLeaveDataSource {
         .asCompletable()
     }
     
+    func fetchEarlyLeavePass() -> Single<Response> {
+        return provider.rx.request(.fetchEarlyLeavePass)
+            .filterSuccessfulStatusCodes()
+    }
     
 }

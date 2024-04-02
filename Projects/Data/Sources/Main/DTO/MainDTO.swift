@@ -9,9 +9,10 @@ public struct MainDTO: Decodable {
     let startTime: String?
     let endTime: String?
     let classroom: String?
+    let type: OutingPassType.RawValue?
     
     enum CodingKeys: String, CodingKey {
-        case classroom
+        case classroom, type
         case userID = "user_id"
         case userName = "username"
         case startTime = "start_time"
@@ -27,7 +28,8 @@ extension MainDTO {
             userName: userName,
             startTime: startTime,
             endTime: endTime,
-            classroom: classroom
+            classroom: classroom, 
+            type: type
         )
     }
     

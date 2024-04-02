@@ -14,4 +14,10 @@ class EarlyLeaveRepositoryImpl: EarlyLeaveRepository {
         )
     }
     
+    func fetchEarlyLeavePass() -> Single<EarlyLeavePassEntity> {
+        return remoteDataSource.fetchEarlyLeavePass()
+            .map(EarlyLeavePassDTO.self)
+            .map { $0.toDomain() }
+    }
+    
 }

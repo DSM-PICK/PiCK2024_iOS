@@ -12,11 +12,10 @@ public struct OutingPassDTO: Decodable {
     let grade: Int
     let classNum: Int
     let num: Int
-    let image: String
     let type: OutingPassType.RawValue
     
     enum CodingKeys: String, CodingKey {
-        case reason, grade, num, image, type
+        case reason, grade, num, type
         case userName = "username"
         case teacherName = "teacher_name"
         case startTime = "start_time"
@@ -36,7 +35,6 @@ extension OutingPassDTO {
             grade: grade,
             classNum: classNum,
             num: num,
-            image: image,
             type: type
         )
     }
