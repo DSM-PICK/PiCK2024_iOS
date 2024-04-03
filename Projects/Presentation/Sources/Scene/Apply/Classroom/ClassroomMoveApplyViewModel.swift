@@ -22,6 +22,8 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
         let floorText: Observable<Int>
         let classroomNameText: Observable<String>
         let classroomMoveApplyButton: Observable<Void>
+        let startPeriod: Observable<Int>
+        let endPeriod: Observable<Int>
     }
     public struct Output {
         let isApplyButtonEnable: Signal<Bool>
@@ -29,14 +31,18 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
     
     private var floor = PublishRelay<Int>()
     private var classroomName = PublishRelay<String>()
+    private var startPeriod = PublishRelay<Int>()
+    private var endPeriod = PublishRelay<Int>()
     
     public func transform(input: Input) -> Output {
         let info = Observable.combineLatest(
             input.floorText,
-            input.classroomNameText
+            input.classroomNameText,
+            input.startPeriod,
+            input.endPeriod
         )
         
-        let isApplyButtonEnable = info.map { floor, classroomName -> Bool in !classroomName.isEmpty
+        let isApplyButtonEnable = info.map { floor, classroomName, startPeriod, endPeriod  -> Bool in !classroomName.isEmpty
         }
         
         input.floorText
@@ -49,10 +55,12 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
         
         input.classroomMoveApplyButton.asObservable()
             .withLatestFrom(info)
-            .flatMap { floor, classroomName in
+            .flatMap { floor, classroomName, startPeriod, endPeriod in
                 self.classroomMoveApplyUseCase.execute(
                     floor: floor,
-                    classroomName: classroomName
+                    classroomName: classroomName,
+                    startPeriod: startPeriod,
+                    endPeriod: endPeriod
                 )
                 .catch {
                     print($0.localizedDescription)

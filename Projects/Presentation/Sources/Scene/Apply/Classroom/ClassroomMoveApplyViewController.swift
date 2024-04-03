@@ -99,14 +99,16 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         let input = ClassroomMoveApplyViewModel.Input(
             floorText: floorText.asObservable(),
             classroomNameText: classroomNameText.asObservable(),
-            classroomMoveApplyButton: classroomMoveApplyButton.rx.tap.asObservable()
+            classroomMoveApplyButton: classroomMoveApplyButton.rx.tap.asObservable(),
+            startPeriod: Observable.just(8),
+            endPeriod: Observable.just(10)
         )
         let output = viewModel.transform(input: input)
         
         output.isApplyButtonEnable.asObservable()
             .subscribe(
-                onNext: { [self] status in
-                    classroomMoveApplyButton.isEnabled = status
+                onNext: { [weak self] status in
+                    self?.classroomMoveApplyButton.isEnabled = status
                 }
             )
             .disposed(by: disposeBag)
@@ -122,9 +124,9 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         
         floorCollectionView.rx.itemSelected
             .subscribe(
-                onNext: { [self] index in
-                    classroomNameText.accept(
-                        currentFloorClassroomArray.value[index.row]
+                onNext: { [weak self] index in
+                    self?.classroomNameText.accept(
+                        self?.currentFloorClassroomArray.value[index.row] ?? ""
                     )
                 }
             )

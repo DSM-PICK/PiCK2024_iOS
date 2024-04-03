@@ -18,4 +18,5 @@ class MainDataSource {
         return provider.rx.request(.fetchMainData)
             .filterSuccessfulStatusCodes()
     }
+    
 }
