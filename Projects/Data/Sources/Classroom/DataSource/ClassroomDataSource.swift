@@ -13,17 +13,14 @@ class ClassroomDataSource {
     static let shared = ClassroomDataSource()
     private init() {}
     
-    func classroomMoveApply(floor: Int, classroomName: String) -> Completable {
+    func classroomMoveApply(floor: Int, classroomName: String, startPeriod: Int, endPeriod: Int) -> Completable {
         return provider.rx.request(.classroomMoveApply(
             floor: floor,
-            classroom: classroomName
+            classroom: classroomName,
+            startPeriod: startPeriod,
+            endPeriod: endPeriod
         ))
         .asCompletable()
-    }
-    
-    func fetchClassroomCheck() -> Single<Response> {
-        return provider.rx.request(.classroomCheck)
-            .filterSuccessfulStatusCodes()
     }
     
     func classroomReturn() -> Completable {

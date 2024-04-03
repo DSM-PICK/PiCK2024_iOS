@@ -7,16 +7,13 @@ import Domain
 class ClassroomRepositoryImpl: ClassroomRepository {
     let remoteDataSource = ClassroomDataSource.shared
     
-    func classroomMoveApply(floor: Int, classroomName: String) -> Completable {
+    func classroomMoveApply(floor: Int, classroomName: String, startPeriod: Int, endPeriod: Int) -> Completable {
         return remoteDataSource.classroomMoveApply(
-            floor: floor, classroomName: classroomName
+            floor: floor, 
+            classroomName: classroomName,
+            startPeriod: startPeriod,
+            endPeriod: endPeriod
         )
-    }
-    
-    func fetchClassroomCheck() -> Single<ClassroomCheckEntity> {
-        return remoteDataSource.fetchClassroomCheck()
-            .map(ClassroomCheckDTO.self)
-            .map { $0.toDomain() }
     }
     
     func classroomReturn() -> Completable {

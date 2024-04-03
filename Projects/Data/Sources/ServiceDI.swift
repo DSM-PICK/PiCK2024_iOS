@@ -23,7 +23,7 @@ public struct ServiceDI {
     
     //classroom
     public let classroomMoveUseCase: ClassroomMoveApplyUseCase
-    public let fetchClassroomCheckUseCase: FetchClassroomCheckUseCase
+//    public let fetchClassroomCheckUseCase: FetchClassroomCheckUseCase
     public let classroomReturn: ClassroomReturnUseCase
     
     //weekendMeal
@@ -101,10 +101,10 @@ extension ServiceDI {
             repository: classroomRepo
         )
         
-        let fetchClassroomCheckUseCaseInject = FetchClassroomCheckUseCase(
-            repository: classroomRepo
-        )
-        
+//        let fetchClassroomCheckUseCaseInject = FetchClassroomCheckUseCase(
+//            repository: classroomRepo
+//        )
+//        
         let classroomReturnUseCaseInject = ClassroomReturnUseCase(
             repository: classroomRepo
         )
@@ -164,7 +164,7 @@ extension ServiceDI {
             earlyLeaveUseCase: earlyLeaveApplyUseCaseInject,
             fetchEarlyLeavePassUseCase: fetchEarlyLeavePassUseCase,
             classroomMoveUseCase: classroomMoveApplyUseCaseInject,
-            fetchClassroomCheckUseCase: fetchClassroomCheckUseCaseInject,
+//            fetchClassroomCheckUseCase: fetchClassroomCheckUseCaseInject,
             classroomReturn: classroomReturnUseCaseInject,
             weekendMealCheckUseCase: weekendMealCheckUseCaseInject,
             weekendMealApplyUseCase: weekendMealApplyUseCaseInject,
