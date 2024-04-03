@@ -31,9 +31,10 @@ public class AcademicScheduleView: BaseView {
     ).then {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 4
-        $0.bounces = false
-        $0.showsVerticalScrollIndicator = false
-        $0.register(AcademicScheduleCell.self, forCellWithReuseIdentifier: AcademicScheduleCell.identifier)
+        $0.register(
+            AcademicScheduleCell.self,
+            forCellWithReuseIdentifier: AcademicScheduleCell.identifier
+        )
     }
     
     public func setup(

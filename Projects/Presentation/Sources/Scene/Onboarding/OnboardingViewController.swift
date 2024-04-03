@@ -14,6 +14,7 @@ public class OnboardingViewController: BaseViewController<OnboardingViewModel> {
     private let viewWillAppearRelay = PublishRelay<Void>()
     private let componentAppearRelay = PublishRelay<Void>()
     
+    
     private lazy var cellSize: CGFloat =  self.view.frame.width - 94
     
     private let animationView = PiCKLottieView()
@@ -39,8 +40,10 @@ public class OnboardingViewController: BaseViewController<OnboardingViewModel> {
         $0.showsVerticalScrollIndicator = false
         $0.isPagingEnabled = true
         $0.bounces = false
-        $0.register(OnboardingCell.self, forCellWithReuseIdentifier: OnboardingCell.identifier)
-        $0.isHidden = true
+        $0.register(
+            OnboardingCell.self,
+            forCellWithReuseIdentifier: OnboardingCell.identifier
+        )
     }
     private let pageControl = PiCKPageControl().then {
         $0.numberOfPages = 3
