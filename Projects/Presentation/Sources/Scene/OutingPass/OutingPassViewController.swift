@@ -12,10 +12,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     
     private let outingPassRelay = PublishRelay<Void>()
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
-    private let mainView = UIView()
-    
     private let navigationTitleLabel = UILabel().then {
         $0.text = "외출증"
         $0.textColor = .neutral50
@@ -23,20 +19,12 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     }
     private let userInfoLabel = UILabel().then {
         $0.textColor = .neutral100
-        $0.font = .subTitle1M
-    }
-    private let outingTypeLabel = UILabel().then {
-        $0.textColor = .primary500
-        $0.font = .subTitle1M
-    }
-    private let qrCodeImageView = UIImageView().then {
-        $0.backgroundColor = .primary1200
-        $0.layer.cornerRadius = 4
+        $0.font = .heading6M
     }
     private let outingTimeLabel = UILabel().then {
         $0.text = "외출 시간"
-        $0.textColor = .neutral50
-        $0.font = .label1
+        $0.textColor = .neutral400
+        $0.font = .label2
     }
     private let outingTimeRangeLabel = PiCKPaddingLabel().then {
         $0.textColor = .neutral100
@@ -47,8 +35,8 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     }
     private let outingReasonLabel = UILabel().then {
         $0.text = "사유"
-        $0.textColor = .neutral50
-        $0.font = .label1
+        $0.textColor = .neutral400
+        $0.font = .label2
     }
     private let outingReasonDescriptionLabel = PiCKPaddingLabel().then {
         $0.textColor = .neutral100
@@ -59,8 +47,8 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     }
     private let approvedTeacherLabel = UILabel().then {
         $0.text = "확인 교사"
-        $0.textColor = .neutral50
-        $0.font = .label1
+        $0.textColor = .neutral400
+        $0.font = .label2
     }
     private let approvedTeacherNameLabel = PiCKPaddingLabel().then {
         $0.textColor = .neutral100
@@ -69,6 +57,7 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.layer.cornerRadius = 4
         $0.clipsToBounds = true
     }
+    private let backgroundImage = UIImageView(image: .outingPassBackgroundIamge)
     
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
@@ -86,10 +75,20 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             .subscribe(
                 onNext: { data in
                     self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
-                    self.outingTypeLabel.text = data.type
                     self.approvedTeacherNameLabel.text = data.teacherName
-                    //                    self.qrCodeImageView.image = data.image
                     self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
+                    self.outingReasonDescriptionLabel.text = data.reason
+                    self.approvedTeacherNameLabel.text = data.teacherName
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        output.earlyLeavePassData.asObservable()
+            .subscribe(
+                onNext: { data in
+                    self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
+                    self.approvedTeacherNameLabel.text = data.teacherName
+                    self.outingTimeRangeLabel.text = "\(data.startTime)"
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = data.teacherName
                 }
@@ -97,48 +96,24 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             .disposed(by: disposeBag)
     }
     public override func addView() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        contentView.addSubview(mainView)
         [
             userInfoLabel,
-            outingTypeLabel,
-            qrCodeImageView,
             outingTimeLabel,
             outingTimeRangeLabel,
             outingReasonLabel,
             outingReasonDescriptionLabel,
             approvedTeacherLabel,
-            approvedTeacherNameLabel
-        ].forEach { mainView.addSubview($0) }
+            approvedTeacherNameLabel,
+            backgroundImage
+        ].forEach { view.addSubview($0) }
     }
     public override func setLayout() {
-        scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        contentView.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.leading.trailing.equalTo(self.view)
-        }
-        mainView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.height.equalTo(self.view.frame.height * 1.2)
-        }
         userInfoLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(25)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(30)
             $0.left.equalToSuperview().inset(24)
         }
-        outingTypeLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(25)
-            $0.right.equalToSuperview().inset(24)
-        }
-        qrCodeImageView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(userInfoLabel.snp.bottom).offset(32)
-            $0.width.height.equalTo(342)
-        }
         outingTimeLabel.snp.makeConstraints {
-            $0.top.equalTo(qrCodeImageView.snp.bottom).offset(32)
+            $0.top.equalTo(userInfoLabel.snp.bottom).offset(32)
             $0.left.equalToSuperview().inset(24)
         }
         outingTimeRangeLabel.snp.makeConstraints {
@@ -163,6 +138,11 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             $0.top.equalTo(approvedTeacherLabel.snp.bottom).offset(6)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(40)
+        }
+        backgroundImage.snp.makeConstraints {
+            $0.top.equalTo(approvedTeacherNameLabel.snp.bottom).offset(32)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(68)
         }
     }
     

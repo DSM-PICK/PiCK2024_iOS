@@ -13,11 +13,13 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
     public var steps = PublishRelay<Step>()
     
     private let fetchOutingPassUseCase: FetchOutingPassUseCase
+    private let fetchEarlyLeavePassUseCase: FetchEarlyLeavePassUseCase
     
     public init(
-        fetchOutingPassUseCase: FetchOutingPassUseCase
-    ) {
+        fetchOutingPassUseCase: FetchOutingPassUseCase,
+        fetchEarlyLeavePassUseCase: FetchEarlyLeavePassUseCase) {
         self.fetchOutingPassUseCase = fetchOutingPassUseCase
+        self.fetchEarlyLeavePassUseCase = fetchEarlyLeavePassUseCase
     }
     
     public struct Input {
@@ -26,9 +28,11 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
     
     public struct Output {
         let outingPassData: Signal<OutingPassEntity>
+        let earlyLeavePassData: Signal<EarlyLeavePassEntity>
     }
     
     let outingPassData = PublishRelay<OutingPassEntity>()
+    let earlyLeavePassData = PublishRelay<EarlyLeavePassEntity>()
     
     public func transform(input: Input) -> Output {
         input.outingPassLoad.asObservable()
@@ -42,8 +46,20 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
             .bind(to: outingPassData)
             .disposed(by: disposeBag)
         
+        input.outingPassLoad.asObservable()
+            .flatMap {
+                self.fetchEarlyLeavePassUseCase.execute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: earlyLeavePassData)
+            .disposed(by: disposeBag)
+        
         return Output(
-            outingPassData: outingPassData.asSignal()
+            outingPassData: outingPassData.asSignal(), 
+            earlyLeavePassData: earlyLeavePassData.asSignal()
         )
     }
     
