@@ -37,4 +37,9 @@ public class KeychainStorage {
         }
     }
     
+    public func removeKeychain() {
+        self.id = ""
+        self.password = ""
+    }
+    
 }
