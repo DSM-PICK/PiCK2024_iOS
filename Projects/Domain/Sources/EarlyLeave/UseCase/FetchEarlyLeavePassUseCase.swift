@@ -1,9 +1,17 @@
-//
-//  FetchEarlyLeavePassUseCase.swift
-//  Domain
-//
-//  Created by 조영준 on 4/2/24.
-//  Copyright © 2024 com.pick.app. All rights reserved.
-//
-
 import Foundation
+
+import RxSwift
+
+public class FetchEarlyLeavePassUseCase {
+    
+    let repository: EarlyLeaveRepository
+    
+    public init(repository: EarlyLeaveRepository) {
+        self.repository = repository
+    }
+    
+    public func execute() -> Single<EarlyLeavePassEntity> {
+        return repository.fetchEarlyLeavePass()
+    }
+    
+}

@@ -5,5 +5,5 @@ import RxSwift
 import Core
 
 public protocol MainRepository {
-    func fetchMainData() -> Single<MainEntity>
+    func fetchMainData() -> Single<MainEntity?>
 }

@@ -11,7 +11,7 @@ public class FetchMainUseCase {
         self.repository = repository
     }
     
-    public func execute() -> Single<MainEntity> {
+    public func execute() -> Single<MainEntity?> {
         return repository.fetchMainData()
     }
     
