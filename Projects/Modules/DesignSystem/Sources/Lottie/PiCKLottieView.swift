@@ -32,4 +32,5 @@ public class PiCKLottieView: UIView {
         self.lottieAnimationView?.play()
         self.lottieAnimationView?.animationSpeed = 1.5
     }
+    
 }

@@ -3,12 +3,16 @@ import UIKit
 enum PickerType {
     case hours
     case mins
+    case period
 }
 
 public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     private let hoursArray = Array(00...23)
     private let minsArray = Array(00...59)
+    private let periodArray = Array(1...10)
+    
+    public var periodText = Int()
     
     private var selectedPickerType: PickerType
     
@@ -37,6 +41,8 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
                 return hoursArray.count
             case .mins:
                 return minsArray.count
+            case .period:
+                return periodArray.count
         }
     }
     
@@ -55,6 +61,9 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
                 label.text = "\(hoursArray[row])"
             case .mins:
                 label.text = "\(minsArray[row])"
+            case .period:
+                label.text = "\(periodArray[row])교시"
+                periodText = periodArray[row]
         }
         return view
     }

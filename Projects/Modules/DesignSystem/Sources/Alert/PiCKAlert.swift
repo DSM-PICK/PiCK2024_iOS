@@ -4,9 +4,13 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+import RxFlow
 
-public class PiCKAlert: UIViewController {
+import Core
+
+public class PiCKAlert: UIViewController, Stepper {
     
+    public var steps = PublishRelay<Step>()
     private let disposeBag = DisposeBag()
     
     private var clickToAction: () -> Void = {}
