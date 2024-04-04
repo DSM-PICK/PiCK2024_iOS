@@ -21,6 +21,8 @@ public class MainFlow: Flow {
         guard let step = step as? PiCKStep else { return .none }
         
         switch step {
+            case .onBoardingRequired:
+                return .end(forwardToParentFlowWithStep: PiCKStep.onBoardingRequired)
             case .mainRequired:
                 return navigateToMain()
             case .profileRequired:
