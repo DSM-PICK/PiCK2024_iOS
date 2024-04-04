@@ -79,24 +79,29 @@ public class PiCKSchoolCalendarView: BaseView {
         observeDays.bind(to: calendarCollectionView.rx.items(
             cellIdentifier: SchoolCalendarCell.identifier,
             cellType: SchoolCalendarCell.self
-        )) { [self] row, element, cell in
+        )) { row, element, cell in
             cell.daysLabel.text = element
             
             let todayDate = Date()
             
-            if todayDate.toString(type: .fullDateKorForCalendar) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+            if todayDate.toString(type: .fullDateKorForCalendar) == "\(self.dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
                 cell.todaySetting()
             }
+            
+            if cell.daysLabel.text?.isEmpty == true {
+                cell.isUserInteractionEnabled = false
+            }
+            
         }.disposed(by: disposeBag)
         
         calendarCollectionView.rx.itemSelected
             .bind(
-                onNext: { [self] value in
-                    let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(closureArray.value[value.row])일"
+                onNext: { value in
+                    let clickDate = "\(self.calendar.component(.month, from: self.date))월 \(self.closureArray.value[value.row])일"
                     
-                    let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(closureArray.value[value.row])"
+                    let loadDate = "\(self.calendar.component(.year, from: self.date))-\(self.calendar.component(.month, from: self.date))-\(self.closureArray.value[value.row])"
                     
-                    clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
+                    self.clickCell(clickDate, loadDate.toDate(type: .fullDate).toString(type: .fullDate))
                 }
             )
             .disposed(by: disposeBag)

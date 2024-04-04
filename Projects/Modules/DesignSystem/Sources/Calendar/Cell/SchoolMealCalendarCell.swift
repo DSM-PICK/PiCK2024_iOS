@@ -13,9 +13,6 @@ public class SchoolCalendarCell: BaseCollectionViewCell {
         }
     }
     
-    private var bgColor: UIColor {
-        !isSelected ? .primary500 : .white
-    }
     private var borderColor: UIColor {
         !isSelected ? .white : .primary500
     }
@@ -32,13 +29,17 @@ public class SchoolCalendarCell: BaseCollectionViewCell {
         self.attribute()
         self.layout()
         self.daysLabel.textColor = .neutral100
+        self.isSelected = true
+        self.isUserInteractionEnabled = true
     }
     
     public override func attribute() {
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 16
-        contentView.layer.borderWidth = 3
-        contentView.layer.borderColor = borderColor.cgColor
+        if self.daysLabel.textColor != UIColor.white {
+            contentView.backgroundColor = .white
+            contentView.layer.cornerRadius = 16
+            contentView.layer.borderWidth = 3
+            contentView.layer.borderColor = borderColor.cgColor
+        }
     }
     public override func layout() {
         contentView.addSubview(daysLabel)
