@@ -22,7 +22,10 @@ public class AcademicScheduleView: BaseView {
     })
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
-        $0.itemSize = .init(width: self.frame.width, height: 60)
+        $0.itemSize = .init(
+            width: self.frame.width,
+            height: 60
+        )
         $0.minimumLineSpacing = 12
     }
     private lazy var scheduleCollectionView = UICollectionView(

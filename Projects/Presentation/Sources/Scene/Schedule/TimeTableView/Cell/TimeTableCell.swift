@@ -46,11 +46,10 @@ public class TimeTableCell: BaseCollectionViewCell {
         
         periodLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.left.equalToSuperview()//.inset(10)
+            $0.left.equalToSuperview()
         }
         subjectImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-//            $0.left.equalToSuperview().inset(64)
             $0.left.equalTo(periodLabel.snp.right).offset(24)
             $0.width.height.equalTo(32)
         }

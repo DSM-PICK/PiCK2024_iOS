@@ -105,19 +105,19 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
     }
     public override func setLayout() {
         segmentedControl.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(90)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(12)
             $0.left.right.equalToSuperview().inset(24)
             $0.height.equalTo(36)
         }
         segmentedTimetableView.snp.makeConstraints {
             $0.top.equalTo(segmentedControl.snp.bottom).offset(28)
             $0.left.right.equalToSuperview().inset(23)
-            $0.bottom.equalToSuperview().inset(74)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         segmentedCalendarView.snp.makeConstraints {
             $0.top.equalTo(segmentedControl.snp.bottom).offset(28)
             $0.left.right.equalToSuperview().inset(23)
-            $0.bottom.equalToSuperview().inset(74)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
