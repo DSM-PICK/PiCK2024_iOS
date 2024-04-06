@@ -29,8 +29,8 @@ public class TestFlow: Flow {
     }
     
     private func navigateToTest() -> FlowContributors {
-        let viewModel = container.mainViewModel
-        let viewController = MainViewController(viewModel: viewModel)
+        let viewModel = container.outingPassViewModel
+        let viewController = OutingPassViewController(viewModel: viewModel)
         self.rootPresentable.pushViewController(viewController, animated: false)
         return .one(flowContributor: .contribute(
             withNextPresentable: viewController,

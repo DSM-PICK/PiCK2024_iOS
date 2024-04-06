@@ -17,7 +17,7 @@ extension WeekendMealAPI: TargetType {
     public var path: String {
         switch self {
             case .weekendMealApply:
-                return "/weekend-meal/status"
+                return "/weekend-meal/my-status"
             case .weekendMealCheck:
                 return "/weekend-meal/my"
         }

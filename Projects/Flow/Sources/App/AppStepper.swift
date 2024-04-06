@@ -23,8 +23,6 @@ public final class AppStepper: Stepper {
     }
     
     public func readyToEmitSteps() {
-//        keychainStorage.id = ""
-//        keychainStorage.password = ""
         container.loginUseCase.execute(
             accountID: keychainStorage.id ?? "",
             password: keychainStorage.password ?? ""
