@@ -23,6 +23,12 @@ public class TimeTableCollectionView: BaseView {
     
     private var todayTimeTable = BehaviorRelay<[TimeTableEntityElement]>(value: [])
     
+    private let emptyTimeTableLabel = UILabel().then {
+        $0.text = "오늘은 등록된 시간표가 없습니다."
+        $0.textColor = .neutral50
+        $0.font = .caption1
+        $0.isHidden = true
+    }
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.itemSize = .init(width: self.frame.width - 32, height: 60)
@@ -31,7 +37,7 @@ public class TimeTableCollectionView: BaseView {
         frame: .zero,
         collectionViewLayout: collectionViewFlowLayout
     ).then {
-        $0.backgroundColor = .white
+        $0.backgroundColor = .red
         $0.register(
             TimeTableCollectionCell.self,
             forCellWithReuseIdentifier: TimeTableCollectionCell.identifier
@@ -54,6 +60,19 @@ public class TimeTableCollectionView: BaseView {
     }
     
     public override func bind() {
+        todayTimeTable.subscribe(
+            onNext: {
+                if $0.isEmpty {
+                    self.collectionView.isHidden = true
+                    self.emptyTimeTableLabel.isHidden = false
+                } else {
+                    self.collectionView.isHidden = false
+                    self.emptyTimeTableLabel.isHidden = true
+                }
+            }
+        )
+        .disposed(by: disposeBag)
+        
         todayTimeTable.bind(to: collectionView.rx.items(
             cellIdentifier: TimeTableCollectionCell.identifier,
             cellType: TimeTableCollectionCell.self
@@ -61,15 +80,20 @@ public class TimeTableCollectionView: BaseView {
             cell.setup(
                 period: element.period,
                 subjectImage: SubjectImageType(rawValue: element.subjectName)?.toImage() ?? UIImage(),
-                subject: element.subjectName,
-                subjectTime: self.timeArray[row]
+                subject: element.subjectName
             )
         }
         .disposed(by: disposeBag)
     }
     public override func setLayout() {
-        self.addSubview(collectionView)
+        [
+            emptyTimeTableLabel,
+            collectionView
+        ].forEach { self.addSubview($0) }
         
+        emptyTimeTableLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
         collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(3)
         }

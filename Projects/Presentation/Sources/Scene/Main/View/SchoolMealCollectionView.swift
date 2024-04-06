@@ -44,8 +44,7 @@ public class SchoolMealCollectionView: BaseView {
     }
     
     public override func bind() {
-        todaySchoolMeal
-            .bind(to: collectionView.rx.items(
+        todaySchoolMeal.bind(to: collectionView.rx.items(
                 cellIdentifier: SchoolMealCell.identifier,
                 cellType: SchoolMealCell.self
             )) { row, element, cell in

@@ -30,7 +30,15 @@ public class SchoolMealCell: BaseCollectionViewCell {
         todaySchoolMeal: [String]
     ) {
         self.schoolMealTimeLabel.text = mealTime
-        self.menuLabel.text = todaySchoolMeal.joined(separator: "\n")
+        if todaySchoolMeal == [""] || todaySchoolMeal == [] {
+            self.menuLabel.text = "등록된 급식이 없습니다."
+        } else if todaySchoolMeal.first == "" {
+            var mealArray = todaySchoolMeal
+            mealArray.removeFirst()
+            self.menuLabel.text = mealArray.joined(separator: "\n")
+        } else {
+            self.menuLabel.text = todaySchoolMeal.joined(separator: "\n")
+        }
     }
     
     public override func attribute() {

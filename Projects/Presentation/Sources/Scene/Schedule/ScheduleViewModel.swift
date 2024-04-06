@@ -35,10 +35,9 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
     }
     
     //academicSchedule
-    let academicScheduleDataLoad = PublishRelay<AcademicScheduleEntity>()
+    let academicScheduleDataLoad = BehaviorRelay<AcademicScheduleEntity>(value: .init())
     //timeTable
-//    let dateDataLoad = PublishRelay<String>()
-    let timeTableDataLoad = PublishRelay<WeekTimeTableEntity>()
+    let timeTableDataLoad = BehaviorRelay<WeekTimeTableEntity>(value: .init())
     
     public func transform(input: Input) -> Output {
         let date = Date()
@@ -70,9 +69,8 @@ public class ScheduleViewModel: BaseViewModel, Stepper {
             .disposed(by: disposeBag)
         
         return Output(
-            academicScheduleDataLoad: academicScheduleDataLoad.asDriver(onErrorJustReturn: []),
-//            dateLoad: dateDataLoad.asDriver(onErrorJustReturn: String()),
-            timeTableDataLoad: timeTableDataLoad.asDriver(onErrorJustReturn: [])
+            academicScheduleDataLoad: academicScheduleDataLoad.asDriver(),
+            timeTableDataLoad: timeTableDataLoad.asDriver()
         )
     }
     

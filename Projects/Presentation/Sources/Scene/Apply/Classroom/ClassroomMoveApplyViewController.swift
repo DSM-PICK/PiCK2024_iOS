@@ -10,6 +10,10 @@ import DesignSystem
 
 public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveApplyViewModel> {
     
+    private let classroomMoveApplyRelay = PublishRelay<Void>()
+    private var startPeriodRelay = Int()
+    private var endPeriodRelay = Int()
+    
     private let floorText = BehaviorRelay<Int>(value: 1)
     private let classroomNameText = BehaviorRelay<String>(value: "")
     private lazy var currentFloorClassroomArray = BehaviorRelay<[String]>(value: firstFloorClassroomArray)
@@ -76,7 +80,10 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 12
         $0.minimumInteritemSpacing = 15
-        $0.itemSize = .init(width: self.view.frame.width / 4, height: 36)
+        $0.itemSize = .init(
+            width: self.view.frame.width / 4,
+            height: 36
+        )
     }
     private lazy var floorCollectionView = UICollectionView(
         frame: .zero,
@@ -99,9 +106,9 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         let input = ClassroomMoveApplyViewModel.Input(
             floorText: floorText.asObservable(),
             classroomNameText: classroomNameText.asObservable(),
-            classroomMoveApplyButton: classroomMoveApplyButton.rx.tap.asObservable(),
-            startPeriod: Observable.just(8),
-            endPeriod: Observable.just(10)
+            classroomMoveApply: classroomMoveApplyRelay.asObservable(),
+            startPeriod: startPeriodRelay,
+            endPeriod: endPeriodRelay
         )
         let output = viewModel.transform(input: input)
         
@@ -112,6 +119,18 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
                 }
             )
             .disposed(by: disposeBag)
+        
+        classroomMoveApplyButton.rx.tap
+            .bind { [weak self] _ in
+                let modal = PiCKPeriodPickerAlert(clickToAction: { period in
+                    self?.startPeriodRelay = period[0] ?? 0
+                    self?.endPeriodRelay = period[1] ?? 0
+                    self?.classroomMoveApplyRelay.accept(())
+                })
+                modal.modalPresentationStyle = .overFullScreen
+                modal.modalTransitionStyle = .crossDissolve
+                self?.present(modal, animated: true)
+            }.disposed(by: disposeBag)
         
         currentFloorClassroomArray
             .bind(to: floorCollectionView.rx.items(
@@ -142,19 +161,29 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
                     
                     switch button.tag {
                         case 1:
-                            self?.currentFloorClassroomArray.accept(self?.firstFloorClassroomArray ?? [])
+                            self?.currentFloorClassroomArray.accept(
+                                self?.firstFloorClassroomArray ?? []
+                            )
                             return
                         case 2:
-                            self?.currentFloorClassroomArray.accept(self?.secondFloorClassroomArray ?? [])
+                            self?.currentFloorClassroomArray.accept(
+                                self?.secondFloorClassroomArray ?? []
+                            )
                             return
                         case 3:
-                            self?.currentFloorClassroomArray.accept(self?.thirdFloorClassroomArray ?? [])
+                            self?.currentFloorClassroomArray.accept(
+                                self?.thirdFloorClassroomArray ?? []
+                            )
                             return
                         case 4:
-                            self?.currentFloorClassroomArray.accept(self?.fourthFloorClassroomArray ?? [])
+                            self?.currentFloorClassroomArray.accept(
+                                self?.fourthFloorClassroomArray ?? []
+                            )
                             return
                         case 5:
-                            self?.currentFloorClassroomArray.accept(self?.fifthFloorClassroomArray ?? [])
+                            self?.currentFloorClassroomArray.accept(
+                                self?.fifthFloorClassroomArray ?? []
+                            )
                             return
                         default:
                             return

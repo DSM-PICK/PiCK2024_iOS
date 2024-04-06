@@ -57,6 +57,7 @@ public class MainViewModel: BaseViewModel, Stepper {
         let selfStudyTeacherButtonDidClick: Observable<Void>
         let outingPassButtonDidClick: Observable<Void>
         let noticeButtonDidClick: Observable<Void>
+        let noticeCellDidClick: Observable<UUID>
     }
     
     public struct Output {
@@ -83,7 +84,7 @@ public class MainViewModel: BaseViewModel, Stepper {
                 self.fetchMainUseCase.execute()
                     .catch {
                         print($0.localizedDescription)
-                        return .never()
+                        return .just(nil)
                     }
             }
             .bind(to: mainData)
@@ -198,11 +199,16 @@ public class MainViewModel: BaseViewModel, Stepper {
             .bind(to: steps)
             .disposed(by: disposeBag)
         
+        input.noticeCellDidClick
+            .map { id in
+                PiCKStep.detailNoticeRequired(id: id)
+            }
+            .bind(to: steps)
+            .disposed(by: disposeBag)
+        
         return Output(
             mainData: mainData.asSignal(),
             userProfileData: userProfileData.asSignal(),
-//            classroomCheckData: classroomCheckData.asSignal(),
-//            isHiddenPassView: isHiddenPassView.asSignal(),
             todayTimeTableData: todayTimeTableData.asDriver(),
             todaySchoolMealData: todaySchoolMealData.asDriver(),
             todayNoticeListData: todayNoticeListData.asDriver()

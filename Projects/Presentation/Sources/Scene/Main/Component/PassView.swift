@@ -26,48 +26,40 @@ public class PassView: BaseView, Stepper {
         $0.numberOfLines = 0
     }
     
-    var firstText = String()
-    var secondText = String()
-
     private lazy var bottomLabel = UILabel().then {
-        let attributedText = NSMutableAttributedString()
-        
-        let attributes1 = [
-            NSAttributedString.Key.foregroundColor: UIColor.primary400,
-            .font: UIFont.subTitle3M
-        ]
-        let text1 = NSAttributedString(string: firstText, attributes: attributes1)
-        
-        let attributes2 = [
-            NSAttributedString.Key.foregroundColor: UIColor.neutral50,
-            .font: UIFont.caption1
-        ]
-        let text2 = NSAttributedString(string: secondText, attributes: attributes2)
-        
-        attributedText.append(text1)
-        attributedText.append(text2)
-        
-        $0.attributedText = attributedText
+        $0.textColor = .neutral50
+        $0.font = .caption1
     }
-    private let checkButton = UIButton(type: .system).then {
+    private var checkButton = UIButton(type: .system).then {
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .buttonES
         $0.layer.cornerRadius = 4
         $0.backgroundColor = .secondary500
+        $0.contentEdgeInsets = .init(
+            top: 11,
+            left: 20,
+            bottom: 11,
+            right: 20
+        )
     }
     
     public func setup(
         topLabel: String,
         bottomLabel: String,
         buttonTitle: String,
-        firstPointText: String,
-        secondPoinText: String
+        firstPointText: String
     ) {
         self.topLabel.text = topLabel
-        self.bottomLabel.text = bottomLabel
+        self.bottomLabel.attributedText = bottomLabel.attributed(
+            of: firstPointText,
+            key: .foregroundColor,
+            value: UIColor.primary400
+        ).addAttribute(
+            of: firstPointText,
+            key: .font,
+            value: UIFont.subTitle3M
+        )
         self.checkButton.setTitle(buttonTitle, for: .normal)
-        self.firstText = firstPointText
-        self.secondText = secondPoinText
     }
     
     init(
@@ -109,9 +101,63 @@ public class PassView: BaseView, Stepper {
         checkButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.right.equalToSuperview().inset(16)
-            $0.width.equalTo(120)
             $0.height.equalTo(40)
         }
     }
     
+}
+
+
+extension NSMutableAttributedString {
+    func addAttribute(of searchString: String, key: NSAttributedString.Key, value: Any) -> NSMutableAttributedString {
+        let length = self.string.count
+        var range = NSRange(location: 0, length: length)
+        var rangeArray = [NSRange]()
+
+        while range.location != NSNotFound {
+            range = (self.string as NSString).range(of: searchString, options: .caseInsensitive, range: range)
+            rangeArray.append(range)
+
+            if range.location != NSNotFound {
+                range = NSRange(location: range.location + range.length, length: self.string.count - (range.location + range.length))
+            }
+        }
+
+        rangeArray.forEach {
+            self.addAttribute(key, value: value, range: $0)
+        }
+
+        return self
+    }
+}
+
+extension String {
+    func attributed(of searchString: String, key: NSAttributedString.Key, value: Any) -> NSMutableAttributedString {
+    
+        // 문자열을 속성 문자열로 변환
+        let attributedString = NSMutableAttributedString(string: self)
+        
+        // 문자열의 길이 확인
+        let length = self.count
+        
+        var range = NSRange(location: 0, length: length)
+        var rangeArray = [NSRange]()
+
+        // 문자열에서 특정 문자열의 위치 찾기
+        while range.location != NSNotFound {
+            range = (attributedString.string as NSString).range(of: searchString, options: .caseInsensitive, range: range)
+            rangeArray.append(range)
+
+            if range.location != NSNotFound {
+                range = NSRange(location: range.location + range.length, length: self.count - (range.location + range.length))
+            }
+        }
+
+        // 찾은 범위의 문자열에 속성 추가
+        rangeArray.forEach {
+            attributedString.addAttribute(key, value: value, range: $0)
+        }
+
+        return attributedString
+    }
 }

@@ -75,10 +75,9 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             .subscribe(
                 onNext: { data in
                     self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
-                    self.approvedTeacherNameLabel.text = data.teacherName
                     self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
                     self.outingReasonDescriptionLabel.text = data.reason
-                    self.approvedTeacherNameLabel.text = data.teacherName
+                    self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
                 }
             )
             .disposed(by: disposeBag)
@@ -87,10 +86,9 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             .subscribe(
                 onNext: { data in
                     self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
-                    self.approvedTeacherNameLabel.text = data.teacherName
                     self.outingTimeRangeLabel.text = "\(data.startTime)"
                     self.outingReasonDescriptionLabel.text = data.reason
-                    self.approvedTeacherNameLabel.text = data.teacherName
+                    self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
                 }
             )
             .disposed(by: disposeBag)

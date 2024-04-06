@@ -14,13 +14,13 @@ public class MainViewController: BaseViewController<MainViewModel> {
     //DataRelay
     private let mainDataLoadRelay = PublishRelay<Void>()
     private let userInfoLoadRelay = PublishRelay<Void>()
-    private let classroomCheckRelay = PublishRelay<Void>()
     private let classroomReturnRelay = PublishRelay<Void>()
     
     //CellDataRelay
     private let todayTimeTableRelay = PublishRelay<Void>()
     private let todaySchoolMealRelay = PublishRelay<String>()
     private let todayNoticeLoadRelay = PublishRelay<Void>()
+    private let clickNoticeCell = PublishRelay<UUID>()
     
     //ButtonRelay
     private let viewNoticeButtonRelay = PublishRelay<Void>()
@@ -30,6 +30,8 @@ public class MainViewController: BaseViewController<MainViewModel> {
     private let todaySchoolMeal = BehaviorRelay<[(Int, String, [String])]>(value: [])
     private let todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
     
+    private var passType: OutingPassType? = nil
+    
     private let date = Date()
     private lazy var todayDate = date.toString(type: .fullDate)
     
@@ -37,7 +39,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
         x: 0,
         y: 0,
         width: collectionView.frame.width - 48,
-        height: collectionView.frame.height
+        height: collectionView.frame.height - (outingPassView.isHidden ? 0 : 74)
     )
     
     private var itemSize: CGSize {
@@ -55,7 +57,12 @@ public class MainViewController: BaseViewController<MainViewModel> {
     }
     private let profileButton = UIButton(type: .system).then {
         $0.setImage(.profileIcon, for: .normal)
-        $0.imageEdgeInsets = .init(top: 5, left: 5, bottom: 5, right: 5)
+        $0.imageEdgeInsets = .init(
+            top: 5,
+            left: 5,
+            bottom: 5,
+            right: 5
+        )
     }
     private let userInfoLabel = UILabel().then {
         $0.textColor = .neutral100
@@ -90,9 +97,12 @@ public class MainViewController: BaseViewController<MainViewModel> {
         $0.setImage(.selfStudyTeacherIcon, for: .normal)
     }
     private lazy var outingPassView = PassView(clickToAction: {
-        //        self.outingPassButtonRelay.accept(())
-        self.classroomReturnRelay.accept(())
-        self.mainDataLoadRelay.accept(())
+        if self.passType?.rawValue == OutingPassType.classroom.rawValue {        
+            self.viewReload(isHidden: true)
+            self.classroomReturnRelay.accept(())
+        } else {
+            self.outingPassButtonRelay.accept(())
+        }
     })
     private lazy var collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
@@ -108,10 +118,15 @@ public class MainViewController: BaseViewController<MainViewModel> {
         $0.showsVerticalScrollIndicator = false
         $0.isPagingEnabled = false
         $0.bounces = false
-        $0.contentInset = UIEdgeInsets(top: 0, left: self.insetX, bottom: 0, right: self.insetX)
         $0.clipsToBounds = true
         $0.decelerationRate = .fast
         $0.contentInsetAdjustmentBehavior = .never
+        $0.contentInset = .init(
+            top: 0,
+            left: self.insetX,
+            bottom: 0,
+            right: self.insetX
+        )
         $0.register(
             MainCell.self,
             forCellWithReuseIdentifier: MainCell.identifier
@@ -145,7 +160,6 @@ public class MainViewController: BaseViewController<MainViewModel> {
         mainDataLoadRelay.accept(())
         userInfoLoadRelay.accept(())
         //cellRelay
-        //뷰모델에서 viewwillappear 하나로 합치기
         todayTimeTableRelay.accept(())
         todaySchoolMealRelay.accept(todayDate)
         todayNoticeLoadRelay.accept(())
@@ -154,7 +168,6 @@ public class MainViewController: BaseViewController<MainViewModel> {
         let input = MainViewModel.Input(
             mainDataLoad: mainDataLoadRelay.asObservable(),
             userInfoLoad: userInfoLoadRelay.asObservable(),
-            //            classroomCheckLoad: classroomCheckRelay.asObservable(),
             classroomReturn: classroomReturnRelay.asObservable(),
             todayTimeTableLoad: todayTimeTableRelay.asObservable(),
             todaySchoolMealLoad: todaySchoolMealRelay.asObservable(),
@@ -165,25 +178,45 @@ public class MainViewController: BaseViewController<MainViewModel> {
             schoolMealButtonDidClick: schoolMealButton.rx.tap.asObservable(),
             selfStudyTeacherButtonDidClick: selfStudyTeacherButton.rx.tap.asObservable(),
             outingPassButtonDidClick: outingPassButtonRelay.asObservable(),
-            noticeButtonDidClick: viewNoticeButtonRelay.asObservable()
+            noticeButtonDidClick: viewNoticeButtonRelay.asObservable(),
+            noticeCellDidClick: clickNoticeCell.asObservable()
         )
         let output = viewModel.transform(input: input)
         
         output.mainData.asObservable()
-            .subscribe(
+            .bind(
                 onNext: { data in
-                    if data?.userName?.isEmpty == false && data?.classroom?.isEmpty == false {
-                        self.outingPassView.isHidden = false
+                    if data?.type == OutingPassType.classroom.rawValue {
+                        self.passType = .classroom
+                        self.outingPassView.setup(
+                            topLabel: "현재 \(data?.userName ?? "")님은",
+                            bottomLabel: "\(data?.classroom ?? "")에 있습니다.",
+                            buttonTitle: "돌아가기",
+                            firstPointText: "\(data?.classroom ?? "")"
+                        )
+                        self.viewReload(isHidden: false)
+                    } else if data?.type ==  OutingPassType.applicatoin.rawValue {
+                        self.passType = .applicatoin
                         self.outingPassView.setup(
                             topLabel: "\(data?.userName ?? "")님의 외출 시간은",
-                            bottomLabel: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "")입니다.",
-                            buttonTitle: "몰라 임마",
-                            firstPointText: "first",
-                            secondPoinText: "second"
+                            bottomLabel: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "") 입니다.",
+                            buttonTitle: "외출증 보러가기",
+                            firstPointText: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "")"
                         )
+                        self.viewReload(isHidden: false)
+                    } else if data?.type == OutingPassType.earlyReturn.rawValue {
+                        self.outingPassView.isHidden = false
+                        self.passType = .earlyReturn
+                        self.outingPassView.setup(
+                            topLabel: "\(data?.userName ?? "")님의 조기 귀가 가능 시간은",
+                            bottomLabel: "\(data?.startTime ?? "") 입니다.",
+                            buttonTitle: "외출증 보러가기",
+                            firstPointText: "\(data?.startTime ?? "")"
+                        )
+                        self.outingPassView.layoutSubviews()
+                        self.viewReload(isHidden: false)
                     } else {
-                        self.outingPassView.isHidden = true
-                        self.outingPassView.updateConstraints()
+                        self.viewReload(isHidden: true)
                     }
                 }
             )
@@ -240,7 +273,6 @@ public class MainViewController: BaseViewController<MainViewModel> {
             schoolMealButton,
             selfStudyTeacherButton
         ].forEach { buttonStackView.addArrangedSubview($0) }
-        
     }
     public override func setLayout() {
         pickLogoImageView.snp.makeConstraints {
@@ -271,12 +303,25 @@ public class MainViewController: BaseViewController<MainViewModel> {
         }
     }
     
+    private func viewReload(isHidden: Bool) {
+        self.outingPassView.isHidden = isHidden
+        self.outingPassView.snp.remakeConstraints {
+            $0.height.equalTo(self.outingPassViewHeight)
+        }
+        self.collectionViewLayout.itemSize = self.itemSize
+    }
+    
 }
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection
+        section: Int
+    ) -> Int {
         return 3
     }
+    
     public func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath

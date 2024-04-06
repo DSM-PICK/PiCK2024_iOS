@@ -5,9 +5,8 @@ import Moya
 import Core
 
 public enum ClassroomAPI {
-    case classroomMoveApply(floor: Int, classroom: String)
+    case classroomMoveApply(floor: Int, classroom: String, startPeriod: Int, endPeriod: Int)
     case classroomReturn
-    case classroomCheck
 }
 
 extension ClassroomAPI: TargetType {
@@ -17,7 +16,7 @@ extension ClassroomAPI: TargetType {
     
     public var path: String {
         switch self {
-            case .classroomMoveApply, .classroomCheck:
+            case .classroomMoveApply:
                 return "/class-room/move"
             case .classroomReturn:
                 return "/class-room/return"
@@ -30,18 +29,18 @@ extension ClassroomAPI: TargetType {
                 return .post
             case .classroomReturn:
                 return .delete
-            case .classroomCheck:
-                return .get
         }
     }
     
     public var task: Moya.Task {
         switch self {
-            case let .classroomMoveApply(floor, classroom):
+            case let .classroomMoveApply(floor, classroom, startPeriod, endPeriod):
                 return .requestParameters(
                     parameters: [
                         "floor": floor,
-                        "classroom_name": classroom
+                        "classroom_name": classroom,
+                        "start_period": startPeriod,
+                        "end_period": endPeriod
                     ],
                     encoding: JSONEncoding.default
                 )

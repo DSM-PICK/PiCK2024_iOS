@@ -19,11 +19,11 @@ public enum SubjectImageType: String {
     case math2 = "수학Ⅰ"
     case math3 = "확률과 통계"
     
-    case science = "통합 과학"
-    case society = "통합 사회"
+    case science = "통합과학"
+    case society = "통합사회"
     
     case music = "음악"
-    case art = "미술"
+    case art = "미술 창작"
     case pe1 = "체육"
     case pe2 = "운동과 건강"
     case pe3 = "스포츠 생활"
@@ -37,7 +37,7 @@ public enum SubjectImageType: String {
     case c = "프로그래밍"
     case computerStructrue = "컴퓨터 구조"
     case dataStructure = "자료구조"
-    case web = "웹프로그래밍"
+    case baseWeb = "웹프로그래밍기초"
     
     //MARK: 공통 전공 과목
     case dataBase = "DB 프로그래밍"
@@ -45,19 +45,20 @@ public enum SubjectImageType: String {
     
     //MARK: SW 개발과
     case server = "서버 프로그래밍"
+    case web = "웹프로그래밍"
     case project1 = "프로젝트실무Ⅰ"
     case project2 = "프로젝트실무Ⅱ"
+    
     //MARK: 임베디드 SW과
     case linux1 = "리눅스 시스템 프로그래밍"
     case linux2 = "임베디드 리눅스 프로그래밍"
     case pcb = "정보통신기기 PCB보드 개발"
-    case processor1 = "마이크로프로세서 제어"
-    case processor2 = "마이크로프로세서 응용"
+    case processor1 = "마이크로프로세서제어"
+    case processor2 = "마이크로프로세서응용"
     case embeddedSystem = "임베디드 시스템"
     case embeddedOS = "임베디드 실시간 운영체제"
-    case physicalComputing = "인공지능과 피지컬 컴퓨팅"
-    
-//    정보통신기기 펌웨어구현
+    case physicalComputing = "인공지능과 피지컬컴퓨팅"
+    case firmware = "정보통신기기 펌웨어구현"
     
     //MARK: AI & 정보보안과
     case ai1 = "인공지능론"
@@ -114,11 +115,11 @@ extension SubjectImageType {
                 return .dataBase
             case .dataStructure:
                 return .dataStructure
-            case .web:
+            case .baseWeb:
                 return .web
                 
                 //MARK: SW 개발과
-            case .server:
+            case .server, .web:
                 return .web
             case .algorithm:
                 return .algorithm
@@ -132,6 +133,12 @@ extension SubjectImageType {
                 return .pcb
             case .linux1, .linux2:
                 return .linux
+            case .embeddedOS:
+                return .pcb
+            case .firmware:
+                return .pcb
+            case .physicalComputing:
+                return .ai
                 
                 //MARK: AI & 정보보안과
             case .ai1, .ai2:

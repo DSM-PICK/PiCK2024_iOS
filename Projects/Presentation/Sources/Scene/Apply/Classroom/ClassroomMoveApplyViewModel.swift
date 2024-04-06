@@ -21,9 +21,9 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
     public struct Input {
         let floorText: Observable<Int>
         let classroomNameText: Observable<String>
-        let classroomMoveApplyButton: Observable<Void>
-        let startPeriod: Observable<Int>
-        let endPeriod: Observable<Int>
+        let classroomMoveApply: Observable<Void>
+        let startPeriod: Int
+        let endPeriod: Int
     }
     public struct Output {
         let isApplyButtonEnable: Signal<Bool>
@@ -37,12 +37,11 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
     public func transform(input: Input) -> Output {
         let info = Observable.combineLatest(
             input.floorText,
-            input.classroomNameText,
-            input.startPeriod,
-            input.endPeriod
+            input.classroomNameText
         )
         
-        let isApplyButtonEnable = info.map { floor, classroomName, startPeriod, endPeriod  -> Bool in !classroomName.isEmpty
+        let isApplyButtonEnable = info.map { floor, classroomName  -> Bool in 
+            !classroomName.isEmpty
         }
         
         input.floorText
@@ -53,14 +52,14 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
             .bind(to: classroomName)
             .disposed(by: disposeBag)
         
-        input.classroomMoveApplyButton.asObservable()
+        input.classroomMoveApply.asObservable()
             .withLatestFrom(info)
-            .flatMap { floor, classroomName, startPeriod, endPeriod in
+            .flatMap { floor, classroomName  in
                 self.classroomMoveApplyUseCase.execute(
                     floor: floor,
                     classroomName: classroomName,
-                    startPeriod: startPeriod,
-                    endPeriod: endPeriod
+                    startPeriod: input.startPeriod,
+                    endPeriod: input.endPeriod
                 )
                 .catch {
                     print($0.localizedDescription)
