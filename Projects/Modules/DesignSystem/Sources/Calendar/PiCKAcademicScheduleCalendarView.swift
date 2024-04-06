@@ -91,16 +91,17 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
         observeDays.bind(to: calendarCollectionView.rx.items(
             cellIdentifier: AcademicScheduleCalendarCell.identifier,
             cellType: AcademicScheduleCalendarCell.self
-        )) { [self] row, element, cell in
+        )) { [weak self] row, element, cell in
             cell.daysLabel.text = element
             
             let todayDate = Date()
             
-            if todayDate.toString(type: .fullDateKorForCalendar) == "\(dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
+            if todayDate.toString(type: .fullDateKorForCalendar) == "\(self?.dateLabel.text ?? "") \(cell.daysLabel.text ?? "")일" {
                 cell.todaySetting()
             }
         }
         .disposed(by: disposeBag)
+        
     }
     public override func addView() {
         [

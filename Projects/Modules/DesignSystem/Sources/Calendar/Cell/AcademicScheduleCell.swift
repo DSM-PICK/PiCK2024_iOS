@@ -12,8 +12,6 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
             self.attribute()
         }
     }
-//    public var isToday: Bool = false
-//    public var haveSchedule: Bool = false
     
     private var borderColor: UIColor {
         !isSelected ? .primary1200 : .secondary400
@@ -36,6 +34,7 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
         self.attribute()
         self.layout()
         self.daysLabel.textColor = .neutral100
+        self.dotView.isHidden = true
     }
     public override func attribute() {
         contentView.backgroundColor = .primary1200

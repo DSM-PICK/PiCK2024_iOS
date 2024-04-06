@@ -89,7 +89,12 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
         $0.backgroundColor = .primary1200
         $0.layer.cornerRadius = 8
         $0.contentHorizontalAlignment = .left
-        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        $0.titleEdgeInsets = .init(
+            top: 0,
+            left: 16,
+            bottom: 0,
+            right: 0
+        )
     }
     private let withdrawalButton = UIButton(type: .system).then {
         $0.setTitle("회원탈퇴", for: .normal)
