@@ -22,8 +22,8 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
         let floorText: Observable<Int>
         let classroomNameText: Observable<String>
         let classroomMoveApply: Observable<Void>
-        let startPeriod: Int
-        let endPeriod: Int
+        let startPeriod: BehaviorRelay<Int>
+        let endPeriod: BehaviorRelay<Int>
     }
     public struct Output {
         let isApplyButtonEnable: Signal<Bool>
@@ -58,8 +58,9 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
                 self.classroomMoveApplyUseCase.execute(
                     floor: floor,
                     classroomName: classroomName,
-                    startPeriod: input.startPeriod,
-                    endPeriod: input.endPeriod
+                    startPeriod: input.startPeriod.value,
+                    endPeriod: input.endPeriod.value
+                    
                 )
                 .catch {
                     print($0.localizedDescription)

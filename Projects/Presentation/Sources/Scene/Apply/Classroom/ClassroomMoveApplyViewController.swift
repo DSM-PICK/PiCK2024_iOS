@@ -11,8 +11,8 @@ import DesignSystem
 public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveApplyViewModel> {
     
     private let classroomMoveApplyRelay = PublishRelay<Void>()
-    private var startPeriodRelay = Int()
-    private var endPeriodRelay = Int()
+    private var startPeriodRelay = BehaviorRelay<Int>(value: 0)
+    private var endPeriodRelay = BehaviorRelay<Int>(value: 0)
     
     private let floorText = BehaviorRelay<Int>(value: 1)
     private let classroomNameText = BehaviorRelay<String>(value: "")
@@ -123,8 +123,8 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         classroomMoveApplyButton.rx.tap
             .bind { [weak self] _ in
                 let modal = PiCKPeriodPickerAlert(clickToAction: { period in
-                    self?.startPeriodRelay = period[0] ?? 0
-                    self?.endPeriodRelay = period[1] ?? 0
+                    self?.startPeriodRelay.accept(period[0] ?? 0)
+                    self?.endPeriodRelay.accept(period[1] ?? 0)
                     self?.classroomMoveApplyRelay.accept(())
                 })
                 modal.modalPresentationStyle = .overFullScreen

@@ -93,7 +93,7 @@ public class PiCKPeriodPickerAlert: UIViewController {
                 let startPeriod = self?.startPeriodPicker.selectedRow(inComponent: 0) ?? 0
                 let endPeriod = self?.endPeriodPicker.selectedRow(inComponent: 0) ?? 0
                 
-                self?.clickToAction([startPeriod, endPeriod])
+                self?.clickToAction([startPeriod + 1, endPeriod + 1])
                 self?.dismiss(animated: true)
             }.disposed(by: disposeBag)
     }
