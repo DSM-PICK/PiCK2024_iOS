@@ -6,7 +6,6 @@ import RxSwift
 import RxCocoa
 
 import Core
-import Domain
 
 public class PiCKAcademicScheduleCalendarView: BaseView {
     
