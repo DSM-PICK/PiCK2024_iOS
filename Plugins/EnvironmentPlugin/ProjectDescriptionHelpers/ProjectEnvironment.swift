@@ -10,8 +10,8 @@ public struct ProjectEnvironment {
 }
 
 public let env = ProjectEnvironment(
-    appName: "PiCK-iOS",
-    targetName: "PiCK-iOS",
+    appName: "PiCK-DSM-iOS",
+    targetName: "PiCK-DSM-iOS",
     organizationName: "com.pick.app",
     deploymentTarget: .iOS(targetVersion: "16.0", devices: .iphone),
     platform: .iOS,
