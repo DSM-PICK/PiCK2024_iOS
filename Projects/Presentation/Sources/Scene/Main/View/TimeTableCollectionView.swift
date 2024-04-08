@@ -37,7 +37,7 @@ public class TimeTableCollectionView: BaseView {
         frame: .zero,
         collectionViewLayout: collectionViewFlowLayout
     ).then {
-        $0.backgroundColor = .red
+        $0.backgroundColor = .white
         $0.register(
             TimeTableCollectionCell.self,
             forCellWithReuseIdentifier: TimeTableCollectionCell.identifier
