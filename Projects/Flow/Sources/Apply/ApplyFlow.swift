@@ -34,6 +34,8 @@ public class ApplyFlow: Flow {
                 return navigateToEarlyLeaveApply()
             case .timePickerAlertRequired(let button):
                 return presentTimePickerAlert(button)
+            case let .successAlertRequired(message):
+                return modal(message: message)
             case .popRequired:
                 return popRequired()
             default:
@@ -100,5 +102,19 @@ public class ApplyFlow: Flow {
             withNextStepper: OneStepper(withSingleStep: PiCKStep.mainRequired)
         ))
     }
+    
+    func modal(message: String) -> FlowContributors {
+        let modal = PiCKAlert(
+            questionText: message,
+            cancelButtonTitle: "취소",
+            checkButtonTitle: "확인",
+            clickToAction: {
+            self.rootViewController.navigationController?.popToRootViewController(animated: true)
+        })
+        modal.modalPresentationStyle = .overFullScreen
+        modal.modalTransitionStyle = .crossDissolve
+        self.rootViewController.present(modal, animated: true)
+        return .none
+       }
     
 }

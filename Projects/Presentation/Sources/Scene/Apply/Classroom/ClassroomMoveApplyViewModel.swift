@@ -66,7 +66,7 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
                     print($0.localizedDescription)
                     return .never()
                 }
-                .andThen(Single.just(PiCKStep.popRequired))
+                .andThen(Single.just(PiCKStep.successAlertRequired(message: "교실이동 신청이 완료 되었습니다.")))
             }
             .bind(to: steps)
             .disposed(by: disposeBag)

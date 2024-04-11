@@ -58,7 +58,7 @@ public class EarlyLeaveApplyViewModel: BaseViewModel, Stepper {
                     print($0.localizedDescription)
                     return .never()
                 }
-                    .andThen(Single.just(PiCKStep.popRequired))
+                .andThen(Single.just(PiCKStep.successAlertRequired(message: "조기 귀가 신청이 완료 되었습니다.")))
             }
             .bind(to: steps)
             .disposed(by: disposeBag)
