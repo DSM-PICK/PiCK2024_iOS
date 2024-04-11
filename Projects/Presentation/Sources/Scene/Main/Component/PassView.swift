@@ -47,15 +47,15 @@ public class PassView: BaseView, Stepper {
         topLabel: String,
         bottomLabel: String,
         buttonTitle: String,
-        firstPointText: String
+        pointText: String
     ) {
         self.topLabel.text = topLabel
         self.bottomLabel.attributedText = bottomLabel.attributed(
-            of: firstPointText,
+            of: pointText,
             key: .foregroundColor,
             value: UIColor.primary400
         ).addAttribute(
-            of: firstPointText,
+            of: pointText,
             key: .font,
             value: UIFont.subTitle3M
         )

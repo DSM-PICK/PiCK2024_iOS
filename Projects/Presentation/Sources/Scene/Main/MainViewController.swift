@@ -183,6 +183,14 @@ public class MainViewController: BaseViewController<MainViewModel> {
         )
         let output = viewModel.transform(input: input)
         
+        output.userProfileData.asObservable()
+            .subscribe(
+                onNext: {
+                    self.userInfoLabel.text = "\($0.grade)학년 \($0.classNum)반 \($0.num)번 \($0.name)"
+                }
+            )
+            .disposed(by: disposeBag)
+        
         output.mainData.asObservable()
             .bind(
                 onNext: { data in
@@ -192,7 +200,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
                             topLabel: "현재 \(data?.userName ?? "")님은",
                             bottomLabel: "\(data?.classroom ?? "")에 있습니다.",
                             buttonTitle: "돌아가기",
-                            firstPointText: "\(data?.classroom ?? "")"
+                            pointText: "\(data?.classroom ?? "")"
                         )
                         self.viewReload(isHidden: false)
                     } else if data?.type ==  OutingPassType.applicatoin.rawValue {
@@ -201,31 +209,21 @@ public class MainViewController: BaseViewController<MainViewModel> {
                             topLabel: "\(data?.userName ?? "")님의 외출 시간은",
                             bottomLabel: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "") 입니다.",
                             buttonTitle: "외출증 보러가기",
-                            firstPointText: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "")"
+                            pointText: "\(data?.startTime ?? "") ~ \(data?.endTime ?? "")"
                         )
                         self.viewReload(isHidden: false)
                     } else if data?.type == OutingPassType.earlyReturn.rawValue {
-                        self.outingPassView.isHidden = false
                         self.passType = .earlyReturn
                         self.outingPassView.setup(
                             topLabel: "\(data?.userName ?? "")님의 조기 귀가 가능 시간은",
                             bottomLabel: "\(data?.startTime ?? "") 입니다.",
                             buttonTitle: "외출증 보러가기",
-                            firstPointText: "\(data?.startTime ?? "")"
+                            pointText: "\(data?.startTime ?? "")"
                         )
-                        self.outingPassView.layoutSubviews()
                         self.viewReload(isHidden: false)
                     } else {
                         self.viewReload(isHidden: true)
                     }
-                }
-            )
-            .disposed(by: disposeBag)
-        
-        output.userProfileData.asObservable()
-            .subscribe(
-                onNext: {
-                    self.userInfoLabel.text = "\($0.grade)학년 \($0.classNum)반 \($0.num)번 \($0.name)"
                 }
             )
             .disposed(by: disposeBag)
