@@ -26,7 +26,7 @@ public enum PiCKStep: Step {
     case classroomMoveApplyRequired
     case outingApplyRequired
     case earlyLeaveApplyRequired
-    case timePickerAlertRequired(time: [String])
+    case timePickerAlertRequired(time: String)
     
     //schoolMeal
     case schoolMealRequired

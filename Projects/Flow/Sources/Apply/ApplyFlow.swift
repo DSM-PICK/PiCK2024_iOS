@@ -32,8 +32,8 @@ public class ApplyFlow: Flow {
                 return navigateToOutingApply()
             case .earlyLeaveApplyRequired:
                 return navigateToEarlyLeaveApply()
-            case .timePickerAlertRequired(let button):
-                return presentTimePickerAlert(button)
+//            case let .timePickerAlertRequired(time):
+//                return presentTimePickerAlert(time: time)
             case let .successAlertRequired(message):
                 return modal(message: message)
             case .popRequired:
@@ -80,16 +80,21 @@ public class ApplyFlow: Flow {
         ))
     }
     
-    private func presentTimePickerAlert(_ button: [String]) -> FlowContributors {
-        let timePickerAlert = PiCKTimePickerAlert(clickToAction: { depatureTime in
-            //            button.setTitle("\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")", for: .normal)
-            //            button.setTitleColor(.neutral50, for: .normal)
-        })
-        timePickerAlert.modalPresentationStyle = .overFullScreen
-        timePickerAlert.modalTransitionStyle = .crossDissolve
-        rootViewController.present(timePickerAlert, animated: true)
-        return .none
-    }
+//    private func presentTimePickerAlert(time: String) -> FlowContributors {
+////        var dd = ""
+//        let timePickerAlert = PiCKTimePickerAlert(
+//            clickToAction: { alertTime in
+//                dd = "\(alertTime[0] ?? "") : \(alertTime[1] ?? "")"
+//            }
+//        )
+//        
+//        timePickerAlert.modalPresentationStyle = .overFullScreen
+//        timePickerAlert.modalTransitionStyle = .crossDissolve
+//        rootViewController.present(timePickerAlert, animated: true, completion: {
+//            return
+//        })
+//        return .none
+//    }
     
     private func popRequired() -> FlowContributors {
         let mainFlow = MainFlow()
@@ -104,17 +109,16 @@ public class ApplyFlow: Flow {
     }
     
     func modal(message: String) -> FlowContributors {
-        let modal = PiCKAlert(
+        let modal = PiCKApplyAlert(
             questionText: message,
-            cancelButtonTitle: "취소",
             checkButtonTitle: "확인",
             clickToAction: {
-            self.rootViewController.navigationController?.popToRootViewController(animated: true)
-        })
+                self.rootViewController.navigationController?.popToRootViewController(animated: true)
+            })
         modal.modalPresentationStyle = .overFullScreen
         modal.modalTransitionStyle = .crossDissolve
         self.rootViewController.present(modal, animated: true)
         return .none
-       }
+    }
     
 }
