@@ -8,10 +8,11 @@ enum PickerType {
 
 public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
     
-    private let hoursArray = Array(00...23)
+    private let hoursArray = Array(8...23)
     private let minsArray = Array(00...59)
     private let periodArray = Array(1...10)
     
+    public var hourText = Int()
     public var periodText = Int()
     
     private var selectedPickerType: PickerType
@@ -59,6 +60,7 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
         switch selectedPickerType {
             case .hours:
                 label.text = "\(hoursArray[row])"
+                hourText = hoursArray[row]
             case .mins:
                 label.text = "\(minsArray[row])"
             case .period:

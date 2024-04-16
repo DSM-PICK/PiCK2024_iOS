@@ -89,7 +89,7 @@ public class PiCKTimePickerAlert: UIViewController {
             .bind { [weak self] in
                 let hourIndex = String(
                     format: "%02d",
-                    self?.hourPicker.selectedRow(inComponent: 0) ?? 0
+                    self?.hourPicker.hourText ?? 8
                 )
                 let minIndex = String(
                     format: "%02d",
