@@ -1,5 +1,8 @@
 import UIKit
 
+import RxSwift
+import RxCocoa
+
 enum PickerType {
     case hours
     case mins
@@ -12,7 +15,7 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
     private let minsArray = Array(00...59)
     private let periodArray = Array(1...10)
     
-    public var hourText = Int()
+    public var hourText = BehaviorRelay<Int>(value: 0)
     public var periodText = Int()
     
     private var selectedPickerType: PickerType
@@ -60,7 +63,7 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
         switch selectedPickerType {
             case .hours:
                 label.text = "\(hoursArray[row])"
-                hourText = hoursArray[row]
+                hourText.accept(hoursArray[row])
             case .mins:
                 label.text = "\(minsArray[row])"
             case .period:
