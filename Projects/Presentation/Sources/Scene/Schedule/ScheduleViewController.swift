@@ -110,7 +110,7 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
             $0.height.equalTo(36)
         }
         segmentedTimetableView.snp.makeConstraints {
-            $0.top.equalTo(segmentedControl.snp.bottom).offset(28)
+            $0.top.equalTo(segmentedControl.snp.bottom)
             $0.left.right.equalToSuperview().inset(23)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
