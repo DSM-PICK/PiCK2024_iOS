@@ -53,12 +53,13 @@ public enum SubjectImageType: String {
     case linux1 = "리눅스 시스템 프로그래밍"
     case linux2 = "임베디드 리눅스 프로그래밍"
     case pcb = "정보통신기기 PCB보드 개발"
-    case processor1 = "마이크로프로세서제어"
-    case processor2 = "마이크로프로세서응용"
+    case processor1 = "마이크로프로세서 제어"
+    case processor2 = "마이크로프로세서 응용"
     case embeddedSystem = "임베디드 시스템"
     case embeddedOS = "임베디드 실시간 운영체제"
     case physicalComputing = "인공지능과 피지컬컴퓨팅"
     case firmware = "정보통신기기 펌웨어구현"
+    case electric = "전기・전자 기초"
     
     //MARK: AI & 정보보안과
     case ai1 = "인공지능론"
@@ -139,6 +140,8 @@ extension SubjectImageType {
                 return .pcb
             case .physicalComputing:
                 return .ai
+            case .electric:
+                return .forensic
                 
                 //MARK: AI & 정보보안과
             case .ai1, .ai2:
