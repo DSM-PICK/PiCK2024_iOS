@@ -156,7 +156,6 @@ extension SubjectImageType {
                 return .swEngineering
             case .swManage1, .swMange2:
                 return .swManage
-
             default:
                 return UIImage()
         }
