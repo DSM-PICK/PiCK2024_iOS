@@ -45,7 +45,7 @@ public enum SubjectImageType: String {
     
     //MARK: SW 개발과
     case server = "서버 프로그래밍"
-    case web = "웹프로그래밍"
+    case web = "프론트엔드 프로그래밍"
     case project1 = "프로젝트실무Ⅰ"
     case project2 = "프로젝트실무Ⅱ"
     
