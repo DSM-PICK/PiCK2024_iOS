@@ -45,7 +45,8 @@ public enum SubjectImageType: String {
     
     //MARK: SW 개발과
     case server = "서버 프로그래밍"
-    case web = "프론트엔드 프로그래밍"
+    case web1 = "웹프로그래밍"
+    case web2 = "프론트엔드 프로그래밍"
     case project1 = "프로젝트실무Ⅰ"
     case project2 = "프로젝트실무Ⅱ"
     
@@ -120,7 +121,7 @@ extension SubjectImageType {
                 return .web
                 
                 //MARK: SW 개발과
-            case .server, .web:
+            case .server, .web1, .web2:
                 return .web
             case .algorithm:
                 return .algorithm
