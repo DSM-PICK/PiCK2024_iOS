@@ -17,6 +17,8 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
     private let weekendMealApply = PublishRelay<WeekendMealTypeEnum>()
     
     private let applyDate = Date()
+    let calendar = Calendar.current
+    lazy var nextMonth = calendar.date(byAdding: .month, value: 1, to: applyDate)
     
     private lazy var weekendMealButtons = [
         applyButton,
@@ -43,7 +45,7 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
         $0.layer.cornerRadius = 8
     }
     private lazy var currnetMonthWeekendMealApplyLabel = UILabel().then {
-        $0.text = "\(applyDate.toString(type: .month)) 주말 급식 신청"
+        $0.text = "\(nextMonth?.toString(type: .month) ?? "Error") 주말 급식 신청"
         $0.textColor = .black
         $0.font = .body3
     }
