@@ -13,9 +13,9 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
         }
     }
     
-    private var borderColor: UIColor {
-        !isSelected ? .primary1200 : .secondary400
-    }
+//    private var borderColor: UIColor {
+//        !isSelected ? .primary1200 : .secondary400
+//    }
     
     static let identifier = "academicScheduleCalendarCellID"
     
@@ -38,9 +38,10 @@ public class AcademicScheduleCalendarCell: BaseCollectionViewCell {
     }
     public override func attribute() {
         contentView.backgroundColor = .primary1200
+//        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 20
-        contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = borderColor.cgColor
+//        contentView.layer.borderWidth = 1
+//        contentView.layer.borderColor = borderColor.cgColor
         self.isUserInteractionEnabled = false
     }
     public override func layout() {
