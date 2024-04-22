@@ -90,8 +90,9 @@ public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
     public override func setLayout() {
         calendarView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(102)
-            $0.left.right.equalToSuperview().inset(70)
-            $0.height.equalTo(250)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(250)
+            $0.height.equalTo(230)
         }
         todaysSchoolMealLabel.snp.makeConstraints {
             $0.top.equalTo(calendarView.snp.bottom).offset(20)
