@@ -95,14 +95,13 @@ public class PiCKTimePickerAlert: UIViewController {
                     format: "%02d",
                     self?.minPicker.selectedRow(inComponent: 0) ?? 0
                 )
-                self?.hourIndex = hourIndex
-                self?.minIndex = minIndex
-                self?.clickToAction([self?.hourIndex, self?.minIndex])
+                self?.clickToAction([hourIndex, minIndex])
                 self?.dismiss(animated: true)
             }.disposed(by: disposeBag)
     }
     private func layout() {
         view.addSubview(backgroundView)
+        
         [
             hourPicker,
             minPicker,

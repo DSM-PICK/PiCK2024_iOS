@@ -15,8 +15,8 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
     private let minsArray = Array(00...59)
     private let periodArray = Array(1...10)
     
-    public var hourText = BehaviorRelay<Int>(value: 0)
-    public var periodText = Int()
+    public var hourText = BehaviorRelay<Int>(value: 8)
+    public var periodText = BehaviorRelay<Int>(value: 1)
     
     private var selectedPickerType: PickerType
     
@@ -41,12 +41,12 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch selectedPickerType {
-            case .hours:
-                return hoursArray.count
-            case .mins:
-                return minsArray.count
-            case .period:
-                return periodArray.count
+        case .hours:
+            return hoursArray.count
+        case .mins:
+            return minsArray.count
+        case .period:
+            return periodArray.count
         }
     }
     
@@ -59,16 +59,16 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
         label.textAlignment = .center
         
         view.addSubview(label)
-
-        switch selectedPickerType {
-            case .hours:
-                label.text = "\(hoursArray[row])"
-                hourText.accept(hoursArray[row])
-            case .mins:
-                label.text = "\(minsArray[row])"
-            case .period:
-                label.text = "\(periodArray[row])교시"
-                periodText = periodArray[row]
+        
+    switch selectedPickerType {
+        case .hours:
+            label.text = "\(hoursArray[row])"
+            hourText.accept(hoursArray[row]) 
+        case .mins:
+            label.text = "\(minsArray[row])"
+        case .period:
+            label.text = "\(periodArray[row])교시"
+            periodText.accept(periodArray[row])
         }
         return view
     }
