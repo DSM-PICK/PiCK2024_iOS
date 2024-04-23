@@ -43,6 +43,7 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.font = .subTitle3M
         $0.backgroundColor = .primary1200
         $0.layer.cornerRadius = 4
+        $0.numberOfLines = 0
         $0.clipsToBounds = true
     }
     private let approvedTeacherLabel = UILabel().then {
@@ -126,7 +127,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         outingReasonDescriptionLabel.snp.makeConstraints {
             $0.top.equalTo(outingReasonLabel.snp.bottom).offset(6)
             $0.left.right.equalToSuperview().inset(24)
-            $0.height.equalTo(40)
         }
         approvedTeacherLabel.snp.makeConstraints {
             $0.top.equalTo(outingReasonDescriptionLabel.snp.bottom).offset(32)
