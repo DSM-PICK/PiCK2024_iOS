@@ -9,18 +9,16 @@ public struct OutingPassDTO: Decodable {
     let startTime: String
     let endTime: String
     let reason: String
-    let grade: Int
-    let classNum: Int
-    let num: Int
+    let schoolNum: String
     let type: OutingPassType.RawValue
     
     enum CodingKeys: String, CodingKey {
-        case reason, grade, num, type
+        case reason, type
         case userName = "username"
         case teacherName = "teacher_name"
         case startTime = "start_time"
         case endTime = "end_time"
-        case classNum = "class_num"
+        case schoolNum = "school_num"
     }
 }
 
@@ -32,9 +30,7 @@ extension OutingPassDTO {
             startTime: startTime,
             endTime: endTime,
             reason: reason,
-            grade: grade,
-            classNum: classNum,
-            num: num,
+            schoolNum: schoolNum,
             type: type
         )
     }
