@@ -1,7 +1,11 @@
+import Foundation
+
 import ProjectDescription
 import DependencyPlugin
 import EnvironmentPlugin
 import ConfigurationPlugin
+
+let isCI = (ProcessInfo.processInfo.environment["TUIST_CI"] ?? "0") == "1" ? true : false
 
 extension Project {
     public static func makeModule(
