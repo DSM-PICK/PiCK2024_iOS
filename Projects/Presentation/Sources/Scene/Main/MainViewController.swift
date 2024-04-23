@@ -255,7 +255,6 @@ public class MainViewController: BaseViewController<MainViewModel> {
             )
             .disposed(by: disposeBag)
     }
-    
     public override func addView() {
         [
             userInfoLabel,
