@@ -11,8 +11,6 @@ import DesignSystem
 
 public class NoticeCollectionView: BaseView {
     
-    public var clickNoticeCellRelay = BehaviorRelay<UUID>(value: UUID())
-    
     private var todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
     
     private let todayDate = Date()
@@ -84,14 +82,6 @@ public class NoticeCollectionView: BaseView {
             }
         }
         .disposed(by: disposeBag)
-        
-        collectionView.rx.modelSelected(NoticeListEntityElement.self)
-            .subscribe(
-                onNext: { [weak self] data in
-                    self?.clickNoticeCellRelay.accept(data.id)
-                }
-            )
-            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
