@@ -1,6 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
-import DependencyHelper
+import DependencyPlugin
 
 let project = Project.makeModule(
     name: "Domain",
