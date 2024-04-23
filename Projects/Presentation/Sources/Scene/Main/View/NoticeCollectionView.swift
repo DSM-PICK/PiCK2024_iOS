@@ -11,7 +11,11 @@ import DesignSystem
 
 public class NoticeCollectionView: BaseView {
     
+    public var clickNoticeCellRelay = BehaviorRelay<UUID>(value: UUID())
+    
     private var todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
+    
+    private let todayDate = Date()
     
     private let emptyNoticeLabel = UILabel().then {
         $0.text = "오늘은 등록된 공지가 없습니다."
@@ -75,9 +79,19 @@ public class NoticeCollectionView: BaseView {
                 title: element.title,
                 date: element.createAt
             )
+            if element.createAt == self.todayDate.toString(type: .fullDate) {
+                cell.newNoticeIconImageView.isHidden = false
+            }
         }
         .disposed(by: disposeBag)
-    
+        
+        collectionView.rx.modelSelected(NoticeListEntityElement.self)
+            .subscribe(
+                onNext: { [weak self] data in
+                    self?.clickNoticeCellRelay.accept(data.id)
+                }
+            )
+            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
