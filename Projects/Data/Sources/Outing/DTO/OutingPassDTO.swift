@@ -9,7 +9,7 @@ public struct OutingPassDTO: Decodable {
     let startTime: String
     let endTime: String
     let reason: String
-    let schoolNum: String
+    let schoolNum: Int
     let type: OutingPassType.RawValue
     
     enum CodingKeys: String, CodingKey {
