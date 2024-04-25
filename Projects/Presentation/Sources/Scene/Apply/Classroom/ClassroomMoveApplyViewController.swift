@@ -26,7 +26,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         "본부교무실", "제 3교무실", "카페테리아", "창조실", "방송실", "진로 상담실", "여자 헬스장"
     ]
     private lazy var thirdFloorClassroomArray = [
-        "2-1", "2-2", "2-3", "2-4", "세미나실 3-1", "세미나실 3-2", "세미나실 3-3", "세미나실 3-4",
+        "2-1", "2-2", "2-3", "2-4", "세미나실 3-1", "세미나실 3-2", "세미나실 3-3",
         "보안 1실", "보안 2실", "제 2교무실", "그린존", "남자 헬스장"
     ]
     private lazy var fourthFloorClassroomArray = [
