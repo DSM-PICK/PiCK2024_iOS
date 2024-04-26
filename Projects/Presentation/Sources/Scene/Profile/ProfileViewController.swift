@@ -105,7 +105,6 @@ public class ProfileViewController: BaseViewController<ProfileViewModel> {
         $0.contentHorizontalAlignment = .left
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
     }
-
     
     public override func configureNavigationBar() {
         navigationItem.titleView = navigationTitleLabel
