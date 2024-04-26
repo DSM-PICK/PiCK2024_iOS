@@ -53,7 +53,6 @@ let dependencies = Dependencies.init(
         ],
         baseSettings: .settings(
             configurations: [
-                .debug(name: .dev),
                 .debug(name: .stage),
                 .release(name: .prod)
             ]
