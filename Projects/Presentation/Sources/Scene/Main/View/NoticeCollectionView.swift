@@ -11,12 +11,12 @@ import DesignSystem
 
 public class NoticeCollectionView: BaseView {
     
-    private var todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
+    private var noticeList = BehaviorRelay<NoticeListEntity>(value: [])
     
     private let todayDate = Date()
     
     private let emptyNoticeLabel = UILabel().then {
-        $0.text = "오늘은 등록된 공지가 없습니다."
+        $0.text = "등록된 공지가 없습니다."
         $0.textColor = .neutral50
         $0.font = .caption1
     }
@@ -40,9 +40,10 @@ public class NoticeCollectionView: BaseView {
     }
     
     public func setup(
-        todayNoticeList: TodayNoticeListEntity
+        noticeList: NoticeListEntity
     ) {
-        self.todayNoticeList.accept(todayNoticeList)
+        let limitList = Array(noticeList.prefix(5))
+        self.noticeList.accept(limitList)
         self.collectionView.reloadData()
     }
     
@@ -55,7 +56,7 @@ public class NoticeCollectionView: BaseView {
     }
     
     public override func bind() {
-        todayNoticeList.subscribe(
+        noticeList.subscribe(
             onNext: {
                 if $0.isEmpty {
                     self.collectionView.isHidden = true
@@ -68,7 +69,7 @@ public class NoticeCollectionView: BaseView {
         )
         .disposed(by: disposeBag)
         
-        todayNoticeList.bind(to: collectionView.rx.items(
+        noticeList.bind(to: collectionView.rx.items(
             cellIdentifier: NoticeCell.identifier,
             cellType: NoticeCell.self
         )) { row, element, cell in

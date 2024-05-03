@@ -12,11 +12,6 @@ class NoticeDataSource {
 
     static let shared = NoticeDataSource()
     
-    func fetchTodayNoticeList() -> Single<Response> {
-        return provider.rx.request(.fetchTodayNoticeList)
-            .filterSuccessfulStatusCodes()
-    }
-    
     func fetchNoticeList() -> Single<Response> {
         return provider.rx.request(.fetchNoticeList)
             .filterSuccessfulStatusCodes()

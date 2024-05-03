@@ -20,7 +20,7 @@ public class MainViewModel: BaseViewModel, Stepper {
     //CellData
     private let fetchTodayTimeTableUseCase: FetchTodayTimeTableUseCase
     private let fetchTodaySchoolMealUseCase: FetchSchoolMealUseCase
-    private let fetchTodayNoticeListUseCase: FetchTodayNoticeListUseCase
+    private let fetchNoticeListUseCase: FetchNoticeListUseCase
     
     public init(
         fetchMainUseCase: FetchMainUseCase,
@@ -28,14 +28,14 @@ public class MainViewModel: BaseViewModel, Stepper {
         classroomReturnUseCase: ClassroomReturnUseCase,
         fetchTodayTimeTableUseCase: FetchTodayTimeTableUseCase,
         fetchSchoolMealUseCase: FetchSchoolMealUseCase,
-        fetchTodayNoticeListUseCase: FetchTodayNoticeListUseCase
+        fetchNoticeListUseCase: FetchNoticeListUseCase
     ) {
         self.fetchMainUseCase = fetchMainUseCase
         self.fetchSimpleProfileUseCase = fetchSimpleProfileUseCase
         self.classroomReturnUseCase = classroomReturnUseCase
         self.fetchTodayTimeTableUseCase = fetchTodayTimeTableUseCase
         self.fetchTodaySchoolMealUseCase = fetchSchoolMealUseCase
-        self.fetchTodayNoticeListUseCase = fetchTodayNoticeListUseCase
+        self.fetchNoticeListUseCase = fetchNoticeListUseCase
     }
     
     public struct Input {
@@ -47,7 +47,7 @@ public class MainViewModel: BaseViewModel, Stepper {
         //LoadCellData
         let todayTimeTableLoad: Observable<Void>
         let todaySchoolMealLoad: Observable<String>
-        let todayNoticeListLoad: Observable<Void>
+        let noticeListLoad: Observable<Void>
         
         //ButtonClick
         let profileButtonDidClick: Observable<Void>
@@ -67,7 +67,7 @@ public class MainViewModel: BaseViewModel, Stepper {
         //CellData
         let todayTimeTableData: Driver<[TimeTableEntityElement]>
         let todaySchoolMealData: Driver<[(Int, String, [String])]>
-        let todayNoticeListData: Driver<TodayNoticeListEntity>
+        let noticeListData: Driver<NoticeListEntity>
     }
     
     let mainData = PublishRelay<MainEntity?>()
@@ -76,7 +76,7 @@ public class MainViewModel: BaseViewModel, Stepper {
     //CellData
     let todayTimeTableData = BehaviorRelay<[TimeTableEntityElement]>(value: [])
     let todaySchoolMealData = BehaviorRelay<[(Int, String, [String])]>(value: [])
-    let todayNoticeListData = BehaviorRelay<TodayNoticeListEntity>(value: [])
+    let noticeListData = BehaviorRelay<NoticeListEntity>(value: [])
     
     public func transform(input: Input) -> Output {
         input.mainDataLoad
@@ -132,35 +132,35 @@ public class MainViewModel: BaseViewModel, Stepper {
             )
             .disposed(by: disposeBag)
         
-                input.todaySchoolMealLoad.asObservable()
-                    .flatMap { date in
-                        self.fetchTodaySchoolMealUseCase.execute(date: date)
-                            .catch {
-                                print($0.localizedDescription)
-                                return .never()
-                            }
-                    }
-                    .map { $0.meals.mealBundle }
-                    .subscribe(
-                        onNext: {
-                            self.todaySchoolMealData.accept(
-                                $0.sorted(by: {
-                                    $0.0 < $1.0
-                                })
-                            )
-                        }
-                    )
-                    .disposed(by: disposeBag)
-        
-        input.todayNoticeListLoad.asObservable()
-            .flatMap {
-                self.fetchTodayNoticeListUseCase.execute()
+        input.todaySchoolMealLoad.asObservable()
+            .flatMap { date in
+                self.fetchTodaySchoolMealUseCase.execute(date: date)
                     .catch {
                         print($0.localizedDescription)
                         return .never()
                     }
             }
-            .bind(to: todayNoticeListData)
+            .map { $0.meals.mealBundle }
+            .subscribe(
+                onNext: {
+                    self.todaySchoolMealData.accept(
+                        $0.sorted(by: {
+                            $0.0 < $1.0
+                        })
+                    )
+                }
+            )
+            .disposed(by: disposeBag)
+        
+        input.noticeListLoad.asObservable()
+            .flatMap {
+                self.fetchNoticeListUseCase.execute()
+                    .catch {
+                        print($0.localizedDescription)
+                        return .never()
+                    }
+            }
+            .bind(to: noticeListData)
             .disposed(by: disposeBag)
         
         input.profileButtonDidClick
@@ -211,7 +211,7 @@ public class MainViewModel: BaseViewModel, Stepper {
             userProfileData: userProfileData.asSignal(),
             todayTimeTableData: todayTimeTableData.asDriver(),
             todaySchoolMealData: todaySchoolMealData.asDriver(),
-            todayNoticeListData: todayNoticeListData.asDriver()
+            noticeListData: noticeListData.asDriver()
         )
     }
     

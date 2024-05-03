@@ -23,7 +23,6 @@ public struct ServiceDI {
     
     //classroom
     public let classroomMoveUseCase: ClassroomMoveApplyUseCase
-//    public let fetchClassroomCheckUseCase: FetchClassroomCheckUseCase
     public let classroomReturn: ClassroomReturnUseCase
     
     //weekendMeal
@@ -34,7 +33,6 @@ public struct ServiceDI {
     public let fetchSelfStudyTeacherUseCase: FetchSelfStudyTeacherUseCase
     
     //notice
-    public let fetchTodayNoticeListUseCase: FetchTodayNoticeListUseCase
     public let fetchNoticeListUseCase: FetchNoticeListUseCase
     public let fetchDetailNoticeUseCase: FetchDetailNoticeUseCase
     
@@ -100,11 +98,6 @@ extension ServiceDI {
         let classroomMoveApplyUseCaseInject = ClassroomMoveApplyUseCase(
             repository: classroomRepo
         )
-        
-//        let fetchClassroomCheckUseCaseInject = FetchClassroomCheckUseCase(
-//            repository: classroomRepo
-//        )
-//        
         let classroomReturnUseCaseInject = ClassroomReturnUseCase(
             repository: classroomRepo
         )
@@ -124,9 +117,9 @@ extension ServiceDI {
         )
         
         //MARK: 공지 관련 UseCase
-        let fetchTodayNoticeListUseCaseInject = FetchTodayNoticeListUseCase(
-            repository: noticeRepo
-        )
+//        let fetchTodayNoticeListUseCaseInject = FetchTodayNoticeListUseCase(
+//            repository: noticeRepo
+//        )
         
         let fetchNoticeListUseCaseInject = FetchNoticeListUseCase(
             repository: noticeRepo
@@ -164,12 +157,10 @@ extension ServiceDI {
             earlyLeaveUseCase: earlyLeaveApplyUseCaseInject,
             fetchEarlyLeavePassUseCase: fetchEarlyLeavePassUseCase,
             classroomMoveUseCase: classroomMoveApplyUseCaseInject,
-//            fetchClassroomCheckUseCase: fetchClassroomCheckUseCaseInject,
             classroomReturn: classroomReturnUseCaseInject,
             weekendMealCheckUseCase: weekendMealCheckUseCaseInject,
             weekendMealApplyUseCase: weekendMealApplyUseCaseInject,
             fetchSelfStudyTeacherUseCase: fetchSelfStudyTeacherUseCaseInject,
-            fetchTodayNoticeListUseCase: fetchTodayNoticeListUseCaseInject,
             fetchNoticeListUseCase: fetchNoticeListUseCaseInject,
             fetchDetailNoticeUseCase: fetchDetailNoticeUseCaseInject,
             fetchMonthAcademicScheduleUseCase: fetchMonthAcademicUseCaseInject,
