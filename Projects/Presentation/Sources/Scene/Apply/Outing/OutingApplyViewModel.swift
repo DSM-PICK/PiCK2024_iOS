@@ -39,20 +39,20 @@ public class OutingApplyViewModel: BaseViewModel, Stepper {
             input.endTimeText
         )
         
-        let isApplyButtonEnable = info.map { reason, startTime, endTime -> Bool in !reason.isEmpty && !startTime.isEmpty && !endTime.isEmpty
+        let isApplyButtonEnable = info.map { reason, startTime, endTime -> Bool in !reason.isEmpty && !startTime.isEmpty && !endTime.isEmpty && startTime < endTime
         }
         
-        input.reasonText
-            .bind(to: reason)
-            .disposed(by: disposeBag)
-        
-        input.startTimeText
-            .bind(to: startTime)
-            .disposed(by: disposeBag)
-        
-        input.endTimeText
-            .bind(to: endTime)
-            .disposed(by: disposeBag)
+//        input.reasonText
+//            .bind(to: reason)
+//            .disposed(by: disposeBag)
+//        
+//        input.startTimeText
+//            .bind(to: startTime)
+//            .disposed(by: disposeBag)
+//        
+//        input.endTimeText
+//            .bind(to: endTime)
+//            .disposed(by: disposeBag)
         
         input.outingApplyButton.asObservable()
             .withLatestFrom(info)
