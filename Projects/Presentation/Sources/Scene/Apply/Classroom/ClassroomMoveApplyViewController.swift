@@ -125,7 +125,10 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
                 let modal = PiCKPeriodPickerAlert(clickToAction: { period in
                     self?.startPeriodRelay.accept(period[0] ?? 0)
                     self?.endPeriodRelay.accept(period[1] ?? 0)
-                    self?.classroomMoveApplyRelay.accept(())
+                    
+                    if self?.startPeriodRelay.value ?? 0 < self?.endPeriodRelay.value ?? 0 {
+                        self?.classroomMoveApplyRelay.accept(())
+                    }
                 })
                 modal.modalPresentationStyle = .overFullScreen
                 modal.modalTransitionStyle = .crossDissolve
