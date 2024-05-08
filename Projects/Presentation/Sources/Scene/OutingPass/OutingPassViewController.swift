@@ -86,7 +86,7 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         output.earlyLeavePassData.asObservable()
             .subscribe(
                 onNext: { data in
-                    self.userInfoLabel.text = "\(data.grade)\(data.classNum)\( data.num) \(data.userName)"
+                    self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
                     self.outingTimeRangeLabel.text = "\(data.startTime)"
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
