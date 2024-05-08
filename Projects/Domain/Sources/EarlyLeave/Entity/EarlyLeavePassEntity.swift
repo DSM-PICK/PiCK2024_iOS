@@ -7,9 +7,7 @@ public struct EarlyLeavePassEntity {
     public let teacherName: String
     public let startTime: String
     public let reason: String
-    public let grade: Int
-    public let classNum: Int
-    public let num: Int
+    public let schoolNum: Int
     public let type: OutingPassType.RawValue
     
     public init(
@@ -17,18 +15,14 @@ public struct EarlyLeavePassEntity {
         teacherName: String,
         startTime: String,
         reason: String,
-        grade: Int,
-        classNum: Int,
-        num: Int,
+        schoolNum: Int,
         type: OutingPassType.RawValue
     ) {
         self.userName = userName
         self.teacherName = teacherName
         self.startTime = startTime
         self.reason = reason
-        self.grade = grade
-        self.classNum = classNum
-        self.num = num
+        self.schoolNum = schoolNum
         self.type = type
     }
     
