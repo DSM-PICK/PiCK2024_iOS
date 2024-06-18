@@ -25,5 +25,16 @@ class OutingDataSource {
         return provider.rx.request(.fetchOutingPass)
             .filterSuccessfulStatusCodes()
     }
+    func earlyLeaveApply(reason: String, startTime: String) -> Completable {
+        return provider.rx.request(.earlyLeaveApply(
+            reason: reason,
+            startTime: startTime
+        ))
+        .asCompletable()
+    }
+    func fetchEarlyLeavePass() -> Single<Response> {
+        return provider.rx.request(.fetchEarlyLeavePass)
+            .filterSuccessfulStatusCodes()
+    }
     
 }

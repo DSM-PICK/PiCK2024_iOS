@@ -4,13 +4,13 @@ import RxSwift
 
 public class FetchEarlyLeavePassUseCase {
     
-    let repository: EarlyLeaveRepository
+    let repository: OutingRepository
     
-    public init(repository: EarlyLeaveRepository) {
+    public init(repository: OutingRepository) {
         self.repository = repository
     }
     
-    public func execute() -> Single<EarlyLeavePassEntity> {
+    public func execute() -> Single<OutingPassEntity> {
         return repository.fetchEarlyLeavePass()
     }
     

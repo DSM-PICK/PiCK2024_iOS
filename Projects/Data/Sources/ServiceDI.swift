@@ -51,7 +51,7 @@ extension ServiceDI {
         let mainRepo = MainRepositoryImpl()
         let profileRepo = ProfileRepositoryImpl()
         let outingRepo = OutingRepositoryImpl()
-        let earlyLeaveRepo = EarlyLeaveRepositoryImpl()
+//        let earlyLeaveRepo = EarlyLeaveRepositoryImpl()
         let classroomRepo = ClassroomRepositoryImpl()
         let weekendMealRepo = WeekendMealRepositoryImpl()
         let selfStudyTeacherRepo = SelfStudyTeacherRepositoryImpl()
@@ -88,10 +88,10 @@ extension ServiceDI {
         
         //MARK: 조기귀가 관련 UseCase
         let earlyLeaveApplyUseCaseInject = EarlyLeaveApplyUseCase(
-            repository: earlyLeaveRepo
+            repository: outingRepo
         )
         let fetchEarlyLeavePassUseCase = FetchEarlyLeavePassUseCase(
-            repository: earlyLeaveRepo
+            repository: outingRepo
         )
         
         //MARK: 교실 이동 관련 UseCase
@@ -117,10 +117,6 @@ extension ServiceDI {
         )
         
         //MARK: 공지 관련 UseCase
-//        let fetchTodayNoticeListUseCaseInject = FetchTodayNoticeListUseCase(
-//            repository: noticeRepo
-//        )
-        
         let fetchNoticeListUseCaseInject = FetchNoticeListUseCase(
             repository: noticeRepo
         )
