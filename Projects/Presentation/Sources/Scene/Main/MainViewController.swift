@@ -353,6 +353,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 return cell
             case 2:
                 let view = NoticeCollectionView(frame: cellViewSize)
+                view.clickNoticeCell = { [weak self] id in
+                    self?.clickNoticeCell.accept(id)
+                }
                 view.setup(noticeList: noticeList.value)
                 cell.configureUI(
                     title: "공지",

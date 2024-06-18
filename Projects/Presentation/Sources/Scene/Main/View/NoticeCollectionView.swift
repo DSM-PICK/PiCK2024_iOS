@@ -11,6 +11,8 @@ import DesignSystem
 
 public class NoticeCollectionView: BaseView {
     
+    public var clickNoticeCell: ((UUID) -> Void)?
+    
     private var noticeList = BehaviorRelay<NoticeListEntity>(value: [])
     
     private let todayDate = Date()
@@ -82,6 +84,13 @@ public class NoticeCollectionView: BaseView {
                 cell.newNoticeIconImageView.isHidden = false
             }
         }
+        .disposed(by: disposeBag)
+        
+        collectionView.rx.itemSelected
+            .bind(onNext: { [weak self] indexPath in
+                self?.clickNoticeCell?(self?.noticeList.value[indexPath.row].id ?? UUID())
+            }
+        )
         .disposed(by: disposeBag)
     }
     public override func addView() {
