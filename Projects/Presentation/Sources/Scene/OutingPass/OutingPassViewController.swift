@@ -76,23 +76,27 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
             .subscribe(
                 onNext: { data in
                     self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
-                    self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
+                    if !data.endTime.isEmpty {
+                        self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
+                    } else {
+                        self.outingTimeRangeLabel.text = "\(data.startTime)"
+                    }
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
                 }
             )
             .disposed(by: disposeBag)
         
-        output.earlyLeavePassData.asObservable()
-            .subscribe(
-                onNext: { data in
-                    self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
-                    self.outingTimeRangeLabel.text = "\(data.startTime)"
-                    self.outingReasonDescriptionLabel.text = data.reason
-                    self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
-                }
-            )
-            .disposed(by: disposeBag)
+//        output.earlyLeavePassData.asObservable()
+//            .subscribe(
+//                onNext: { data in
+//                    self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
+//                    self.outingTimeRangeLabel.text = "\(data.startTime)"
+//                    self.outingReasonDescriptionLabel.text = data.reason
+//                    self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
+//                }
+//            )
+//            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
