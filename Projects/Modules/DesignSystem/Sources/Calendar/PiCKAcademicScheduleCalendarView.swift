@@ -17,6 +17,10 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
     private var days: [String] = []
     private var observeDays = BehaviorRelay<[String]>(value: [])
     
+    private var calendarHeight: Int {
+        return days.endIndex > 35 ? 340 : 300
+    }
+    
     private let calendarStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 12
@@ -52,6 +56,7 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         $0.bounces = false
+        $0.isScrollEnabled = false
     }
     
     public init(click: @escaping (Date) -> Void) {
@@ -116,6 +121,9 @@ public class PiCKAcademicScheduleCalendarView: BaseView {
             $0.left.right.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview()
         }
+        self.snp.makeConstraints {
+            $0.height.equalTo(calendarHeight)
+        }
     }
     
 }
@@ -161,6 +169,10 @@ extension PiCKAcademicScheduleCalendarView {
         
         observeDays.accept(days)
         self.calendarCollectionView.reloadData()
+        self.snp.remakeConstraints {
+            $0.height.equalTo(calendarHeight)
+        }
+        print("endIndex: \(days.endIndex)")
     }
     
     private func minusMonth() {

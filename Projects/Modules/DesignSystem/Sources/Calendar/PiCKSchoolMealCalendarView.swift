@@ -18,6 +18,10 @@ public class PiCKSchoolCalendarView: BaseView {
     private var observeDays = BehaviorRelay<[String]>(value: [])
     private var closureArray = BehaviorRelay<[String]>(value: [])
     
+    private var calendarHeight: Int {
+        return days.endIndex > 35 ? 250 : 220
+    }
+    
     private let calendarStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 12
@@ -50,6 +54,7 @@ public class PiCKSchoolCalendarView: BaseView {
             SchoolCalendarCell.self,
             forCellWithReuseIdentifier: SchoolCalendarCell.identifier
         )
+        $0.isScrollEnabled = false
     }
     
     public init(
@@ -128,6 +133,9 @@ public class PiCKSchoolCalendarView: BaseView {
             $0.top.equalTo(calendarStackView.snp.bottom).offset(5)
             $0.left.right.bottom.equalToSuperview()
         }
+        self.snp.makeConstraints {
+            $0.height.equalTo(calendarHeight)
+        }
     }
     
 }
@@ -173,6 +181,9 @@ extension PiCKSchoolCalendarView {
         observeDays.accept(days)
         closureArray.accept(days)
         self.calendarCollectionView.reloadData()
+        self.snp.remakeConstraints {
+            $0.height.equalTo(calendarHeight)
+        }
     }
     
     private func minusMonth() {
