@@ -158,7 +158,7 @@ extension SubjectImageType {
             case .swManage1, .swMange2:
                 return .swManage
             default:
-                return UIImage()
+            return .web
         }
     }
 }
