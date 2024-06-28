@@ -89,7 +89,6 @@ public class SelfStudyTeacherViewController: BaseViewController<SelfStudyTeacher
             $0.top.equalToSuperview().inset(102)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(250)
-            $0.height.equalTo(230)
         }
         todaySelfStudyTeacherLabel.snp.makeConstraints {
             $0.top.equalTo(calendarView.snp.bottom).offset(20)
