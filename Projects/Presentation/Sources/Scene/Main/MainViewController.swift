@@ -97,7 +97,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
         $0.setImage(.selfStudyTeacherIcon, for: .normal)
     }
     private lazy var outingPassView = PassView(clickToAction: {
-        if self.passType?.rawValue == OutingPassType.classroom.rawValue {        
+        if self.passType?.rawValue == OutingPassType.classroom.rawValue {
             self.viewReload(isHidden: true)
             self.classroomReturnRelay.accept(())
         } else {
