@@ -32,6 +32,8 @@ public enum SubjectImageType: String {
     case job2 = "진로와 직업"
     
     case army = "군대 윤리"
+    case dream = "진로활동"
+    case club = "동아리활동"
     
     //MARK: 공통과정
     case c = "프로그래밍"
@@ -68,7 +70,6 @@ public enum SubjectImageType: String {
     case bigData = "빅데이터 분석"
     case hacking = "해킹"
     case forensic = "디지털 포렌식"
-    
     
     //MARK: 3학년
     case swEngineering = "소프트웨어공학 실무"
