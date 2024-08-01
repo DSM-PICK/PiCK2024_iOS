@@ -23,7 +23,7 @@ public enum SubjectImageType: String {
     case society = "통합사회"
     
     case music = "음악"
-    case art = "미술 창작"
+    case art = "미술"
     case pe1 = "체육"
     case pe2 = "운동과 건강"
     case pe3 = "스포츠 생활"
@@ -40,15 +40,18 @@ public enum SubjectImageType: String {
     case computerStructrue = "컴퓨터 구조"
     case dataStructure = "자료구조"
     case baseWeb = "웹프로그래밍기초"
+    case aiBase = "인공지능프로그래밍"
     
     //MARK: 공통 전공 과목
     case dataBase = "DB 프로그래밍"
     case os = "운영체제"
+    case network = "컴퓨터 네트워크"
     
     //MARK: SW 개발과
     case server = "서버 프로그래밍"
     case web1 = "웹프로그래밍"
     case web2 = "프론트엔드 프로그래밍"
+    case java = "자바 프로그래밍"
     case project1 = "프로젝트실무Ⅰ"
     case project2 = "프로젝트실무Ⅱ"
     
@@ -112,6 +115,8 @@ extension SubjectImageType {
                 //MARK: 공통 전공 과목
             case .c:
                 return .c
+            case .aiBase:
+                return .ai
             case .computerStructrue, .os:
                 return .computerStructrue
             case .dataBase:
@@ -124,6 +129,8 @@ extension SubjectImageType {
                 //MARK: SW 개발과
             case .server, .web1, .web2:
                 return .web
+            case .java:
+                return .java
             case .algorithm:
                 return .algorithm
             case .project1, .project2:
