@@ -12,7 +12,7 @@ enum PickerType {
 public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
     
     private let hoursArray = Array(8...23)
-    private let minsArray = Array(00...59)
+    private let minsArray = Array(0...59)
     private let periodArray = Array(1...10)
     
     public var hourText = BehaviorRelay<Int>(value: 8)
@@ -35,6 +35,7 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
+    
     public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 60
     }
@@ -60,22 +61,32 @@ public class PiCKTimePickerView: UIPickerView, UIPickerViewDelegate, UIPickerVie
         
         view.addSubview(label)
         
-    switch selectedPickerType {
+        switch selectedPickerType {
         case .hours:
             label.text = "\(hoursArray[row])"
-            hourText.accept(hoursArray[row]) 
         case .mins:
-            label.text = "\(minsArray[row])"
+            label.text = String(format: "%02d", minsArray[row])
         case .period:
             label.text = "\(periodArray[row])교시"
-            periodText.accept(periodArray[row])
         }
+        
         return view
+    }
+    
+    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch selectedPickerType {
+        case .hours:
+            hourText.accept(hoursArray[row])
+        case .period:
+            periodText.accept(periodArray[row])
+        default:
+            return
+        }
     }
     
     func setTimeArrayType(_ type: PickerType) {
         selectedPickerType = type
         reloadAllComponents()
     }
-    
+
 }
