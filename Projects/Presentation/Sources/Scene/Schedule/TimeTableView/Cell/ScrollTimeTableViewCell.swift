@@ -62,8 +62,8 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
             )) { row, element, cell in
                 cell.setup(
                     period: element.period,
-                    subjectImage: SubjectImageType(rawValue: element.subjectName)?.toImage() ?? UIImage(),
-                    subject: element.subjectName,
+                    subjectImage: element.subjectImage,
+                    subjectName: element.subjectName,
                     time: self.timeArray[row]
                 )
             }

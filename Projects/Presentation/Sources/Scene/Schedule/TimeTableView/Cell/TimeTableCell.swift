@@ -3,6 +3,9 @@ import UIKit
 import SnapKit
 import Then
 
+import Kingfisher
+import SVGKit
+
 import Core
 import DesignSystem
 
@@ -26,14 +29,20 @@ public class TimeTableCell: BaseCollectionViewCell {
     
     public func setup(
         period: Int,
-        subjectImage: UIImage,
-        subject: String,
+        subjectImage: String,
+        subjectName: String,
         time: String
     ) {
         self.periodLabel.text = "\(period)교시"
-        self.subjectImageView.image = subjectImage
-        self.subjectLabel.text = subject
+        self.subjectLabel.text = subjectName
         self.timeLabel.text = time
+
+        let url = URL(string: subjectImage)
+        self.subjectImageView.kf.setImage(
+            with: url,
+            options: [.processor(SVGProcessor())]
+        )
+//        self.subjectImageView.load(url: url!)
     }
     
     public override func layout() {
@@ -63,4 +72,53 @@ public class TimeTableCell: BaseCollectionViewCell {
         }
     }
     
+}
+
+
+
+public struct SVGProcessor: ImageProcessor {
+    public var identifier: String = "com.PrintingAlley"
+    public func process(item: ImageProcessItem, options: KingfisherParsedOptionsInfo) -> KFCrossPlatformImage? {
+        switch item {
+        case .image(let image):
+            print("already an image")
+            return image
+        case .data(let data):
+            let imsvg = SVGKImage(data: data)
+            return imsvg?.uiImage
+        }
+    }
+
+    public init() {
+
+    }
+}
+
+
+
+extension UIImageView {
+    func load(url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            guard let data = try? Data(contentsOf: url) else {
+                print("Failed to load data from URL: \(url)")
+                return
+            }
+            
+            if url.pathExtension.lowercased() == "svg" {
+                guard let svgImage = SVGKImage(data: data) else {
+                    print("Failed to create SVGKImage")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    svgImage.size = self?.bounds.size ?? CGSize(width: 200, height: 200)
+                    self?.image = svgImage.uiImage
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self?.image = UIImage(data: data)
+                }
+            }
+        }
+    }
 }

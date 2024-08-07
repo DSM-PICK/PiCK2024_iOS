@@ -79,7 +79,7 @@ public class TimeTableCollectionView: BaseView {
         )) { row, element, cell in
             cell.setup(
                 period: element.period,
-                subjectImage: SubjectImageType(rawValue: element.subjectName)?.toImage() ?? UIImage(),
+                subjectImage: element.subjectImage,
                 subject: element.subjectName
             )
         }

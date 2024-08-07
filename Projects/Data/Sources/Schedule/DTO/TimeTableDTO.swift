@@ -21,9 +21,10 @@ public struct TimeTableDTOElement: Decodable {
     public let id: UUID
     public let period: Int
     public let subjectName: String
+    public let image: String
     
     enum CodingKeys: String, CodingKey {
-        case id, period
+        case id, period, image
         case subjectName = "subject_name"
     }
     
@@ -34,7 +35,8 @@ extension TimeTableDTOElement {
         return .init(
             id: id,
             period: period,
-            subjectName: subjectName
+            subjectName: subjectName,
+            subjectImage: image
         )
     }
     

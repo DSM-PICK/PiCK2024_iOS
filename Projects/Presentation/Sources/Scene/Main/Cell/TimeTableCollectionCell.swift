@@ -3,6 +3,8 @@ import UIKit
 import SnapKit
 import Then
 
+import Kingfisher
+
 import Core
 import DesignSystem
 
@@ -22,11 +24,11 @@ public class TimeTableCollectionCell: BaseCollectionViewCell {
     
     public func setup(
         period: Int,
-        subjectImage: UIImage,
+        subjectImage: String,
         subject: String
     ) {
         self.periodLabel.text = "\(period)"
-        self.subjectImageView.image = subjectImage
+        self.subjectImageView.kf.setImage(with: URL(string: subjectImage))
         self.subjectLabel.text = subject
     }
     

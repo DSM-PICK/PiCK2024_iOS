@@ -37,6 +37,10 @@ let dependencies = Dependencies.init(
                 url: "https://github.com/onevcat/Kingfisher.git",
                 requirement: .upToNextMajor(from: "7.4.1")
             ),
+            .remote(
+                url: "https://github.com/SVGKit/SVGKit.git",
+                requirement: .upToNextMajor(from: "3.0.0")
+            ),
             //RxGesture
             .remote(
                 url: "https://github.com/RxSwiftCommunity/RxGesture",
