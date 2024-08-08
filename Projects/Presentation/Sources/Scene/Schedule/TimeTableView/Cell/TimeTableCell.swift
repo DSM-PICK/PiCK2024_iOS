@@ -17,7 +17,10 @@ public class TimeTableCell: BaseCollectionViewCell {
         $0.textColor = .primary50
         $0.font = .subTitle3B
     }
-    private var subjectImageView = UIImageView()
+    private var subjectImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
+    }
     private var subjectLabel = UILabel().then {
         $0.textColor = .black
         $0.font = .subTitle3M
@@ -36,13 +39,7 @@ public class TimeTableCell: BaseCollectionViewCell {
         self.periodLabel.text = "\(period)교시"
         self.subjectLabel.text = subjectName
         self.timeLabel.text = time
-
-        let url = URL(string: subjectImage)
-        self.subjectImageView.kf.setImage(
-            with: url,
-            options: [.processor(SVGProcessor())]
-        )
-//        self.subjectImageView.load(url: url!)
+        self.subjectImageView.kf.setImage(with: URL(string: subjectImage))
     }
     
     public override func layout() {
@@ -71,54 +68,5 @@ public class TimeTableCell: BaseCollectionViewCell {
             $0.left.equalTo(subjectImageView.snp.right).offset(24)
         }
     }
-    
-}
 
-
-
-public struct SVGProcessor: ImageProcessor {
-    public var identifier: String = "com.PrintingAlley"
-    public func process(item: ImageProcessItem, options: KingfisherParsedOptionsInfo) -> KFCrossPlatformImage? {
-        switch item {
-        case .image(let image):
-            print("already an image")
-            return image
-        case .data(let data):
-            let imsvg = SVGKImage(data: data)
-            return imsvg?.uiImage
-        }
-    }
-
-    public init() {
-
-    }
-}
-
-
-
-extension UIImageView {
-    func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
-            guard let data = try? Data(contentsOf: url) else {
-                print("Failed to load data from URL: \(url)")
-                return
-            }
-            
-            if url.pathExtension.lowercased() == "svg" {
-                guard let svgImage = SVGKImage(data: data) else {
-                    print("Failed to create SVGKImage")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    svgImage.size = self?.bounds.size ?? CGSize(width: 200, height: 200)
-                    self?.image = svgImage.uiImage
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self?.image = UIImage(data: data)
-                }
-            }
-        }
-    }
 }
