@@ -70,7 +70,7 @@ public class PiCKTimePickerAlert: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .placeholderText
-        setInitialPickerValues() // 현재 시간으로 피커 설정
+        setInitialPickerValues()
         bind()
     }
 
@@ -89,8 +89,6 @@ public class PiCKTimePickerAlert: UIViewController {
         checkButton.rx.tap
             .bind { [weak self] in
                 guard let self = self else { return }
-                
-                // 시작 시간이 8시이므로 해당 인덱스를 보정
                 let startHour = 8
                 let selectedHourIndex = self.hourPicker.selectedRow(inComponent: 0)
                 let selectedMinuteIndex = self.minPicker.selectedRow(inComponent: 0)
@@ -112,13 +110,10 @@ public class PiCKTimePickerAlert: UIViewController {
         let currentHour = calendar.component(.hour, from: currentDate)
         let currentMinute = calendar.component(.minute, from: currentDate)
         
-        // 시작 시간이 오전 8시라고 가정
         let startHour = 8
         
-        // 현재 시간이 8시 미만이면 8시로 설정
         let initialHour = max(currentHour, startHour)
         
-        // 시간 피커는 8시부터 시작하므로 인덱스 조정
         hourPicker.selectRow(initialHour - startHour, inComponent: 0, animated: false)
         minPicker.selectRow(currentMinute, inComponent: 0, animated: false)
     }
