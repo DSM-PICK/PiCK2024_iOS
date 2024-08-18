@@ -16,8 +16,8 @@ public class PiCKTimePickerAlert: UIViewController {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 8
     }
-    private let hourPicker = PiCKTimePickerView(pickerType: .hours) // 시간 선택용 PickerView
-    private let minPicker = PiCKTimePickerView(pickerType: .mins) // 분 선택용 PickerView
+    private let hourPicker = PiCKTimePickerView(pickerType: .hours)
+    private let minPicker = PiCKTimePickerView(pickerType: .mins)
     private let hourPickerUpLine = UIView().then {
         $0.backgroundColor = .primary500
     }

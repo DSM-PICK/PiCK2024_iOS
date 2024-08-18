@@ -27,7 +27,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
     private let outingPassButtonRelay = PublishRelay<Void>()
     
     private let todayTimeTable = BehaviorRelay<[TimeTableEntityElement]>(value: [])
-    private let todaySchoolMeal = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    private let todaySchoolMeal = BehaviorRelay<[(Int, String, MealEntityElement)]>(value: [])
     private let noticeList = BehaviorRelay<NoticeListEntity>(value: [])
     
     private var passType: OutingPassType? = nil
@@ -343,7 +343,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 return cell
             case 1:
                 let view =  SchoolMealCollectionView(frame: cellViewSize)
-                view.setup(todaySchoolMeal: todaySchoolMeal.value)
+            view.setup(todaySchoolMeal: todaySchoolMeal.value)
                 cell.configureUI(
                     title: "급식",
                     buttonVisiable: true,

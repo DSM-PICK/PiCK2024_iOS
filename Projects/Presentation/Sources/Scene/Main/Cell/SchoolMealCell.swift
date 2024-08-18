@@ -27,17 +27,17 @@ public class SchoolMealCell: BaseCollectionViewCell {
     
     public func setup(
         mealTime: String,
-        todaySchoolMeal: [String]
+        todaySchoolMeal: MealEntityElement
     ) {
         self.schoolMealTimeLabel.text = mealTime
-        if todaySchoolMeal == [""] || todaySchoolMeal == [] {
+        if todaySchoolMeal.menu == [""] || todaySchoolMeal.menu == [] {
             self.menuLabel.text = "등록된 급식이 없습니다."
-        } else if todaySchoolMeal.first == "" {
-            var mealArray = todaySchoolMeal
+        } else if todaySchoolMeal.menu.first == "" {
+            var mealArray = todaySchoolMeal.menu
             mealArray.removeFirst()
             self.menuLabel.text = mealArray.joined(separator: "\n")
         } else {
-            self.menuLabel.text = todaySchoolMeal.joined(separator: "\n")
+            self.menuLabel.text = todaySchoolMeal.menu.joined(separator: "\n")
         }
     }
     

@@ -66,7 +66,7 @@ public class MainViewModel: BaseViewModel, Stepper {
         
         //CellData
         let todayTimeTableData: Driver<[TimeTableEntityElement]>
-        let todaySchoolMealData: Driver<[(Int, String, [String])]>
+        let todaySchoolMealData: Driver<[(Int, String, MealEntityElement)]>
         let noticeListData: Driver<NoticeListEntity>
     }
     
@@ -75,7 +75,7 @@ public class MainViewModel: BaseViewModel, Stepper {
     
     //CellData
     let todayTimeTableData = BehaviorRelay<[TimeTableEntityElement]>(value: [])
-    let todaySchoolMealData = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    let todaySchoolMealData = BehaviorRelay<[(Int, String, MealEntityElement)]>(value: [])
     let noticeListData = BehaviorRelay<NoticeListEntity>(value: [])
     
     public func transform(input: Input) -> Output {

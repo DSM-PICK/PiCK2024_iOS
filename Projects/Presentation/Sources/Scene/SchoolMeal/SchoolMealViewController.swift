@@ -12,7 +12,7 @@ import DesignSystem
 public class SchoolMealViewController: BaseViewController<SchoolMealViewModel> {
     
     private let schoolMealLoadRelay = PublishRelay<String>()
-    private var schoolMealArray = BehaviorRelay<[String]>(value: [])
+    private var schoolMealArray = BehaviorRelay<MealEntityElement>(value: .init(menu: [], kcal: ""))
     
     private let date = Date()
     private lazy var todayDate = date.toString(type: .monthAndDay)
