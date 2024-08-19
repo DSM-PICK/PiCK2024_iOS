@@ -16,9 +16,9 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
         "09:40 ~ 10:30",
         "10:40 ~ 11:30",
         "11:40 ~ 12:30",
-        "01:30 ~ 02:20",
-        "02:30 ~ 03:20",
-        "03:30 ~ 04:20"
+        "13:30 ~ 14:20",
+        "14:30 ~ 15:20",
+        "15:30 ~ 16:20"
     ]
     private lazy var timeTableData = PublishRelay<[TimeTableEntityElement]>()
     
@@ -62,8 +62,8 @@ public class ScrollTimeTableViewCell: BaseCollectionViewCell {
             )) { row, element, cell in
                 cell.setup(
                     period: element.period,
-                    subjectImage: SubjectImageType(rawValue: element.subjectName)?.toImage() ?? UIImage(),
-                    subject: element.subjectName,
+                    subjectImage: element.subjectImage,
+                    subjectName: element.subjectName,
                     time: self.timeArray[row]
                 )
             }

@@ -8,9 +8,7 @@ public struct OutingPassEntity {
     public let startTime: String
     public let endTime: String
     public let reason: String
-    public let grade: Int
-    public let classNum: Int
-    public let num: Int
+    public let schoolNum: Int
     public let type: OutingPassType.RawValue
     
     public init(
@@ -19,9 +17,7 @@ public struct OutingPassEntity {
         startTime: String,
         endTime: String,
         reason: String,
-        grade: Int,
-        classNum: Int,
-        num: Int,
+        schoolNum: Int,
         type: OutingPassType.RawValue
     ) {
         self.userName = userName
@@ -29,9 +25,7 @@ public struct OutingPassEntity {
         self.startTime = startTime
         self.endTime = endTime
         self.reason = reason
-        self.grade = grade
-        self.classNum = classNum
-        self.num = num
+        self.schoolNum = schoolNum
         self.type = type
     }
 }

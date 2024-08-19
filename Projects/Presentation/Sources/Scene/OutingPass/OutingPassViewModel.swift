@@ -28,13 +28,14 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
     
     public struct Output {
         let outingPassData: Signal<OutingPassEntity>
-        let earlyLeavePassData: Signal<EarlyLeavePassEntity>
+//        let earlyLeavePassData: Signal<EarlyLeavePassEntity>
     }
     
     let outingPassData = PublishRelay<OutingPassEntity>()
-    let earlyLeavePassData = PublishRelay<EarlyLeavePassEntity>()
+//    let earlyLeavePassData = PublishRelay<EarlyLeavePassEntity>()
     
     public func transform(input: Input) -> Output {
+        
         input.outingPassLoad.asObservable()
             .flatMap {
                 self.fetchOutingPassUseCase.execute()
@@ -54,12 +55,12 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
                         return .never()
                     }
             }
-            .bind(to: earlyLeavePassData)
+            .bind(to: outingPassData)
             .disposed(by: disposeBag)
         
         return Output(
-            outingPassData: outingPassData.asSignal(), 
-            earlyLeavePassData: earlyLeavePassData.asSignal()
+            outingPassData: outingPassData.asSignal()
+//            earlyLeavePassData: earlyLeavePassData.asSignal()
         )
     }
     

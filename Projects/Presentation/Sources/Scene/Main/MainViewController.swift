@@ -27,8 +27,8 @@ public class MainViewController: BaseViewController<MainViewModel> {
     private let outingPassButtonRelay = PublishRelay<Void>()
     
     private let todayTimeTable = BehaviorRelay<[TimeTableEntityElement]>(value: [])
-    private let todaySchoolMeal = BehaviorRelay<[(Int, String, [String])]>(value: [])
-    private let todayNoticeList = BehaviorRelay<TodayNoticeListEntity>(value: [])
+    private let todaySchoolMeal = BehaviorRelay<[(Int, String, MealEntityElement)]>(value: [])
+    private let noticeList = BehaviorRelay<NoticeListEntity>(value: [])
     
     private var passType: OutingPassType? = nil
     
@@ -97,7 +97,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
         $0.setImage(.selfStudyTeacherIcon, for: .normal)
     }
     private lazy var outingPassView = PassView(clickToAction: {
-        if self.passType?.rawValue == OutingPassType.classroom.rawValue {        
+        if self.passType?.rawValue == OutingPassType.classroom.rawValue {
             self.viewReload(isHidden: true)
             self.classroomReturnRelay.accept(())
         } else {
@@ -171,7 +171,7 @@ public class MainViewController: BaseViewController<MainViewModel> {
             classroomReturn: classroomReturnRelay.asObservable(),
             todayTimeTableLoad: todayTimeTableRelay.asObservable(),
             todaySchoolMealLoad: todaySchoolMealRelay.asObservable(),
-            todayNoticeListLoad: todayNoticeLoadRelay.asObservable(),
+            noticeListLoad: todayNoticeLoadRelay.asObservable(),
             profileButtonDidClick: profileButton.rx.tap.asObservable(),
             scheduleButtonDidClick: scheduleButton.rx.tap.asObservable(),
             applyButtonDidClick: applyButton.rx.tap.asObservable(),
@@ -246,16 +246,15 @@ public class MainViewController: BaseViewController<MainViewModel> {
             )
             .disposed(by: disposeBag)
         
-        output.todayNoticeListData.asObservable()
+        output.noticeListData.asObservable()
             .subscribe(
                 onNext: {
-                    self.todayNoticeList.accept($0)
+                    self.noticeList.accept($0)
                     self.collectionView.reloadData()
                 }
             )
             .disposed(by: disposeBag)
     }
-    
     public override func addView() {
         [
             userInfoLabel,
@@ -344,7 +343,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 return cell
             case 1:
                 let view =  SchoolMealCollectionView(frame: cellViewSize)
-                view.setup(todaySchoolMeal: todaySchoolMeal.value)
+            view.setup(todaySchoolMeal: todaySchoolMeal.value)
                 cell.configureUI(
                     title: "급식",
                     buttonVisiable: true,
@@ -354,7 +353,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 return cell
             case 2:
                 let view = NoticeCollectionView(frame: cellViewSize)
-                view.setup(todayNoticeList: todayNoticeList.value)
+                view.clickNoticeCell = { [weak self] id in
+                    self?.clickNoticeCell.accept(id)
+                }
+                view.setup(noticeList: noticeList.value)
                 cell.configureUI(
                     title: "공지",
                     buttonVisiable: false,

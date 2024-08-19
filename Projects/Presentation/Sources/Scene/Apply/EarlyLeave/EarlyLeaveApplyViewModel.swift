@@ -39,13 +39,13 @@ public class EarlyLeaveApplyViewModel: BaseViewModel, Stepper {
         let isApplyButtonEnable = info.map { reason, startTime -> Bool in !reason.isEmpty && !startTime.isEmpty
         }
         
-        input.reasonText
-            .bind(to: reason)
-            .disposed(by: disposeBag)
-        
-        input.startTimeText
-            .bind(to: startTime)
-            .disposed(by: disposeBag)
+//        input.reasonText
+//            .bind(to: reason)
+//            .disposed(by: disposeBag)
+//        
+//        input.startTimeText
+//            .bind(to: startTime)
+//            .disposed(by: disposeBag)
         
         input.earlyLeaveApplyButton.asObservable()
             .withLatestFrom(info)

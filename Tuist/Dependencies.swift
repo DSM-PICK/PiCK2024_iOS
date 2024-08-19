@@ -35,7 +35,11 @@ let dependencies = Dependencies.init(
             // Kingfisher
             .remote(
                 url: "https://github.com/onevcat/Kingfisher.git",
-                requirement: .upToNextMajor(from: "7.4.1")
+                requirement: .upToNextMajor(from: "7.0.0")
+            ),
+            .remote(
+                url: "https://github.com/SVGKit/SVGKit.git",
+                requirement: .upToNextMajor(from: "3.0.0")
             ),
             //RxGesture
             .remote(
@@ -53,7 +57,6 @@ let dependencies = Dependencies.init(
         ],
         baseSettings: .settings(
             configurations: [
-                .debug(name: .dev),
                 .debug(name: .stage),
                 .release(name: .prod)
             ]

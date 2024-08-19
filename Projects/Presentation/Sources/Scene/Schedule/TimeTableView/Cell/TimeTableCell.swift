@@ -3,6 +3,9 @@ import UIKit
 import SnapKit
 import Then
 
+import Kingfisher
+import SVGKit
+
 import Core
 import DesignSystem
 
@@ -14,7 +17,10 @@ public class TimeTableCell: BaseCollectionViewCell {
         $0.textColor = .primary50
         $0.font = .subTitle3B
     }
-    private var subjectImageView = UIImageView()
+    private var subjectImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
+    }
     private var subjectLabel = UILabel().then {
         $0.textColor = .black
         $0.font = .subTitle3M
@@ -26,14 +32,14 @@ public class TimeTableCell: BaseCollectionViewCell {
     
     public func setup(
         period: Int,
-        subjectImage: UIImage,
-        subject: String,
+        subjectImage: String,
+        subjectName: String,
         time: String
     ) {
         self.periodLabel.text = "\(period)교시"
-        self.subjectImageView.image = subjectImage
-        self.subjectLabel.text = subject
+        self.subjectLabel.text = subjectName
         self.timeLabel.text = time
+        self.subjectImageView.kf.setImage(with: URL(string: subjectImage))
     }
     
     public override func layout() {
@@ -62,5 +68,5 @@ public class TimeTableCell: BaseCollectionViewCell {
             $0.left.equalTo(subjectImageView.snp.right).offset(24)
         }
     }
-    
+
 }

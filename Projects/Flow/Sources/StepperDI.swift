@@ -41,7 +41,7 @@ extension StepperDI {
             classroomReturnUseCase: serviceDI.classroomReturn,
             fetchTodayTimeTableUseCase: serviceDI.fetchTodayTimeTableUseCase,
             fetchSchoolMealUseCase: serviceDI.fetchSchoolMealUseCase,
-            fetchTodayNoticeListUseCase: serviceDI.fetchTodayNoticeListUseCase
+            fetchNoticeListUseCase: serviceDI.fetchNoticeListUseCase
         )
         
         //MARK: 신청 ViewModel

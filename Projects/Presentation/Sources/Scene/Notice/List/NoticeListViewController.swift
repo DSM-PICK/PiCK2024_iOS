@@ -14,6 +14,8 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel> {
     private let viewWillAppearRelay = PublishRelay<Void>()
     private let clickNoticeCell = PublishRelay<UUID>()
     
+    private let todayDate = Date()
+    
     private let navigationTitleLabel = UILabel().then {
         $0.text = "공지사항"
         $0.textColor = .neutral50
@@ -57,6 +59,9 @@ public class NoticeListViewController: BaseViewController<NoticeListViewModel> {
                     title: element.title,
                     date: element.createAt
                 )
+                if element.createAt == self.todayDate.toString(type: .fullDate) {
+                    cell.newNoticeIconImageView.isHidden = false
+                }
             }
             .disposed(by: disposeBag)
         

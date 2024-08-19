@@ -10,10 +10,19 @@ public struct SchoolMealEntity {
 }
 
 public struct SchoolMealEntityElement {
-    public let mealBundle: [(Int, String, [String])]
+    public let mealBundle: [(Int, String, MealEntityElement)]
 
-    public init(mealBundle: [(Int, String, [String])]) {
+    public init(mealBundle: [(Int, String, MealEntityElement)]) {
         self.mealBundle = mealBundle
     }
-    
+}
+
+public struct MealEntityElement {
+    public let menu: [String]
+    public let kcal: String
+
+    public init(menu: [String], kcal: String) {
+        self.menu = menu
+        self.kcal = kcal
+    }
 }

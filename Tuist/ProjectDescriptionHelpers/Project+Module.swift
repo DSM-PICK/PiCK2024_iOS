@@ -30,7 +30,6 @@ extension Project {
         var configurations = configurations
         if configurations.isEmpty {
             configurations = [
-                .debug(name: .dev, xcconfig: .relativeToXCConfig(type: .dev, name: name)),
                 .debug(name: .stage, xcconfig: .relativeToXCConfig(type: .stage, name: name)),
                 .release(name: .prod, xcconfig: .relativeToXCConfig(type: .prod, name: name))
               ]
@@ -59,7 +58,7 @@ extension Project {
             )
         ]
         
-        let schemes: [Scheme] = [.makeScheme(target: .dev, name: name)]
+        let schemes: [Scheme] = [.makeScheme(target: .stage, name: name)]
         
         return Project(
             name: name,

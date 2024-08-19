@@ -18,5 +18,6 @@ regenerate:
 	rm -rf **/**/*.xcodeproj
 	rm -rf **/*.xcodeproj
 	rm -rf *.xcworkspace
+	tuist fetch
 	tuist generate
 	

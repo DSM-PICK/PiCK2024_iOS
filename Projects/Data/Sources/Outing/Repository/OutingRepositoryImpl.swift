@@ -20,4 +20,19 @@ class OutingRepositoryImpl: OutingRepository {
             .map(OutingPassDTO.self)
             .map { $0.toDomain() }
     }
+    
+    func earlyLeaveApply(reason: String, startTime: String) -> Completable {
+        return remoteDataSource.earlyLeaveApply(
+            reason: reason,
+            startTime: startTime
+        )
+    }
+    
+    func fetchEarlyLeavePass() -> Single<OutingPassEntity> {
+        return remoteDataSource.fetchEarlyLeavePass()
+            .map(OutingPassDTO.self)
+            .map { $0.toDomain() }
+    }
+    
+    
 }

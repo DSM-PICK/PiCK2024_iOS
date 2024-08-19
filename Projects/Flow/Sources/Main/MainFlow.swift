@@ -39,6 +39,8 @@ public class MainFlow: Flow {
                 return presentOutingPass()
             case .noticeRequired:
                 return navigateToNotice()
+            case .detailNoticeRequired(let id):
+                return navigateToDetailNotice(id: id)
             default:
                 return .none
         }
@@ -135,6 +137,14 @@ public class MainFlow: Flow {
             withNextPresentable: noticeFlow,
             withNextStepper: OneStepper(withSingleStep: PiCKStep.noticeRequired)
         ))
+    }
+    
+    private func navigateToDetailNotice(id: UUID) -> FlowContributors {
+        let viewModel = container.detailNoticeViewModel
+        let viewController = DetailNoticeViewController(viewModel: viewModel)
+        viewController.id = id
+        self.rootViewController.pushViewController(viewController, animated: true)
+        return .none
     }
     
 }

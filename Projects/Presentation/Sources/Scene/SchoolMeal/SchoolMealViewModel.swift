@@ -25,10 +25,10 @@ public class SchoolMealViewModel: BaseViewModel, Stepper {
     }
     
     public struct Output {
-        let schoolMealDataLoad: Driver<[(Int, String, [String])]>
+        let schoolMealDataLoad: Driver<[(Int, String, MealEntityElement)]>
     }
     
-    let schoolMealDataLoad = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    let schoolMealDataLoad = BehaviorRelay<[(Int, String, MealEntityElement)]>(value: [])
     
     public func transform(input: Input) -> Output {
         input.schoolMealLoad.asObservable()

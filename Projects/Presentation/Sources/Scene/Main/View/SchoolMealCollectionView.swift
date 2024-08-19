@@ -11,7 +11,7 @@ import DesignSystem
 
 public class SchoolMealCollectionView: BaseView {
     
-    private var todaySchoolMeal = BehaviorRelay<[(Int, String, [String])]>(value: [])
+    private var todaySchoolMeal = BehaviorRelay<[(Int, String, MealEntityElement)]>(value: [])
     
     private lazy var collectionViewFlowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
@@ -29,7 +29,7 @@ public class SchoolMealCollectionView: BaseView {
     }
     
     public func setup(
-        todaySchoolMeal: [(Int, String, [String])]
+        todaySchoolMeal: [(Int, String, MealEntityElement)]
     ) {
         self.todaySchoolMeal.accept(todaySchoolMeal)
         self.collectionView.reloadData()

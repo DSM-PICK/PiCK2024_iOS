@@ -81,9 +81,7 @@ public class AcademicScheduleView: BaseView {
         calendarView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
-//            $0.left.right.equalToSuperview()
             $0.width.equalTo(342)
-            $0.height.equalTo(330)
         }
         scheduleCollectionView.snp.makeConstraints {
             $0.top.equalTo(calendarView.snp.bottom).offset(16)

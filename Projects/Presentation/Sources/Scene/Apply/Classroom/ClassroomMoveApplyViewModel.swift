@@ -37,30 +37,31 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
     public func transform(input: Input) -> Output {
         let info = Observable.combineLatest(
             input.floorText,
-            input.classroomNameText
+            input.classroomNameText,
+            input.startPeriod,
+            input.endPeriod
         )
         
-        let isApplyButtonEnable = info.map { floor, classroomName  -> Bool in 
+        let isApplyButtonEnable = info.map { floor, classroomName, startPeriod, endPeriod  -> Bool in
             !classroomName.isEmpty
         }
         
-        input.floorText
-            .bind(to: floor)
-            .disposed(by: disposeBag)
-        
-        input.classroomNameText
-            .bind(to: classroomName)
-            .disposed(by: disposeBag)
+//        input.floorText
+//            .bind(to: floor)
+//            .disposed(by: disposeBag)
+//        
+//        input.classroomNameText
+//            .bind(to: classroomName)
+//            .disposed(by: disposeBag)
         
         input.classroomMoveApply.asObservable()
             .withLatestFrom(info)
-            .flatMap { floor, classroomName  in
+            .flatMap { floor, classroomName, startPeriod, endPeriod in
                 self.classroomMoveApplyUseCase.execute(
                     floor: floor,
                     classroomName: classroomName,
-                    startPeriod: input.startPeriod.value,
-                    endPeriod: input.endPeriod.value
-                    
+                    startPeriod: startPeriod,
+                    endPeriod: endPeriod
                 )
                 .catch {
                     print($0.localizedDescription)

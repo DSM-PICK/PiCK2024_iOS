@@ -14,6 +14,9 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
     var depatureTimeText = BehaviorRelay<String>(value: "")
     var arrivalTimeText = BehaviorRelay<String>(value: "")
     
+    var depatureTime = BehaviorRelay<String>(value: "")
+    var arrivalTime = BehaviorRelay<String>(value: "")
+    
     private let navigationTitleLabel = UILabel().then {
         $0.text = "외출 신청"
         $0.textColor = .neutral50
@@ -90,6 +93,7 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
                     self?.depatureTimeText.accept(
                         "\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")"
                     )
+//                    self?.depatureTime.accept("\(depatureTime[0] ?? "")\(depatureTime[1] ?? "")")
                     
                     self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
                     self?.departureTimeLabel.textColor = .neutral50
@@ -104,6 +108,7 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
             .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { arrialTime in
                     self?.arrivalTimeText.accept("\(arrialTime[0] ?? ""):\(arrialTime[1] ?? "")")
+//                    self?.arrivalTime.accept("\(arrialTime[0] ?? "")\(arrialTime[1] ?? "")")
                     
                     self?.arrivalTimeLabel.text = "\(arrialTime[0] ?? "") : \(arrialTime[1] ?? "")"
                     self?.arrivalTimeLabel.textColor = .neutral50
