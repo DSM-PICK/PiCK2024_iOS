@@ -46,14 +46,6 @@ public class ClassroomMoveApplyViewModel: BaseViewModel, Stepper {
             !classroomName.isEmpty
         }
         
-//        input.floorText
-//            .bind(to: floor)
-//            .disposed(by: disposeBag)
-//        
-//        input.classroomNameText
-//            .bind(to: classroomName)
-//            .disposed(by: disposeBag)
-        
         input.classroomMoveApply.asObservable()
             .withLatestFrom(info)
             .flatMap { floor, classroomName, startPeriod, endPeriod in

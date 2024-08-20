@@ -126,7 +126,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
                     self?.startPeriodRelay.accept(period[0] ?? 0)
                     self?.endPeriodRelay.accept(period[1] ?? 0)
                     
-                    if self?.startPeriodRelay.value ?? 0 < self?.endPeriodRelay.value ?? 0 {
+                    if self?.startPeriodRelay.value ?? 0 <= self?.endPeriodRelay.value ?? 0 {
                         self?.classroomMoveApplyRelay.accept(())
                     }
                 })
