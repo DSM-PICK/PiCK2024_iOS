@@ -1,7 +1,7 @@
 #!/bin/sh
 cd ../
 git clone https://github.com/DSM-PICK/PiCK_iOS_XCConfig
-mv PiCK_iOS_XCConfig/V1/XCConfig/ .
+mv PiCK_iOS_XCConfig/XCConfig/.
 
 brew install make
 
