@@ -13,4 +13,5 @@ mise install tuist@3.41.0
 
 tuist version
 
-make generate
+tuist fetch
+tuist generate
