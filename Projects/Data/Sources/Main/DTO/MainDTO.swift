@@ -17,8 +17,8 @@ public struct MainDTO: Decodable {
         case classroom, type
         case userID = "user_id"
         case userName = "username"
-        case startTime = "start_time"
-        case endTime = "end_time"
+        case startTime = "start"
+        case endTime = "end"
         case startPeriod = "start_period"
         case endPeriod = "end_period"
     }

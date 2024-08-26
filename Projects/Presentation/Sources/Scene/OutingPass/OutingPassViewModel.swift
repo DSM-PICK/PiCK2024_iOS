@@ -28,11 +28,9 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
     
     public struct Output {
         let outingPassData: Signal<OutingPassEntity>
-//        let earlyLeavePassData: Signal<EarlyLeavePassEntity>
     }
     
     let outingPassData = PublishRelay<OutingPassEntity>()
-//    let earlyLeavePassData = PublishRelay<EarlyLeavePassEntity>()
     
     public func transform(input: Input) -> Output {
         
@@ -60,7 +58,6 @@ public class OutingPassViewModel: BaseViewModel, Stepper {
         
         return Output(
             outingPassData: outingPassData.asSignal()
-//            earlyLeavePassData: earlyLeavePassData.asSignal()
         )
     }
     

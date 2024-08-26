@@ -120,5 +120,5 @@ public class ScheduleViewController: BaseViewController<ScheduleViewModel> {
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
+
 }

@@ -13,7 +13,6 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
     private let outingPassRelay = PublishRelay<Void>()
     
     private let navigationTitleLabel = UILabel().then {
-        $0.text = "외출증"
         $0.textColor = .neutral50
         $0.font = .subTitle3M
     }
@@ -59,10 +58,7 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         $0.clipsToBounds = true
     }
     private let backgroundImage = UIImageView(image: .outingPassBackgroundIamge)
-    
-    public override func configureNavigationBar() {
-        navigationItem.titleView = navigationTitleLabel
-    }
+
     public override func bindAction() {
         outingPassRelay.accept(())
     }
@@ -75,28 +71,21 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         output.outingPassData.asObservable()
             .subscribe(
                 onNext: { data in
-                    self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
-                    if !data.endTime.isEmpty {
-                        self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime)"
+                    self.userInfoLabel.text = "\(data.grade)\(data.classNum)\(data.num) \(data.userName)"
+                    if data.endTime?.isEmpty == false {
+                        self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime ?? "")"
+                        self.navigationTitleLabel.text = "외출증"
+                        self.navigationItem.titleView = self.navigationTitleLabel
                     } else {
                         self.outingTimeRangeLabel.text = "\(data.startTime)"
+                        self.navigationTitleLabel.text = "조기귀가증"
+                        self.navigationItem.titleView = self.navigationTitleLabel
                     }
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
                 }
             )
             .disposed(by: disposeBag)
-        
-//        output.earlyLeavePassData.asObservable()
-//            .subscribe(
-//                onNext: { data in
-//                    self.userInfoLabel.text = "\(data.schoolNum) \(data.userName)"
-//                    self.outingTimeRangeLabel.text = "\(data.startTime)"
-//                    self.outingReasonDescriptionLabel.text = data.reason
-//                    self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
-//                }
-//            )
-//            .disposed(by: disposeBag)
     }
     public override func addView() {
         [
