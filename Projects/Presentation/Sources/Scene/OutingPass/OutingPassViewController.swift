@@ -71,16 +71,23 @@ public class OutingPassViewController: BaseViewController<OutingPassViewModel> {
         output.outingPassData.asObservable()
             .subscribe(
                 onNext: { data in
-                    self.userInfoLabel.text = "\(data.grade)\(data.classNum)\(data.num) \(data.userName)"
-                    if data.endTime?.isEmpty == false {
-                        self.outingTimeRangeLabel.text = "\(data.startTime) ~ \(data.endTime ?? "")"
+                    if data.num ?? 0 < 10 {
+                        self.userInfoLabel.text = "\(data.grade ?? 0)\(data.classNum ?? 0)0\(data.num ?? 0) \(data.userName)"
+                    } else {
+                        self.userInfoLabel.text = "\(data.grade ?? 0)\(data.classNum ?? 0)\(data.num ?? 0) \(data.userName)"
+                    }
+
+                    if data.end?.isEmpty == false {
+                        self.outingTimeRangeLabel.text = "\(data.start ?? "") ~ \(data.end ?? "")"
                         self.navigationTitleLabel.text = "외출증"
                         self.navigationItem.titleView = self.navigationTitleLabel
+                        self.userInfoLabel.text = "\(data.schoolNum ?? 0000) \(data.userName)"
                     } else {
-                        self.outingTimeRangeLabel.text = "\(data.startTime)"
+                        self.outingTimeRangeLabel.text = "\(data.startTime ?? "")"
                         self.navigationTitleLabel.text = "조기귀가증"
                         self.navigationItem.titleView = self.navigationTitleLabel
                     }
+
                     self.outingReasonDescriptionLabel.text = data.reason
                     self.approvedTeacherNameLabel.text = "\(data.teacherName) 선생님"
                 }

@@ -6,12 +6,14 @@ import Domain
 public struct OutingPassDTO: Decodable {
     let userName: String
     let teacherName: String
-    let startTime: String
-    let endTime: String?
+    let startTime: String?
+    let start: String?
+    let end: String?
     let reason: String
-    let grade: Int
-    let classNum: Int
-    let num: Int
+    let schoolNum: Int?
+    let grade: Int?
+    let classNum: Int?
+    let num: Int?
     let type: OutingPassType.RawValue
     
     enum CodingKeys: String, CodingKey {
@@ -19,7 +21,9 @@ public struct OutingPassDTO: Decodable {
         case userName = "username"
         case teacherName = "teacher_name"
         case startTime = "start_time"
-        case endTime = "end_time"
+        case start = "start"
+        case schoolNum = "school_num"
+        case end = "end"
         case classNum = "class_num"
     }
 }
@@ -30,8 +34,10 @@ extension OutingPassDTO {
             userName: userName,
             teacherName: teacherName,
             startTime: startTime,
-            endTime: endTime,
+            start: start,
+            end: end,
             reason: reason,
+            schoolNum: schoolNum,
             grade: grade,
             classNum: classNum,
             num: num,

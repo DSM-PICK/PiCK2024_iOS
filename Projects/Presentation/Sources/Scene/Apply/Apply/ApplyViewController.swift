@@ -45,7 +45,8 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
         $0.layer.cornerRadius = 8
     }
     private lazy var currnetMonthWeekendMealApplyLabel = UILabel().then {
-        $0.text = "\(nextMonth?.toString(type: .month) ?? "Error") 주말 급식 신청"
+//        $0.text = "\(nextMonth?.toString(type: .month) ?? "Error") 주말 급식 신청"
+        $0.text = "10월 주말 급식 신청"
         $0.textColor = .black
         $0.font = .body3
     }

@@ -91,9 +91,8 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
             .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { depatureTime in
                     self?.depatureTimeText.accept(
-                        "\(depatureTime[0] ?? ""):\(depatureTime[1] ?? "")"
+                        "\(depatureTime[0] ?? ""):\(depatureTime[1] ?? ""):00"
                     )
-//                    self?.depatureTime.accept("\(depatureTime[0] ?? "")\(depatureTime[1] ?? "")")
                     
                     self?.departureTimeLabel.text = "\(depatureTime[0] ?? "") : \(depatureTime[1] ?? "")"
                     self?.departureTimeLabel.textColor = .neutral50
@@ -107,7 +106,7 @@ public class OutingApplyViewController: BaseViewController<OutingApplyViewModel>
             .when(.recognized)
             .bind { [weak self] _ in
                 let modal = PiCKTimePickerAlert(clickToAction: { arrialTime in
-                    self?.arrivalTimeText.accept("\(arrialTime[0] ?? ""):\(arrialTime[1] ?? "")")
+                    self?.arrivalTimeText.accept("\(arrialTime[0] ?? ""):\(arrialTime[1] ?? ""):00")
 //                    self?.arrivalTime.accept("\(arrialTime[0] ?? "")\(arrialTime[1] ?? "")")
                     
                     self?.arrivalTimeLabel.text = "\(arrialTime[0] ?? "") : \(arrialTime[1] ?? "")"

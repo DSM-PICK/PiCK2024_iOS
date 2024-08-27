@@ -46,8 +46,9 @@ extension OutingAPI: TargetType {
             return .requestParameters(
                 parameters: [
                     "reason": reason,
-                    "start_time": startTime,
-                    "end_time": endTime
+                    "start": startTime,
+                    "end": endTime,
+                    "application_type": "TIME"
                 ],
                 encoding: JSONEncoding.default
             )
