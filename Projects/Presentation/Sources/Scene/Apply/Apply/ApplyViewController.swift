@@ -24,7 +24,6 @@ public class ApplyViewController: BaseViewController<ApplyViewModel>, Stepper {
         applyButton,
         noApplyButton
     ]
-    
     private let navigationTitleLabel = UILabel().then {
         $0.text = "신청"
         $0.textColor = .neutral50

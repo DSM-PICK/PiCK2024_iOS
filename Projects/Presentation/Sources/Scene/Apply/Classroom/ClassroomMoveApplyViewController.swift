@@ -19,7 +19,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
     private lazy var currentFloorClassroomArray = BehaviorRelay<[String]>(value: firstFloorClassroomArray)
     
     private lazy var firstFloorClassroomArray = [
-        "산학협력부", "새롬홀", "무한 상상실", "청죽관", "탁구실", "운동장"
+        "산학협력부", "새롬홀", "무한 상상실", "청죽관", "탁구실", "운동장", "밴드부실"
     ]
     private lazy var secondFloorClassroomArray = [
         "3-1", "3-2", "3-3", "3-4", "세미나실 2-1", "세미나실 2-2", "세미나실 2-3", "SW 1실", "SW 2실", "SW 3실",
@@ -30,7 +30,7 @@ public class ClassroomMoveApplyViewController: BaseViewController<ClassroomMoveA
         "보안 1실", "보안 2실", "제 2교무실", "그린존", "남자 헬스장"
     ]
     private lazy var fourthFloorClassroomArray = [
-        "1-1", "1-2", "1-3", "1-4", "세미나실 4-1", "세미나실 4-2", "세미나실 4-3", "세미나실 4-4",
+        "1-1", "1-2", "1-3", "1-4", "세미나실 4-1", "세미나실 4-2", "세미나실 4-3",
         "임베 1실", "임베 2실", "제 1교무실"
     ]
     private lazy var fifthFloorClassroomArray = [
